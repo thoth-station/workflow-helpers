@@ -33,6 +33,9 @@ def trigger_integration_workflow():
     metadata = retrieve_adviser_document()
     source_type = metadata["source_type"]
 
+    if not metadata:
+        return
+
     if source_type is ThothAdviserIntegrationEnum.KEBECHET:
         with open("/tmp/source_type", "w") as f:
             f.write(source_type)
