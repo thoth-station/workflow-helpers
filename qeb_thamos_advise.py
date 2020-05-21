@@ -31,11 +31,12 @@ from trigger_finished_webhook import trigger_finished_webhook
 
 _LOGGER = logging.getLogger("qebhwt")
 
+_ORIGIN = os.getenv("ORIGIN")
 _GITHUB_EVENT_TYPE = os.getenv("GITHUB_EVENT_TYPE")
 _GITHUB_CHECK_RUN_ID = os.getenv("GITHUB_CHECK_RUN_ID")
 _GITHUB_INSTALLATION_ID = os.getenv("GITHUB_INSTALLATION_ID")
 _GITHUB_BASE_REPO_URL = os.getenv("GITHUB_BASE_REPO_URL")
-_ORIGIN = os.getenv("ORIGIN")
+_THOTH_HOST = os.getenv("THOTH_HOST")
 
 
 def _create_message_config_file_error():
@@ -69,7 +70,7 @@ def _create_message_config_file_error():
 def qeb_hwt_thamos_advise():
     """Qeb-Hwt Thamos Advise Task."""
     os.chdir("/mnt/inputs/artifacts/repository")
-    config.explicit_host = "{{inputs.parameters.THOTH_HOST}}"
+    config.explicit_host = _THOTH_HOST
     config.tls_verify = True
 
     artifact_path = Path.cwd()
