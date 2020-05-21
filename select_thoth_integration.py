@@ -36,10 +36,10 @@ def trigger_integration_workflow():
     if not metadata:
         return
 
-    if source_type is ThothAdviserIntegrationEnum.KEBECHET:
-        with open("/tmp/source_type", "w") as f:
-            f.write(source_type)
+    with open("/tmp/source_type", "w") as f:
+        f.write(source_type)
 
+    if source_type is ThothAdviserIntegrationEnum.KEBECHET:
         with open("/tmp/origin", "w") as f:
             if metadata["origin"] is not None:
                 f.write(metadata["origin"])
