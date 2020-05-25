@@ -47,3 +47,6 @@ def trigger_integration_workflow():
     if source_type is ThothAdviserIntegrationEnum.GITHUB_APP:
         _THOTH_DOCUMENT_ID = os.getenv("THOTH_DOCUMENT_ID")
         trigger_finished_webhook(metadata=metadata, document_id=_THOTH_DOCUMENT_ID)
+
+if __name__ == "__main__":
+    trigger_integration_workflow()
