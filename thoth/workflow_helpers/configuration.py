@@ -25,7 +25,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class Configuration:
-    """Configuration of SLO-reporter."""
+    """Configuration for workflow-helpers."""
 
     _REPO_PATH = os.getenv("REPO_PATH")
 
