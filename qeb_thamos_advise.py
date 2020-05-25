@@ -66,7 +66,7 @@ def _create_message_config_file_error(no_file: bool):
     return message
 
 
-def qeb_hwt_thamos_advise():
+def qeb_hwt_thamos_advise() -> None:
     """Qeb-Hwt Thamos Advise Task."""
     if not Configuration._REPO_PATH:
         raise Exception(f"No path has been provided to REPO_PATH env variable.")
@@ -90,18 +90,19 @@ def qeb_hwt_thamos_advise():
             github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
             github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
             origin=Configuration._ORIGIN,
-            # source_type="GITHUB_APP",
+            source_type="GITHUB_APP",
         )
         _LOGGER.info("Successfully submitted thamos advise call.")
     except Exception as exception:
-        if isinstance(exception, (
-            NoRuntimeEnvironmentError,
-            FileNotFoundError,
-            FileLoadError,
-            KeyError,
-            ValueError
-            )
-        ):
+        if isinstance(
+            exception, (
+                NoRuntimeEnvironmentError,
+                FileNotFoundError,
+                FileLoadError,
+                KeyError,
+                ValueError
+                )
+            ):
             _LOGGER.debug(exception)
             exception_message = str(exception)
         else:

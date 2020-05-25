@@ -19,7 +19,6 @@
 
 import logging
 import os
-from datetime import timedelta
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,8 +26,12 @@ _LOGGER = logging.getLogger(__name__)
 class Configuration:
     """Configuration for workflow-helpers."""
 
-    _REPO_PATH = os.getenv("REPO_PATH")
+    # General
+    _THOTH_DOCUMENT_ID = os.getenv("THOTH_DOCUMENT_ID")
+    _THOTH_ADVISER_METADATA = os.getenv("THOTH_ADVISER_METADATA")
 
+    # Qeb Hwt inner workflow task
+    _REPO_PATH = os.getenv("REPO_PATH")
     _ORIGIN = os.getenv("ORIGIN")
     _GITHUB_EVENT_TYPE = os.getenv("GITHUB_EVENT_TYPE")
     _GITHUB_CHECK_RUN_ID = os.getenv("GITHUB_CHECK_RUN_ID")
@@ -36,7 +39,7 @@ class Configuration:
     _GITHUB_BASE_REPO_URL = os.getenv("GITHUB_BASE_REPO_URL")
     _THOTH_HOST = os.getenv("THOTH_HOST")
 
+    # Trigger finished webhook workflow task
     _WORKFLOW_NAME = os.getenv("WORKFLOW_NAME")
-
     _KEY = os.getenv("WEBHOOK_SECRET")
     _WEBHOOK_CALLBACK_URL = os.getenv("WEBHOOK_CALLBACK_URL")

@@ -4,10 +4,10 @@
 # command and debug level
 #
 
-if [ "$WORKFLOW_TASK" = "trigger_integration" ]
+if [ "$THOTH_WORKFLOW_TASK" = "trigger_integration" ]
 then
     exec pipenv run python3 select_thoth_integration main.py
-elif [ "$WORKFLOW_TASK" = "qeb_hwt" ]
+elif [ "$THOTH_WORKFLOW_TASK" = "qeb_hwt" ]
 then
     exec pipenv run python3 qeb_thamos_advise.py
 fi

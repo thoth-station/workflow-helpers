@@ -39,7 +39,7 @@ def trigger_finished_webhook(
     exception_message: Optional[str] = None,
     metadata: Optional[dict] = None,
     document_id: Optional[str] = None,
-):
+) -> None:
     """Trigger finished webhook."""
     payload = {}
     installation_id = {}
@@ -60,8 +60,8 @@ def trigger_finished_webhook(
         github_base_repo_url = metadata["github_base_repo_url"]
         github_event_type = metadata["github_event_type"]
         workflow_name = Configuration._WORKFLOW_NAME
-    
-    _verify_github_app_inputs(
+
+    OpenShift._verify_github_app_inputs(
         github_event_type=github_event_type,
         github_check_run_id=github_check_run_id,
         github_installation_id=github_installation_id,

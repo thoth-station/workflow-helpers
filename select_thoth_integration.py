@@ -24,29 +24,31 @@ import logging
 from thoth.workflow_helpers.utils import retrieve_adviser_document
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.common.enums import ThothAdviserIntegrationEnum
+from thoth.workflow_helpers.configuration import Configuration
 
 _LOGGER = logging.getLogger("select_thoth_integration")
 
 
-def trigger_integration_workflow():
+def trigger_integration_workflow() -> None:
     """Trigger specific workflow depending on Thoth integration type."""
-    metadata = retrieve_adviser_document()
+    metadata = Configuration._THOTH_ADVISER_METADATA
     source_type = metadata["source_type"]
 
     if not metadata:
+        _LOGGER.warning("No adviser metadata provided. No actions performed.")
         return
 
     with open("/tmp/source_type", "w") as f:
         f.write(source_type)
 
-    if source_type is ThothAdviserIntegrationEnum.KEBECHET:
+    if source_type is ThothAdviserIntegrationEnum.KEBECHET.name:
         with open("/tmp/origin", "w") as f:
             if metadata["origin"] is not None:
                 f.write(metadata["origin"])
 
-    if source_type is ThothAdviserIntegrationEnum.GITHUB_APP:
-        _THOTH_DOCUMENT_ID = os.getenv("THOTH_DOCUMENT_ID")
-        trigger_finished_webhook(metadata=metadata, document_id=_THOTH_DOCUMENT_ID)
+    if source_type is ThothAdviserIntegrationEnum.GITHUB_APP.name:
+        trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)
+
 
 if __name__ == "__main__":
     trigger_integration_workflow()
