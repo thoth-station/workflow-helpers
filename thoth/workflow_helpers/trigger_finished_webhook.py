@@ -25,13 +25,13 @@ import uuid
 import logging
 
 from typing import Optional
-from utils import retrieve_adviser_document
 from thoth.common import init_logging
+from thoth.common import OpenShift
+
+from thoth.workflow_helpers.utils import retrieve_adviser_document
+from thoth.workflow_helpers.configuration import Configuration
 
 _LOGGER = logging.getLogger("trigger_finished_webhook")
-
-_KEY = os.getenv("WEBHOOK_SECRET")
-_WEBHOOK_CALLBACK_URL = os.getenv("WEBHOOK_CALLBACK_URL")
 
 
 def trigger_finished_webhook(
@@ -42,25 +42,42 @@ def trigger_finished_webhook(
 ):
     """Trigger finished webhook."""
     payload = {}
+    installation_id = {}
 
     if has_error:
         payload["analysis_id"] = None
         payload["exception"] = exception_message
+        installation_id["id"] = Configuration._GITHUB_INSTALLATION_ID
+        check_run_id = Configuration._GITHUB_CHECK_RUN_ID
+        github_base_repo_url = Configuration._GITHUB_BASE_REPO_URL
+        github_event_type = Configuration._GITHUB_EVENT_TYPE
+        workflow_name = "workflow-not-run"
+
     else:
         payload["analysis_id"] = document_id
-
-    installation_id = {}
-    installation_id["id"] = int(metadata["github_installation_id"])
+        installation_id["id"] = metadata["github_installation_id"]
+        check_run_id = metadata["github_check_run_id"]
+        github_base_repo_url = metadata["github_base_repo_url"]
+        github_event_type = metadata["github_event_type"]
+        workflow_name = Configuration._WORKFLOW_NAME
+    
+    _verify_github_app_inputs(
+        github_event_type=github_event_type,
+        github_check_run_id=github_check_run_id,
+        github_installation_id=github_installation_id,
+        github_base_repo_url=github_base_repo_url,
+        origin=origin,
+    )
 
     data = {
         "action": "finished",
-        "check_run_id": int(metadata["github_check_run_id"]),
-        "installation": installation_id,
-        "base_repo_url": metadata["github_base_repo_url"],
+        "check_run_id": int(check_run_id),
+        "installation": int(installation_id),
+        "base_repo_url": github_base_repo_url,
         "payload": payload,
     }
 
-    key = _KEY
+    key = Configuration._KEY
     msg = json.dumps(data).encode("UTF-8")
 
     secret = key.encode("UTF-8")
@@ -69,16 +86,14 @@ def trigger_finished_webhook(
     headers = {
         "Accept": "application/vnd.github.antiope-preview+json",
         "Content-Type": "application/json",
-        "User-Agent": "Workflow/{{inputs.parameters.WORKFLOW_NAME}}",
+        "User-Agent": f"Workflow/{workflow_name}",
         "X-GitHub-Delivery": str(uuid.uuid4()),
-        "X-GitHub-Event": metadata["github_event_type"],
+        "X-GitHub-Event": github_event_type,
         "X-Hub-Signature": f"sha1={signature.hexdigest()}",
     }
 
     _LOGGER.info("Headers:\n", headers)
     _LOGGER.info("Data:\n", data)
 
-    WEBHOOK_CALLBACK_URL = _WEBHOOK_CALLBACK_URL
-
-    response = requests.post(WEBHOOK_CALLBACK_URL, data=json.dumps(data), headers=headers)
+    response = requests.post(Configuration._WEBHOOK_CALLBACK_URL, data=json.dumps(data), headers=headers)
     response.raise_for_status()

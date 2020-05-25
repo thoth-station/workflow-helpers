@@ -17,9 +17,9 @@
 
 """These are common scripts that can be reused."""
 
+import os
 
-THOTH_DOCUMENT_PATH = os.getenv("THOTH_DOCUMENT_PATH", None)
-
+THOTH_DOCUMENT_PATH = os.getenv("THOTH_DOCUMENT_PATH")
 
 def retrieve_adviser_document():
     """Retrieve document ID."""
