@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 thamos = "*"
+thoth-common = "*"
+thoth-python = "*"
 
 [dev-packages]
 

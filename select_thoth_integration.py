@@ -23,8 +23,9 @@ import logging
 
 from thoth.workflow_helpers.utils import retrieve_adviser_document
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
-from thoth.common.enums import ThothAdviserIntegrationEnum
 from thoth.workflow_helpers.configuration import Configuration
+
+from thoth.common.enums import ThothAdviserIntegrationEnum
 
 _LOGGER = logging.getLogger("select_thoth_integration")
 
@@ -32,11 +33,12 @@ _LOGGER = logging.getLogger("select_thoth_integration")
 def trigger_integration_workflow() -> None:
     """Trigger specific workflow depending on Thoth integration type."""
     metadata = Configuration._THOTH_ADVISER_METADATA
-    source_type = metadata["source_type"]
 
     if not metadata:
         _LOGGER.warning("No adviser metadata provided. No actions performed.")
         return
+
+    source_type = metadata["source_type"]
 
     with open("/tmp/source_type", "w") as f:
         f.write(source_type)

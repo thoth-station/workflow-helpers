@@ -26,8 +26,11 @@ from pathlib import Path
 
 from thamos.lib import advise_here
 from thamos.config import _Configuration
-from thoth.python.exceptions import FileLoadError
 from thamos.exceptions import NoRuntimeEnvironmentError
+
+from thoth.python.exceptions import FileLoadError
+from thoth.common import ThothAdviserIntegrationEnum
+
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
 
@@ -90,19 +93,11 @@ def qeb_hwt_thamos_advise() -> None:
             github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
             github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
             origin=Configuration._ORIGIN,
-            source_type="GITHUB_APP",
+            source_type=ThothAdviserIntegrationEnum.GITHUB_APP,
         )
         _LOGGER.info("Successfully submitted thamos advise call.")
     except Exception as exception:
-        if isinstance(
-            exception, (
-                NoRuntimeEnvironmentError,
-                FileNotFoundError,
-                FileLoadError,
-                KeyError,
-                ValueError
-                )
-            ):
+        if isinstance(exception, (NoRuntimeEnvironmentError, FileNotFoundError, FileLoadError, KeyError, ValueError)):
             _LOGGER.debug(exception)
             exception_message = str(exception)
         else:
