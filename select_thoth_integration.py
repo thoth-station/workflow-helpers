@@ -40,13 +40,14 @@ def trigger_integration_workflow() -> None:
 
     source_type = metadata["source_type"]
 
-    with open("/tmp/source_type", "w") as f:
+    with open("/mnt/workdir/source_type", "w") as f:
         f.write(source_type)
+        f.close()
 
     if source_type is ThothAdviserIntegrationEnum.KEBECHET.name:
-        with open("/tmp/origin", "w") as f:
-            if metadata["origin"] is not None:
-                f.write(metadata["origin"])
+        with open("/mnt/workdir/origin", "w") as f:
+            f.write(metadata["origin"])
+            f.close()
 
     if source_type is ThothAdviserIntegrationEnum.GITHUB_APP.name:
         trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)

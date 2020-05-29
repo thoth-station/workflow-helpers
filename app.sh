@@ -6,8 +6,8 @@
 
 if [ "$THOTH_WORKFLOW_TASK" = "trigger_integration" ]
 then
-    exec pipenv run python3 select_thoth_integration main.py
+    exec python3 select_thoth_integration.py
 elif [ "$THOTH_WORKFLOW_TASK" = "qeb_hwt" ]
 then
-    exec pipenv run python3 qeb_thamos_advise.py
+    exec python3 qeb_thamos_advise.py
 fi

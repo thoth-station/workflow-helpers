@@ -42,13 +42,17 @@ _LOGGER = logging.getLogger("thoth.qebhwt")
 def _create_message_config_file_error(no_file: bool):
     """Create message for config file error."""
     if no_file:
-        _INITIAL_MESSAGE = """No .thoth.yaml was provided.
+        _INITIAL_MESSAGE = """
+        No .thoth.yaml was provided.
         Please add .thoth.yaml to your PR."""
     else:
-        _INITIAL_MESSAGE = """No configuration for adviser in .thoth.yaml was provided.
+        _INITIAL_MESSAGE = """
+        No configuration for adviser in .thoth.yaml was provided.
         Please add configuration in .thoth.yaml to your PR."""
 
-    _MESSAGE = f"""{_INITIAL_MESSAGE}
+    _MESSAGE = f"""
+    {_INITIAL_MESSAGE}
+
     For more information have a look at Qeb-Hwt README file:"
     https://github.com/thoth-station/Qeb-Hwt#usage
 
@@ -75,7 +79,7 @@ def qeb_hwt_thamos_advise() -> None:
 
     if not Path(Configuration._REPO_PATH).exists():
         raise FileNotFoundError(f"Cannot find the file on this path: {Configuration._REPO_PATH}")
-    
+
     OpenShift.verify_github_app_inputs(
         github_event_type=Configuration._GITHUB_EVENT_TYPE,
         github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
