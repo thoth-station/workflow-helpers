@@ -27,11 +27,26 @@ import logging
 from typing import Optional
 from thoth.common import init_logging
 from thoth.common import OpenShift
+from .exception import TriggerFinishedWebhookInputsMissing
 
-from thoth.workflow_helpers.utils import retrieve_adviser_document
 from thoth.workflow_helpers.configuration import Configuration
 
 _LOGGER = logging.getLogger("trigger_finished_webhook")
+
+
+def _verify_inputs_triggering_finished_webhook(
+    github_event_type: Optional[str],
+    github_check_run_id: Optional[int],
+    github_installation_id: Optional[int],
+    github_base_repo_url: Optional[str],
+    workflow_name: Optional[str]
+) -> None:
+    """Verify if Trigger Finished Webhook inputs are correct."""
+    parameters = locals()
+    if not all(parameters.values()):
+        raise TriggerFinishedWebhookInputsMissing(
+            f"Not all inputs to trigger finished webhook are provided: {parameters}"
+        )
 
 
 def trigger_finished_webhook(
@@ -54,6 +69,14 @@ def trigger_finished_webhook(
         workflow_name = "workflow-not-run"
 
     else:
+        _verify_inputs_triggering_finished_webhook(
+            github_event_type=Configuration._GITHUB_EVENT_TYPE,
+            github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
+            github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
+            github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
+            workflow_name=Configuration._WORKFLOW_NAME,
+        )
+
         payload["analysis_id"] = document_id
         installation_id["id"] = metadata["github_installation_id"]
         check_run_id = metadata["github_check_run_id"]
@@ -61,18 +84,10 @@ def trigger_finished_webhook(
         github_event_type = metadata["github_event_type"]
         workflow_name = Configuration._WORKFLOW_NAME
 
-    OpenShift._verify_github_app_inputs(
-        github_event_type=github_event_type,
-        github_check_run_id=check_run_id,
-        github_installation_id=installation_id["id"],
-        github_base_repo_url=base_repo_url,
-        origin=metadata["origin"],
-    )
-
     data = {
         "action": "finished",
-        "check_run_id": int(check_run_id),
-        "installation": int(installation_id),
+        "check_run_id": check_run_id,
+        "installation": installation_id,
         "base_repo_url": base_repo_url,
         "payload": payload,
     }

@@ -27,31 +27,30 @@ from pathlib import Path
 from thamos.lib import advise_here
 from thamos.config import _Configuration
 from thamos.exceptions import NoRuntimeEnvironmentError
+from thamos.exceptions import NoRequirementsFormatError
 
 from thoth.python.exceptions import FileLoadError
 from thoth.common import ThothAdviserIntegrationEnum
+from thoth.common import OpenShift
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
 
-_LOGGER = logging.getLogger("qebhwt")
+_LOGGER = logging.getLogger("thoth.qebhwt")
 
 
 def _create_message_config_file_error(no_file: bool):
     """Create message for config file error."""
     if no_file:
-        message = "No .thoth.yaml was provided."
-        message += " Please add .thoth.yaml to your PR."
+        _INITIAL_MESSAGE = """No .thoth.yaml was provided.
+        Please add .thoth.yaml to your PR."""
     else:
-        message = "No configuration for adviser in .thoth.yaml was provided."
-        message += " Please add configuration in .thoth.yaml to your PR."
+        _INITIAL_MESSAGE = """No configuration for adviser in .thoth.yaml was provided.
+        Please add configuration in .thoth.yaml to your PR."""
 
-    message += (
-        "\n\nFor more information have a look at Qeb-Hwt README file:"
-        + "\n https://github.com/thoth-station/Qeb-Hwt#usage\n"
-    )
-
-    message += """
+    _MESSAGE = f"""{_INITIAL_MESSAGE}
+    For more information have a look at Qeb-Hwt README file:"
+    https://github.com/thoth-station/Qeb-Hwt#usage
 
     Example:
         host: khemenu.thoth-station.ninja
@@ -60,13 +59,13 @@ def _create_message_config_file_error(no_file: bool):
 
         runtime_environments:
         - name: rhel:8
-          operating_system:
+        operating_system:
             name: rhel
             version: "8"
-          python_version: "3.6"
-          recommendation_type: stable
+        python_version: "3.6"
+        recommendation_type: stable
     """
-    return message
+    return _MESSAGE
 
 
 def qeb_hwt_thamos_advise() -> None:
@@ -76,6 +75,14 @@ def qeb_hwt_thamos_advise() -> None:
 
     if not Path(Configuration._REPO_PATH).exists():
         raise FileNotFoundError(f"Cannot find the file on this path: {Configuration._REPO_PATH}")
+    
+    OpenShift.verify_github_app_inputs(
+        github_event_type=Configuration._GITHUB_EVENT_TYPE,
+        github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
+        github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
+        github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
+        origin=Configuration._ORIGIN,
+    )
 
     os.chdir(Configuration._REPO_PATH)
     thoth_yaml_config = _Configuration()
@@ -97,7 +104,18 @@ def qeb_hwt_thamos_advise() -> None:
         )
         _LOGGER.info("Successfully submitted thamos advise call.")
     except Exception as exception:
-        if isinstance(exception, (NoRuntimeEnvironmentError, FileNotFoundError, FileLoadError, KeyError, ValueError)):
+        if isinstance(
+            exception,
+            (
+                NoRuntimeEnvironmentError,
+                NoRequirementsFormatError,
+                FileNotFoundError,
+                FileLoadError,
+                KeyError,
+                ValueError,
+                AttributeError,
+            ),
+        ):
             _LOGGER.debug(exception)
             exception_message = str(exception)
         else:

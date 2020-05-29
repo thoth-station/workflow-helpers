@@ -27,7 +27,7 @@ from thoth.workflow_helpers.configuration import Configuration
 
 from thoth.common.enums import ThothAdviserIntegrationEnum
 
-_LOGGER = logging.getLogger("select_thoth_integration")
+_LOGGER = logging.getLogger("thoth.select_thoth_integration")
 
 
 def trigger_integration_workflow() -> None:
