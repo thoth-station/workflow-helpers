@@ -1,0 +1,34 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: workflow-helpers-imagestream
+  annotations:
+    description: This is Thoth Core - Workflow Helpers ImageStream
+    openshift.io/display-name: "Thoth: Workflow Helpers ImageStream"
+    version: 0.1.0
+    tags: poc,thoth,ai-stacks,workflow-helpers
+    template.openshift.io/documentation-url: https://github.com/Thoth-Station/
+    template.openshift.io/long-description: >
+      This template defines resources needed to deploy Thoth Workflow Helpers
+      ImageStream as a Proof-of-Concept to OpenShift.
+    template.openshift.io/provider-display-name: Red Hat, Inc.
+    thoth-station.ninja/template-version: 0.1.0
+  labels:
+    template: workflow-helpers-imagestream
+    app: thoth
+    component: workflow-helpers
+
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      annotations:
+        thoth-station.ninja/template-version: 0.1.0
+      labels:
+        app: thoth
+        component: workflow-helpers
+      name: workflow-helpers
+    spec:
+      name: latest
+      lookupPolicy:
+        local: true
