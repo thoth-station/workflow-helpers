@@ -21,11 +21,10 @@ import json
 import os
 import logging
 
-from thoth.workflow_helpers.utils import retrieve_adviser_document
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
 
-from thoth.common.enums import ThothAdviserIntegrationEnum
+from thoth.common import ThothAdviserIntegrationEnum
 
 _LOGGER = logging.getLogger("thoth.select_thoth_integration")
 
