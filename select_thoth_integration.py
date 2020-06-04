@@ -48,7 +48,7 @@ def trigger_integration_workflow() -> None:
             f.write(metadata["origin"])
             f.close()
 
-    if source_type is ThothAdviserIntegrationEnum.GITHUB_APP.name:
+    if source_type == ThothAdviserIntegrationEnum.GITHUB_APP.name:
         trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)
 
 
