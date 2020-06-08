@@ -54,6 +54,7 @@ def trigger_finished_webhook(
     exception_message: Optional[str] = None,
     metadata: Optional[dict] = None,
     document_id: Optional[str] = None,
+    error_type: Optional[str] = None
 ) -> None:
     """Trigger finished webhook."""
     payload = {}
@@ -62,6 +63,7 @@ def trigger_finished_webhook(
     if has_error:
         payload["analysis_id"] = None
         payload["exception"] = exception_message
+        payload["error_type"] = error_type
         installation_id["id"] = Configuration._GITHUB_INSTALLATION_ID
         check_run_id = Configuration._GITHUB_CHECK_RUN_ID
         base_repo_url = Configuration._GITHUB_BASE_REPO_URL
