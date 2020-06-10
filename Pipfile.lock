@@ -78,10 +78,10 @@
         },
         "certifi": {
             "hashes": [
-                "sha256:1d987a998c75633c40847cc966fcf5904906c920a7f17ef374f5aa4282abd304",
-                "sha256:51fcb31174be6e6664c5f69e3e1691a2d72a1a12e90f872cbdb1567eb47b6519"
+                "sha256:5ad7e9a056d25ffa5082862e36f119f7f7cec6457fa07ee2f8c339814b80c9b1",
+                "sha256:9cd41137dc19af6a5e03b630eefe7d1f458d964d406342dd3edf625839b944cc"
             ],
-            "version": "==2020.4.5.1"
+            "version": "==2020.4.5.2"
         },
         "chardet": {
             "hashes": [
@@ -127,10 +127,10 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:1b3732b121917124adfe602de148ef5cba351792cf9527f99e6b61b84f74a7f5",
-                "sha256:7a9119c4ed518e4ea596cc896e6c567b923b57db40be70e5aec990055aea85d3"
+                "sha256:2f1a6bc3031fc7cd0c1aeb225ad34febcb60268f71f5df75d5976dd20a52c002",
+                "sha256:c041ffe8887fda3b040b39700d839fe38260c281ee11dbf6627978e21c99a626"
             ],
-            "version": "==1.16.0"
+            "version": "==1.16.1"
         },
         "idna": {
             "hashes": [
@@ -473,11 +473,11 @@
         },
         "thamos": {
             "hashes": [
-                "sha256:2195f73095f29270f3697a784b2a5d3da039a74b5b458d768303a69df2658c80",
-                "sha256:fcd3f97050bf3e12ee22c8c425e53ec6f9bf76a2267a7eff12059f834f3dc6a0"
+                "sha256:4411f0740ea1c943e8a6a38b70a831206f1dd8b7476deab91e0821d33610afd3",
+                "sha256:f57043a6832fc6f904b71a394a01f7cca154e4e6053ebf8e6a1af880156ce299"
             ],
             "index": "pypi",
-            "version": "==0.10.2"
+            "version": "==0.10.3"
         },
         "thoth-analyzer": {
             "hashes": [
