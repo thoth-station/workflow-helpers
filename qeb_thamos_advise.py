@@ -93,7 +93,7 @@ def qeb_hwt_thamos_advise() -> None:
 
     if not thoth_yaml_config.config_file_exists():
         exception_message = _create_message_config_file_error(no_file=True)
-        trigger_finished_webhook(exception_message=exception_message, has_error=True)
+        trigger_finished_webhook(exception_message=exception_message, has_error=True, error_type="MissingThothYamlFile")
         return
 
     try:
