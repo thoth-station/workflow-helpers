@@ -31,7 +31,7 @@ _LOGGER = logging.getLogger("thoth.select_thoth_integration")
 
 def trigger_integration_workflow() -> None:
     """Trigger specific workflow depending on Thoth integration type."""
-    metadata = Configuration._THOTH_ADVISER_METADATA
+    metadata = json.loads(Configuration._THOTH_ADVISER_METADATA)
 
     if not metadata:
         _LOGGER.warning("No adviser metadata provided. No actions performed.")
@@ -43,12 +43,12 @@ def trigger_integration_workflow() -> None:
         f.write(source_type)
         f.close()
 
-    if source_type is ThothAdviserIntegrationEnum.KEBECHET.name:
+    if source_type == ThothAdviserIntegrationEnum.KEBECHET.name:
         with open("/mnt/workdir/origin", "w") as f:
             f.write(metadata["origin"])
             f.close()
 
-    if source_type is ThothAdviserIntegrationEnum.GITHUB_APP.name:
+    if source_type == ThothAdviserIntegrationEnum.GITHUB_APP.name:
         trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)
 
 
