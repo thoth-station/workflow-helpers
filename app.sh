@@ -10,4 +10,7 @@ then
 elif [ "$THOTH_WORKFLOW_TASK" = "qeb_hwt" ]
 then
     exec python3 qeb_thamos_advise.py
+elif [ "$THOTH_WORKFLOW_TASK" = "download_package"]
+then
+    exec python3 download_py_package.py
 fi

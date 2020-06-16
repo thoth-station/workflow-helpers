@@ -43,3 +43,8 @@ class Configuration:
     _WORKFLOW_NAME = os.getenv("WORKFLOW_NAME")
     _KEY = os.getenv("WEBHOOK_SECRET")
     _WEBHOOK_CALLBACK_URL = os.getenv("WEBHOOK_CALLBACK_URL")
+
+    # Python Package Info
+    _PACKAGE_NAME = os.getenv("PACKAGE_NAME")
+    _PACKAGE_VERSION = os.getenv("PACKAGE_VERSION")
+    _PACKAGE_INDEX = os.getenv("PACKAGE_INDEX")
