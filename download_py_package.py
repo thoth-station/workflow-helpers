@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # workflow-helpers
-# Copyright(C) 2020 Francesco Murdaca
+# Copyright(C) 2020 Kevin Postlethwait
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,10 +25,12 @@ import os
 
 WORKDIR = "/mnt/workdir"
 
+
 def download_py_package():
+    """Download package which needs to be analyzed by future steps."""
     command = (
-        f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration._PACKAGE_INDEX} "
-        f"{Configuration._PACKAGE_NAME}==={Configuration._PACKAGE_VERSION}"
+        f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
+        f"{Configuration.PACKAGE_NAME}==={Configuration.PACKAGE_VERSION}"
     )
 
     run_command(command)
@@ -38,15 +40,18 @@ def download_py_package():
             full_path = os.path.join(WORKDIR, f)
             tar = tarfile.open(full_path, "r:gz")
             tar.extractall(os.path.join(d, "package"))
+            break
         elif f.endswith(".zip"):
             full_path = os.path.join(WORKDIR, f)
             with zipfile.ZipFile(os.path.join(WORKDIR, f), 'r') as zip_ref:
                 zip_ref.extractall(os.path.join(WORKDIR, "package"))
+            break
     else:
         raise FileNotFoundError(
-            f"No source distribution found for {Configuration._PACKAGE_NAME}==={Configuration._PACKAGE_VERSION} on "
-            f"index {Configuration._PACKAGE_INDEX}."
+            f"No source distribution found for {Configuration.PACKAGE_NAME}==={Configuration.PACKAGE_VERSION} on "
+            f"index {Configuration.PACKAGE_INDEX}."
         )
+
 
 if __name__ == "__main__":
     download_py_package()
