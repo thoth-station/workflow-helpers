@@ -45,6 +45,6 @@ class Configuration:
     _WEBHOOK_CALLBACK_URL = os.getenv("WEBHOOK_CALLBACK_URL")
 
     # Python Package Info
-    PACKAGE_NAME = os.getenv("PACKAGE_NAME")
-    PACKAGE_VERSION = os.getenv("PACKAGE_VERSION")
-    PACKAGE_INDEX = os.getenv("PACKAGE_INDEX")
+    PACKAGE_NAME = os.getenv("THOTH_PACKAGE_NAME")
+    PACKAGE_VERSION = os.getenv("THOTH_PACKAGE_VERSION")
+    PACKAGE_INDEX = os.getenv("THOTH_PACKAGE_INDEX")
