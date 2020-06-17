@@ -7,6 +7,7 @@ name = "pypi"
 thamos = "*"
 thoth-common = "*"
 thoth-python = "*"
+thoth-analyzer = "*"
 
 [dev-packages]
 
