@@ -26,7 +26,7 @@ import logging
 
 WORKDIR = "/mnt/workdir"
 
-_LOGGER = logging.getLogger("thoth.select_thoth_integration")
+_LOGGER = logging.getLogger("thoth.download_package")
 
 
 def download_py_package():
