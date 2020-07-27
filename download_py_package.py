@@ -45,7 +45,7 @@ def download_py_package():
             break
         elif f.endswith(".zip"):
             full_path = os.path.join(WORKDIR, f)
-            with zipfile.ZipFile(os.path.join(WORKDIR, f), 'r') as zip_ref:
+            with zipfile.ZipFile(os.path.join(WORKDIR, f), "r") as zip_ref:
                 zip_ref.extractall(os.path.join(WORKDIR, "package"))
             break
     else:
