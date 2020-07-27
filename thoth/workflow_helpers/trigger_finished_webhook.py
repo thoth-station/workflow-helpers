@@ -39,7 +39,7 @@ def _verify_inputs_triggering_finished_webhook(
     github_check_run_id: Optional[int],
     github_installation_id: Optional[int],
     github_base_repo_url: Optional[str],
-    workflow_name: Optional[str]
+    workflow_name: Optional[str],
 ) -> None:
     """Verify if Trigger Finished Webhook inputs are correct."""
     parameters = locals()
@@ -54,7 +54,7 @@ def trigger_finished_webhook(
     exception_message: Optional[str] = None,
     metadata: Optional[dict] = None,
     document_id: Optional[str] = None,
-    error_type: Optional[str] = None
+    error_type: Optional[str] = None,
 ) -> None:
     """Trigger finished webhook."""
     payload = {}
