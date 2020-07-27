@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""This script run in a workflow task to parse solver inputs for future steps."""
+"""This script run in a workflow task to parse solver inputs and produce inputs for Kafka message."""
 
 import os
 import logging
@@ -25,7 +25,7 @@ import json
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
 
 def parse_solver_inputs():
-    """Download package which needs to be analyzed by future steps."""
+    """Parse solver inputs and produce inputs for Kafka message."""
     solver_name = os.environ["THOTH_SOLVER_NAME"]
     packages = os.environ["THOTH_SOLVER_PACKAGES"]
     indexes = os.environ["THOTH_SOLVER_INDEXES"]
