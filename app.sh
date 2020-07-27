@@ -16,6 +16,6 @@ if [ "$THOTH_WORKFLOW_TASK" = "trigger_integration" ]; then
     exec python3 select_thoth_integration.py
 elif [ "$THOTH_WORKFLOW_TASK" = "qeb_hwt" ]; then
     exec python3 qeb_thamos_advise.py
-elif [ "$THOTH_WORKFLOW_TASK" = "download_package"]; then
+elif [ "$THOTH_WORKFLOW_TASK" = "download_package" ]; then
     exec python3 download_py_package.py
 fi

@@ -22,8 +22,11 @@ from thoth.workflow_helpers.configuration import Configuration
 import tarfile
 import zipfile
 import os
+import logging
 
 WORKDIR = "/mnt/workdir"
+
+_LOGGER = logging.getLogger("thoth.select_thoth_integration")
 
 
 def download_py_package():
@@ -32,14 +35,13 @@ def download_py_package():
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
         f"{Configuration.PACKAGE_NAME}==={Configuration.PACKAGE_VERSION}"
     )
-
     run_command(command)
 
     for f in os.listdir(WORKDIR):
         if f.endswith(".tar.gz"):
             full_path = os.path.join(WORKDIR, f)
             tar = tarfile.open(full_path, "r:gz")
-            tar.extractall(os.path.join(d, "package"))
+            tar.extractall(os.path.join(WORKDIR, "package"))
             break
         elif f.endswith(".zip"):
             full_path = os.path.join(WORKDIR, f)
