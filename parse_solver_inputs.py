@@ -36,9 +36,9 @@ def parse_solver_inputs():
 
     package_inputs = package.split("===")
     message_input = {
-        "package_name": {"type": "str", "value": package_inputs[0]}
-        "package_version": {"type": "str", "value": package_inputs[1]}
-        "index_url": {"type": "str", "value": index_url}
+        "package_name": {"type": "str", "value": package_inputs[0]},
+        "package_version": {"type": "str", "value": package_inputs[1]},
+        "index_url": {"type": "str", "value": index_url},
         "solver": {"type": "str", "value": solver_name}
     }
     message = json.dumps(message_input)
