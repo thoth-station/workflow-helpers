@@ -20,6 +20,7 @@
 import json
 import os
 import logging
+from urllib import parse
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
@@ -41,12 +42,15 @@ def trigger_integration_workflow() -> None:
 
     with open("/mnt/workdir/source_type", "w") as f:
         f.write(source_type)
-        f.close()
 
     if source_type == ThothAdviserIntegrationEnum.KEBECHET.name:
         with open("/mnt/workdir/origin", "w") as f:
             f.write(metadata["origin"])
-            f.close()
+
+        with open("/mnt/workdir/git_service", "w") as f:
+            # get url portion directly before toplevel domain
+            git_service = parse.urlsplit(metadata["origin"]).hostname.split(".")[-2]
+            f.write(git_service)
 
     if source_type == ThothAdviserIntegrationEnum.GITHUB_APP.name:
         trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)
