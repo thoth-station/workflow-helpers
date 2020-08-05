@@ -28,3 +28,7 @@ all the things that you see...
 * same change as above
 * small bugs
 * Remove import
+
+## Release 0.1.2 (2020-08-05T13:50:54)
+* :pushpin: Automatic update of dependency thoth-common from 0.14.2 to 0.16.0 (#32)
+* parse git service and remove f.close(context managers) (#31)
