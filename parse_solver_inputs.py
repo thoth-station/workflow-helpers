@@ -43,9 +43,8 @@ def parse_solver_inputs():
     }
     message = json.dumps(message_input)
 
-    with open("/mnt/workdir/message", "w") as f:
+    with open("/mnt/workdir/kafka_message", "w") as f:
         f.write(message)
-        f.close()
 
 
 if __name__ == "__main__":
