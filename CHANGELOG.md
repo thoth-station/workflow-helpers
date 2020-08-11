@@ -32,3 +32,9 @@ all the things that you see...
 ## Release 0.1.2 (2020-08-05T13:50:54)
 * :pushpin: Automatic update of dependency thoth-common from 0.14.2 to 0.16.0 (#32)
 * parse git service and remove f.close(context managers) (#31)
+
+## Release 0.1.3 (2020-08-11T13:35:06)
+* :pushpin: Automatic update of dependency thoth-python from 0.10.0 to 0.10.1 (#40)
+* :pushpin: Automatic update of dependency thamos from 0.10.6 to 0.11.0 (#39)
+* :pushpin: Automatic update of dependency thamos from 0.10.6 to 0.11.0 (#38)
+* Use custom name for file (#36)
