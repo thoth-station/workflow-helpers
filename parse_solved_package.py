@@ -72,7 +72,7 @@ def parse_solved_package() -> None:
 
         # 2. Check if all packages have been solved
         number_packages_solved = _check_unsolved_packages(
-            unsolved_packages=,
+            unsolved_packages=unsolved_packages,
             package_name=package_name
         )
 
