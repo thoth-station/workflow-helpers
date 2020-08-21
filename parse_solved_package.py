@@ -79,7 +79,7 @@ def parse_solved_package():
         if number_packages_solved == len(unsolved_packages):
             _LOGGER.("All packages have been solved! Adviser can re run.")
             # 3. Retrieve adviser inputs to re run from adviser id
-            document = ADVISER_STORE.retrieve_document(document_id)
+            document = ADVISER_STORE.retrieve_document(adviser_id)
             parameters = document["result"]["parameters"]
             cli_inputs = document["metadata"]["arguments"]
             cli_arguments = document["metadata"]["arguments"]["thoth-adviser"]
