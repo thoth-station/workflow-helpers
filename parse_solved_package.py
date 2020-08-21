@@ -53,7 +53,7 @@ def _check_unsolved_packages(unsolved_packages: List[str], package_name: str) ->
     return solved_counter
 
 
-def parse_solved_package():
+def parse_solved_package() -> None:
     """Parse solver inputs and produce inputs for Kafka message."""
     solved_package = os.environ["THOTH_SOLVER_PACKAGES"]
 
@@ -64,7 +64,7 @@ def parse_solved_package():
         source_type="github_app"
     )
 
-    output_message_counter = 1
+    output_messages = []
 
     for adviser_id in unsolved_per_adviser_runs:
         
@@ -77,7 +77,8 @@ def parse_solved_package():
         )
 
         if number_packages_solved == len(unsolved_packages):
-            _LOGGER.("All packages have been solved! Adviser can re run.")
+            _LOGGER.info("All packages have been solved! Adviser can re run.")
+
             # 3. Retrieve adviser inputs to re run from adviser id
             document = ADVISER_STORE.retrieve_document(adviser_id)
             parameters = document["result"]["parameters"]
@@ -102,7 +103,7 @@ def parse_solved_package():
             source_type = (cli_arguments.get("metadata") or {}).get("source_type")
             source_type = source_type.upper() if source_type else None
 
-            # 4. Store adviser_id_message inputs
+            # 4. Save adviser_id_message inputs
             message_input = {
                 "re_run_adviser_id": {"type": "str", "value": adviser_id},
                 "application_stack": {"type": "Dict[Any, Any]", "value": application_stack},
@@ -115,12 +116,16 @@ def parse_solved_package():
                 "github_base_repo_url": {"type": "Optional[str]", "value": github_base_repo_url},
                 "source_type": {"type": "Optional[str]", "value": source_type},
             }
-            message = json.dumps(message_input)
 
-            with open(f"/mnt/workdir/{output_message_counter}_message", "w") as f:
-                f.write(message)
+            output_messages.append({
+                "topic_name": "thoth.investigator.adviser-re-run",
+                "message_contents": message_input
+            })
 
-            output_message_counter += 1
+    if output_messages:
+        # 5. Store messages that need to be sent
+        with open(f"/mnt/workdir/adviser_runs_messages.json", "w") as json_file:
+            json.dump(messages, json_file)
 
 
 if __name__ == "__main__":
