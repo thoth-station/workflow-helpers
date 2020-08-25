@@ -29,22 +29,30 @@ def parse_solver_inputs():
     solver_name = os.environ["THOTH_SOLVER_NAME"]
     package = os.environ["THOTH_SOLVER_PACKAGES"]
 
-    # TODO: Solver can be scheduled also with list of indexes!
-    indexes = os.environ["THOTH_SOLVER_INDEXES"]
-
-    index_url = indexes[0]
-
     package_inputs = package.split("===")
-    message_input = {
-        "package_name": {"type": "str", "value": package_inputs[0]},
-        "package_version": {"type": "str", "value": package_inputs[1]},
-        "index_url": {"type": "str", "value": index_url},
-        "solver": {"type": "str", "value": solver_name}
-    }
-    message = json.dumps(message_input)
 
-    with open("/mnt/workdir/kafka_message", "w") as f:
-        f.write(message)
+    solver_indexes = os.environ["THOTH_SOLVER_INDEXES"]
+    indexes = solver_indexes.split(",")
+
+    output_messages = []
+
+    for index_url in indexes:
+
+        message_input = {
+            "package_name": {"type": "str", "value": package_inputs[0]},
+            "package_version": {"type": "str", "value": package_inputs[1]},
+            "index_url": {"type": "str", "value": index_url},
+            "solver": {"type": "str", "value": solver_name}
+        }
+
+        output_messages.append({
+            "topic_name": "thoth.solver.solved-package",
+            "message_contents": message_input
+        })
+
+    if output_messages:
+        with open(f"/mnt/workdir/solved_messages.json", "w") as json_file:
+            json.dump(output_messages, json_file)
 
 
 if __name__ == "__main__":
