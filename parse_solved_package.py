@@ -21,7 +21,9 @@ import os
 import logging
 import json
 
+from typing import List
 from thoth.storages import GraphDatabase
+from thoth.storages import AdvisersResultsStore
 
 GRAPH = GraphDatabase()
 GRAPH.connect()
@@ -31,24 +33,29 @@ ADVISER_STORE.connect()
 
 _LOGGER = logging.getLogger("thoth.parse_solved_package")
 
-def _check_unsolved_packages(unsolved_packages: List[str], package_name: str) -> int:
+
+def _check_unsolved_packages(
+    unsolved_packages: List[str], package_name: str, package_version: str, indexes: List[str]
+) -> int:
     """Check unsolved packages to decide if adviser can be re run."""
     solved_counter = 0
     if package_name not in unsolved_packages:
         return solved_counter
 
+    # current package name, version, index has been solved already!
     solved_counter += 1
 
     for package in unsolved_packages:
         # Check if all packages are solved (except just solved)
-        if package != package_name:
-            is_present = GRAPH.python_package_version_exists(
-                package_name=package_name, package_version=version, index_url=index_url
-            )
-            if not is_present:
-                return solved_counter
+        for index_url in indexes:
+            if package != package_name:
+                is_present = GRAPH.python_package_version_exists(
+                    package_name=package_name, package_version=package_version, index_url=index_url
+                )
+                if not is_present:
+                    return solved_counter
 
-            solved_counter += 1
+                solved_counter += 1
 
     return solved_counter
 
@@ -58,25 +65,29 @@ def parse_solved_package() -> None:
     solved_package = os.environ["THOTH_SOLVER_PACKAGES"]
 
     package_name = solved_package.split("===")[0]
+    package_version = solved_package.split("===")[1]
+
+    solver_indexes = os.environ["THOTH_SOLVER_INDEXES"]
+    indexes = solver_indexes.split(",")
 
     # 1. Retrieve adviser ids for specific thoth_integrations with need_re_run == True
-    unsolved_per_adviser_runs = graph.get_unsolved_python_packages_all_per_adviser_run(
-        source_type="github_app"
-    )
+    unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type="github_app")
 
     output_messages = []
 
     for adviser_id in unsolved_per_adviser_runs:
-        
+
         unsolved_packages = unsolved_per_adviser_runs[adviser_id]
 
         # 2. Check if all packages have been solved
         number_packages_solved = _check_unsolved_packages(
             unsolved_packages=unsolved_packages,
-            package_name=package_name
+            package_name=package_name,
+            package_version=package_version,
+            indexes=indexes,
         )
 
-        if number_packages_solved == len(unsolved_packages):
+        if number_packages_solved >= len(unsolved_packages):
             _LOGGER.info("All packages have been solved! Adviser can re run.")
 
             # 3. Retrieve adviser inputs to re run from adviser id
@@ -85,20 +96,20 @@ def parse_solved_package() -> None:
             cli_inputs = document["metadata"]["arguments"]
             cli_arguments = document["metadata"]["arguments"]["thoth-adviser"]
 
-            application_stack={
+            application_stack = {
                 "requirements": cli_inputs["requirements"],
                 "requirements_lock": cli_inputs["requirements_lock"],
-                "requirements_format": cli_inputs["requirements_format"]
+                "requirements_format": cli_inputs["requirements_format"],
             }
 
             recommendation_type = parameters["recommendation_type"]
             runtime_environment = parameters["project"].get("runtime_environment")
 
-            origin = cli_arguments['metadata']['origin']
-            github_event_type = cli_arguments['metadata']['github_event_type']
-            github_check_run_id = cli_arguments['metadata']['github_event_type']
-            github_installation_id = cli_arguments['metadata']['github_event_type']
-            github_base_repo_url = cli_arguments['metadata']['github_event_type']
+            origin = cli_arguments["metadata"]["origin"]
+            github_event_type = cli_arguments["metadata"]["github_event_type"]
+            github_check_run_id = cli_arguments["metadata"]["github_event_type"]
+            github_installation_id = cli_arguments["metadata"]["github_event_type"]
+            github_base_repo_url = cli_arguments["metadata"]["github_event_type"]
 
             source_type = (cli_arguments.get("metadata") or {}).get("source_type")
             source_type = source_type.upper() if source_type else None
@@ -117,10 +128,9 @@ def parse_solved_package() -> None:
                 "source_type": {"type": "Optional[str]", "value": source_type},
             }
 
-            output_messages.append({
-                "topic_name": "thoth.investigator.adviser-re-run",
-                "message_contents": message_input
-            })
+            output_messages.append(
+                {"topic_name": "thoth.investigator.adviser-re-run", "message_contents": message_input}
+            )
 
     if output_messages:
         # 5. Store messages that need to be sent

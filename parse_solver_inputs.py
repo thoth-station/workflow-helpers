@@ -24,6 +24,7 @@ import json
 
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
 
+
 def parse_solver_inputs() -> None:
     """Parse solver inputs and produce inputs for Kafka message."""
     solver_name = os.environ["THOTH_SOLVER_NAME"]
@@ -42,13 +43,10 @@ def parse_solver_inputs() -> None:
             "package_name": {"type": "str", "value": package_inputs[0]},
             "package_version": {"type": "str", "value": package_inputs[1]},
             "index_url": {"type": "str", "value": index_url},
-            "solver": {"type": "str", "value": solver_name}
+            "solver": {"type": "str", "value": solver_name},
         }
 
-        output_messages.append({
-            "topic_name": "thoth.solver.solved-package",
-            "message_contents": message_input
-        })
+        output_messages.append({"topic_name": "thoth.solver.solved-package", "message_contents": message_input})
 
     if output_messages:
         with open(f"/mnt/workdir/solved_messages.json", "w") as json_file:

@@ -20,7 +20,6 @@
 
 import os
 import json
-import yaml
 import logging
 from pathlib import Path
 
@@ -30,7 +29,7 @@ from thamos.exceptions import NoRuntimeEnvironmentError
 from thamos.exceptions import NoRequirementsFormatError
 
 from thoth.python.exceptions import FileLoadError
-from thoth.common import ThothAdviserIntegrationEnum
+from thoth.common.enums import ThothAdviserIntegrationEnum
 from thoth.common import OpenShift
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
@@ -42,16 +41,16 @@ _LOGGER = logging.getLogger("thoth.qebhwt")
 def _create_message_config_file_error(no_file: bool):
     """Create message for config file error."""
     if no_file:
-        _INITIAL_MESSAGE = """
+        initial_message = """
         No .thoth.yaml was provided.
         Please add .thoth.yaml to your PR."""
     else:
-        _INITIAL_MESSAGE = """
+        initial_message = """
         No configuration for adviser in .thoth.yaml was provided.
         Please add configuration in .thoth.yaml to your PR."""
 
-    _MESSAGE = f"""
-    {_INITIAL_MESSAGE}
+    message = f"""
+    {initial_message}
 
     For more information have a look at Qeb-Hwt README file:"
     https://github.com/thoth-station/Qeb-Hwt#usage
@@ -69,7 +68,7 @@ def _create_message_config_file_error(no_file: bool):
         python_version: "3.6"
         recommendation_type: stable
     """
-    return _MESSAGE
+    return message
 
 
 def qeb_hwt_thamos_advise() -> None:
@@ -106,7 +105,7 @@ def qeb_hwt_thamos_advise() -> None:
             origin=Configuration._ORIGIN,
             source_type=ThothAdviserIntegrationEnum.GITHUB_APP,
         )
-        _LOGGER.info("Successfully submitted thamos advise call.")
+        _LOGGER.info("Successfully submitted thamos advise call: %r", analysis_id)
     except Exception as exception:
         if isinstance(
             exception,
@@ -123,8 +122,8 @@ def qeb_hwt_thamos_advise() -> None:
             _LOGGER.debug(exception)
             exception_message = str(exception)
         else:
-            _LOGGER.debug(json.loads(exception.body)["error"])
-            exception_message = json.loads(exception.body)["error"]
+            _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
+            exception_message = json.loads(exception.body)["error"]  # type: ignore
 
         trigger_finished_webhook(exception_message=exception_message, has_error=True)
 

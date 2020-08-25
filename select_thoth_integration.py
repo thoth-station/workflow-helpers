@@ -18,14 +18,13 @@
 """This script run in a workflow task to select Thoth integration workflow to run."""
 
 import json
-import os
 import logging
 from urllib import parse
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
 
-from thoth.common import ThothAdviserIntegrationEnum
+from thoth.common.enums import ThothAdviserIntegrationEnum
 
 _LOGGER = logging.getLogger("thoth.select_thoth_integration")
 
