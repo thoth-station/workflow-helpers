@@ -42,20 +42,20 @@ def _check_unsolved_packages(
     if package_name not in unsolved_packages:
         return solved_counter
 
-    index_url = indexes[0]
     # current package name, version, index has been solved already!
     solved_counter += 1
 
     for package in unsolved_packages:
         # Check if all packages are solved (except just solved)
-        if package != package_name:
-            is_present = GRAPH.python_package_version_exists(
-                package_name=package_name, package_version=package_version, index_url=index_url
-            )
-            if not is_present:
-                return solved_counter
+        for index_url in indexes:
+            if package != package_name:
+                is_present = GRAPH.python_package_version_exists(
+                    package_name=package_name, package_version=package_version, index_url=index_url
+                )
+                if not is_present:
+                    return solved_counter
 
-            solved_counter += 1
+                solved_counter += 1
 
     return solved_counter
 
@@ -87,7 +87,7 @@ def parse_solved_package() -> None:
             indexes=indexes,
         )
 
-        if number_packages_solved == len(unsolved_packages):
+        if number_packages_solved >= len(unsolved_packages):
             _LOGGER.info("All packages have been solved! Adviser can re run.")
 
             # 3. Retrieve adviser inputs to re run from adviser id
