@@ -19,14 +19,11 @@
 
 import hmac
 import json
-import os
 import requests
 import uuid
 import logging
 
-from typing import Optional
-from thoth.common import init_logging
-from thoth.common import OpenShift
+from typing import Optional, Any, Dict
 from .exception import TriggerFinishedWebhookInputsMissing
 
 from thoth.workflow_helpers.configuration import Configuration
@@ -52,13 +49,13 @@ def _verify_inputs_triggering_finished_webhook(
 def trigger_finished_webhook(
     has_error: bool = False,
     exception_message: Optional[str] = None,
-    metadata: Optional[dict] = None,
+    metadata: Optional[Dict[str, Any]] = None,
     document_id: Optional[str] = None,
     error_type: Optional[str] = None,
 ) -> None:
     """Trigger finished webhook."""
-    payload = {}
-    installation_id = {}
+    payload: Dict[str, Any] = {}
+    installation_id: Dict[str, Any] = {}
 
     if has_error:
         payload["analysis_id"] = None
@@ -80,10 +77,13 @@ def trigger_finished_webhook(
         )
 
         payload["analysis_id"] = document_id
-        installation_id["id"] = metadata["github_installation_id"]
-        check_run_id = metadata["github_check_run_id"]
-        base_repo_url = metadata["github_base_repo_url"]
-        github_event_type = metadata["github_event_type"]
+
+        if metadata:
+            installation_id["id"] = metadata["github_installation_id"]
+            check_run_id = metadata["github_check_run_id"]
+            base_repo_url = metadata["github_base_repo_url"]
+            github_event_type = metadata["github_event_type"]
+
         workflow_name = Configuration._WORKFLOW_NAME
 
     data = {
