@@ -20,4 +20,6 @@ elif [ "$THOTH_WORKFLOW_TASK" = "download_package" ]; then
     exec python3 download_py_package.py
 elif [ "$THOTH_WORKFLOW_TASK" = "parse_solver_inputs" ]; then
     exec python3 parse_solver_inputs.py
+elif [ "$THOTH_WORKFLOW_TASK" = "parse_solved_package" ]; then
+    exec python3 parse_solved_package.py
 fi
