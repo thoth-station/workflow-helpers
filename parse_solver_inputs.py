@@ -24,7 +24,7 @@ import json
 
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
 
-def parse_solver_inputs():
+def parse_solver_inputs() -> None:
     """Parse solver inputs and produce inputs for Kafka message."""
     solver_name = os.environ["THOTH_SOLVER_NAME"]
     package = os.environ["THOTH_SOLVER_PACKAGES"]

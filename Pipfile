@@ -8,6 +8,7 @@ thamos = "*"
 thoth-common = "*"
 thoth-python = "*"
 thoth-analyzer = "*"
+thoth-storages = "*"
 
 [dev-packages]
 
