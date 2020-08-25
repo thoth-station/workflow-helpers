@@ -125,7 +125,7 @@ def parse_solved_package() -> None:
     if output_messages:
         # 5. Store messages that need to be sent
         with open(f"/mnt/workdir/adviser_runs_messages.json", "w") as json_file:
-            json.dump(messages, json_file)
+            json.dump(output_messages, json_file)
 
 
 if __name__ == "__main__":
