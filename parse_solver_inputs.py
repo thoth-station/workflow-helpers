@@ -21,8 +21,8 @@ import os
 import logging
 import json
 
-component_name = os.environ["THOTH_COMPONENT_NAME"]
-service_version = os.environ["THOTH_SERVICE_NAME"]
+component_name = os.environ["THOTH_MESSAGING_COMPONENT_NAME"]
+service_version = os.environ["THOTH_MESSAGING_SERVICE_NAME"]
 
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
 
