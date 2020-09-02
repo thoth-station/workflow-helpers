@@ -31,6 +31,9 @@ GRAPH.connect()
 ADVISER_STORE = AdvisersResultsStore()
 ADVISER_STORE.connect()
 
+component_name = os.environ["THOTH_COMPONENT_NAME"]
+service_version = os.environ["THOTH_SERVICE_NAME"]
+
 _LOGGER = logging.getLogger("thoth.parse_solved_package")
 
 
@@ -116,6 +119,8 @@ def parse_solved_package() -> None:
 
             # 4. Save adviser_id_message inputs
             message_input = {
+                "component_name": {"type": "str", "value": component_name},
+                "service_version": {"type": "str", "value": service_version},
                 "re_run_adviser_id": {"type": "str", "value": adviser_id},
                 "application_stack": {"type": "Dict[Any, Any]", "value": application_stack},
                 "recommendation_type": {"type": "str", "value": recommendation_type},

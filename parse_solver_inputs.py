@@ -21,6 +21,8 @@ import os
 import logging
 import json
 
+component_name = os.environ["THOTH_COMPONENT_NAME"]
+service_version = os.environ["THOTH_SERVICE_NAME"]
 
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
 
@@ -40,6 +42,8 @@ def parse_solver_inputs() -> None:
     for index_url in indexes:
 
         message_input = {
+            "component_name": {"type": "str", "value": component_name},
+            "service_version": {"type": "str", "value": service_version},
             "package_name": {"type": "str", "value": package_inputs[0]},
             "package_version": {"type": "str", "value": package_inputs[1]},
             "index_url": {"type": "str", "value": index_url},
