@@ -38,3 +38,17 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thamos from 0.10.6 to 0.11.0 (#39)
 * :pushpin: Automatic update of dependency thamos from 0.10.6 to 0.11.0 (#38)
 * Use custom name for file (#36)
+
+## Release 0.1.4 (2020-09-02T14:26:53)
+### Features
+* Update files (#50)
+* Add pre-commit and correct errors (#49)
+* Consider multiple indexes (#46)
+* :truck: include aicoe-ci configuration file (#43)
+### Improvements
+* Add message content for service name and version sending Kafka Messages (#52)
+* Add parse solved method (#44)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thamos from 0.11.1 to 0.12.0 (#55)
+* :pushpin: Automatic update of dependency thamos from 0.11.1 to 0.12.0 (#54)
+* :pushpin: Automatic update of dependency thamos from 0.11.0 to 0.11.1 (#47)
