@@ -25,11 +25,16 @@ from typing import List
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
 
+from thoth.workflow_helpers.common import retrieve_solver_service_version
+
 GRAPH = GraphDatabase()
 GRAPH.connect()
 
 ADVISER_STORE = AdvisersResultsStore()
 ADVISER_STORE.connect()
+
+component_name = os.environ["THOTH_MESSAGING_COMPONENT_NAME"]
+document_path = os.environ["THOTH_SOLVER_DOCUMENT_PATH"]
 
 _LOGGER = logging.getLogger("thoth.parse_solved_package")
 
@@ -69,6 +74,8 @@ def parse_solved_package() -> None:
 
     solver_indexes = os.environ["THOTH_SOLVER_INDEXES"]
     indexes = solver_indexes.split(",")
+
+    service_version = retrieve_solver_service_version(document_path)
 
     # 1. Retrieve adviser ids for specific thoth_integrations with need_re_run == True
     unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type="github_app")
@@ -116,6 +123,8 @@ def parse_solved_package() -> None:
 
             # 4. Save adviser_id_message inputs
             message_input = {
+                "component_name": {"type": "str", "value": component_name},
+                "service_version": {"type": "str", "value": service_version},
                 "re_run_adviser_id": {"type": "str", "value": adviser_id},
                 "application_stack": {"type": "Dict[Any, Any]", "value": application_stack},
                 "recommendation_type": {"type": "str", "value": recommendation_type},

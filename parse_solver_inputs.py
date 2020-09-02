@@ -21,6 +21,10 @@ import os
 import logging
 import json
 
+from thoth.workflow_helpers.common import retrieve_solver_service_version
+
+component_name = os.environ["THOTH_MESSAGING_COMPONENT_NAME"]
+document_path = os.environ["THOTH_SOLVER_DOCUMENT_PATH"]
 
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
 
@@ -35,11 +39,15 @@ def parse_solver_inputs() -> None:
     solver_indexes = os.environ["THOTH_SOLVER_INDEXES"]
     indexes = solver_indexes.split(",")
 
+    service_version = retrieve_solver_service_version(document_path)
+
     output_messages = []
 
     for index_url in indexes:
 
         message_input = {
+            "component_name": {"type": "str", "value": component_name},
+            "service_version": {"type": "str", "value": service_version},
             "package_name": {"type": "str", "value": package_inputs[0]},
             "package_version": {"type": "str", "value": package_inputs[1]},
             "index_url": {"type": "str", "value": index_url},
