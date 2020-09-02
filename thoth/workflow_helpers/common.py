@@ -18,7 +18,6 @@
 """Common methods for all workflow helpers."""
 
 import logging
-import os
 import json
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,5 +32,3 @@ def retrieve_solver_service_version(document_path: str):
     solver_report_metadata = solver_document["metadata"]
 
     return solver_report_metadata["analyzer_version"]
-
-
