@@ -68,23 +68,24 @@ def trigger_finished_webhook(
         workflow_name = "workflow-not-run"
 
     else:
-        _verify_inputs_triggering_finished_webhook(
-            github_event_type=Configuration._GITHUB_EVENT_TYPE,
-            github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
-            github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
-            github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
-            workflow_name=Configuration._WORKFLOW_NAME,
-        )
 
-        payload["analysis_id"] = document_id
+        workflow_name = Configuration._WORKFLOW_NAME
 
         if metadata:
+            _verify_inputs_triggering_finished_webhook(
+                github_event_type=metadata["github_event_type"],
+                github_check_run_id=metadata["github_check_run_id"],
+                github_installation_id=metadata["github_installation_id"],
+                github_base_repo_url=metadata["github_base_repo_url"],
+                workflow_name=workflow_name,
+            )
+
+            payload["analysis_id"] = document_id
+
             installation_id["id"] = metadata["github_installation_id"]
             check_run_id = metadata["github_check_run_id"]
             base_repo_url = metadata["github_base_repo_url"]
             github_event_type = metadata["github_event_type"]
-
-        workflow_name = Configuration._WORKFLOW_NAME
 
     data = {
         "action": "finished",
