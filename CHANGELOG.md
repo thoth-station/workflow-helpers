@@ -52,3 +52,11 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thamos from 0.11.1 to 0.12.0 (#55)
 * :pushpin: Automatic update of dependency thamos from 0.11.1 to 0.12.0 (#54)
 * :pushpin: Automatic update of dependency thamos from 0.11.0 to 0.11.1 (#47)
+
+## Release 0.1.5 (2020-09-09T13:44:07)
+### Features
+* Fix metadata missing in adviser workflow (#63)
+* :turtle: update base image to be used for build. (#60)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-common from 0.17.2 to 0.17.3 (#62)
+* :pushpin: Automatic update of dependency thamos from 0.12.0 to 0.12.2 (#59)
