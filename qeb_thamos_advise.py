@@ -34,8 +34,10 @@ from thoth.common import OpenShift
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
+from thoth.workflow_helpers import __service_version__
 
 _LOGGER = logging.getLogger("thoth.qebhwt")
+_LOGGER.info("Thoth workflow-helpers task: qebhwt v%s", __service_version__)
 
 
 def _create_message_config_file_error(no_file: bool):

@@ -17,16 +17,20 @@
 
 """This script run in a workflow task to download and extract python package for future steps."""
 
-from thoth.analyzer import run_command
-from thoth.workflow_helpers.configuration import Configuration
 import tarfile
 import zipfile
 import os
 import logging
 
+from thoth.analyzer import run_command
+from thoth.workflow_helpers.configuration import Configuration
+from thoth.workflow_helpers import __service_version__
+
+
 WORKDIR = "/mnt/workdir"
 
 _LOGGER = logging.getLogger("thoth.download_package")
+_LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_version__)
 
 
 def download_py_package():

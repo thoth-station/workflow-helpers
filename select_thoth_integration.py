@@ -23,10 +23,12 @@ from urllib import parse
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
+from thoth.workflow_helpers import __service_version__
 
 from thoth.common.enums import ThothAdviserIntegrationEnum
 
 _LOGGER = logging.getLogger("thoth.select_thoth_integration")
+_LOGGER.info("Thoth workflow-helpers task: select_thoth_integration v%s", __service_version__)
 
 
 def trigger_integration_workflow() -> None:

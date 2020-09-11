@@ -22,11 +22,13 @@ import logging
 import json
 
 from thoth.workflow_helpers.common import retrieve_solver_service_version
+from thoth.workflow_helpers import __service_version__
 
 component_name = os.environ["THOTH_MESSAGING_COMPONENT_NAME"]
 document_path = os.environ["THOTH_SOLVER_DOCUMENT_PATH"]
 
 _LOGGER = logging.getLogger("thoth.parse_solver_inputs")
+_LOGGER.info("Thoth workflow-helpers task: parse_solver_inputs v%s", __service_version__)
 
 
 def parse_solver_inputs() -> None:
