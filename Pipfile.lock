@@ -84,16 +84,17 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:b45ac1d61c3abc6cf21c60be987b1563fdf223d97c9d0ce575d341155a4843b4"
+                "sha256:20edd03ae4c4e141b0d8a9a9afc773af4345d54b68202b6aa502956b57b18b3f",
+                "sha256:b596a80181fecd775ccc009286400f4d785136f250967895cb34beeeef65eb1f"
             ],
-            "version": "==1.14.57"
+            "version": "==1.14.59"
         },
         "botocore": {
             "hashes": [
-                "sha256:4b7865ac5f62b5abc40331ff696da839f4b3d746943db7dc90802703dbd7a68a",
-                "sha256:5cafc8f7e594892ac3d8591d5625d2cfc13b777a0617339e851dba6e91a32311"
+                "sha256:47aa4683597b5b20bbaeee31f583d9ad701a6dd51ed56e1b61708a2057bbb1ae",
+                "sha256:9736ff0c2a27e800864953c812be2f41fb9a6247350db4f052ef5e5b200a1ac4"
             ],
-            "version": "==1.17.57"
+            "version": "==1.17.59"
         },
         "cachetools": {
             "hashes": [
@@ -554,10 +555,10 @@
         },
         "sentry-sdk": {
             "hashes": [
-                "sha256:0af429c221670e602f960fca85ca3f607c85510a91f11e8be8f742a978127f78",
-                "sha256:a088a1054673c6a19ea590045c871c38da029ef743b61a07bfee95e9f3c060f7"
+                "sha256:97bff68e57402ad39674e6fe2545df0d5eea41c3d51e280c170761705c8c20ff",
+                "sha256:a16caf9ce892623081cbb9a95f6c1f892778bb123909b0ed7afdfb52ce7a58a1"
             ],
-            "version": "==0.17.3"
+            "version": "==0.17.4"
         },
         "six": {
             "hashes": [
@@ -639,11 +640,10 @@
         },
         "thoth-common": {
             "hashes": [
-                "sha256:177a11d9839e8aab49bc8960a0ae2ad2f2cca680ed94723d946d89a0ba5ec154",
-                "sha256:88812b9d793d566c8d2a8b16b9b481b21834c51d25aa6e807de980be42b037e4"
+                "sha256:de9e9c0a5f37005100c3e961a17bc57a8f85cb4bee320fa1a9311280fe766ff5"
             ],
             "index": "pypi",
-            "version": "==0.17.3"
+            "version": "==0.18.1"
         },
         "thoth-python": {
             "hashes": [
@@ -674,7 +674,7 @@
                 "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c",
                 "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"
             ],
-            "markers": "python_version < '3.8'",
+            "markers": "python_version < '3.7'",
             "version": "==3.7.4.3"
         },
         "tzlocal": {
