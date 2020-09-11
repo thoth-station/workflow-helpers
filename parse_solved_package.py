@@ -26,6 +26,7 @@ from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
 
 from thoth.workflow_helpers.common import retrieve_solver_service_version
+from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
 GRAPH.connect()
@@ -37,6 +38,7 @@ component_name = os.environ["THOTH_MESSAGING_COMPONENT_NAME"]
 document_path = os.environ["THOTH_SOLVER_DOCUMENT_PATH"]
 
 _LOGGER = logging.getLogger("thoth.parse_solved_package")
+_LOGGER.info("Thoth workflow-helpers task: parse_solved_package v%s", __service_version__)
 
 
 def _check_unsolved_packages(
