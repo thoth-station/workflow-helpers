@@ -60,3 +60,12 @@ all the things that you see...
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-common from 0.17.2 to 0.17.3 (#62)
 * :pushpin: Automatic update of dependency thamos from 0.12.0 to 0.12.2 (#59)
+
+## Release 0.1.6 (2020-09-11T13:23:41)
+### Features
+* Change name because overwrite Argo default (#67)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.6 to 0.25.7 (#70)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.6 to 0.25.7 (#69)
+* :pushpin: Automatic update of dependency thoth-common from 0.17.3 to 0.18.1 (#68)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.5 to 0.25.6 (#66)

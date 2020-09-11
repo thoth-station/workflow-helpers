@@ -21,7 +21,7 @@
 from thamos import __version__ as __thamos__version__
 from thoth.common import init_logging
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __service_version__ = f"{__version__}+thamos.{__thamos__version__}"
 
 
