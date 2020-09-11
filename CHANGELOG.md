@@ -69,3 +69,9 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.6 to 0.25.7 (#69)
 * :pushpin: Automatic update of dependency thoth-common from 0.17.3 to 0.18.1 (#68)
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.5 to 0.25.6 (#66)
+
+## Release 0.1.7 (2020-09-11T15:35:48)
+### Features
+* Add info version (#73)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-common from 0.18.1 to 0.18.2 (#75)
