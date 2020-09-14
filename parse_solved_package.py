@@ -24,7 +24,7 @@ import json
 from typing import List
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
-from thoth.storages import ThothAdviserIntegrationEnum
+from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_service_version
 from thoth.workflow_helpers import __service_version__
