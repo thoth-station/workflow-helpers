@@ -63,5 +63,6 @@ def parse_solver_inputs() -> None:
             json.dump(output_messages, json_file)
         _LOGGER.info("Successfully stored file with solved messages!")
 
+
 if __name__ == "__main__":
     parse_solver_inputs()
