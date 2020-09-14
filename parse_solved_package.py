@@ -80,7 +80,8 @@ def parse_solved_package() -> None:
     service_version = retrieve_solver_service_version(document_path)
 
     # 1. Retrieve adviser ids for specific thoth_integrations with need_re_run == True
-    unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type="github_app")
+    source_type = "GITHUB_APP"
+    unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type=source_type)
 
     output_messages = []
 
