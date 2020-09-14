@@ -20,9 +20,18 @@
 
 from thamos import __version__ as __thamos__version__
 from thoth.common import init_logging
+from thoth.common import __version__ as __common_version__
+from thoth.python import __version__ as __python_version__
+from thoth.analyzer import __version__ as __analyzer_version__
+from thoth.storages import __version__ as __storages_version__
 
 __version__ = "0.1.7"
-__service_version__ = f"{__version__}+thamos.{__thamos__version__}"
+__service_version__ = (
+    f"{__version__}+"
+    f"thamos.{__thamos__version__}."
+    f"common.{__common_version__}.python.{__python_version__}"
+    f"analyzer.{__analyzer_version__}.storages.{__storages_version__}"
+)
 
 
 # Init logging here when gunicorn import this application.
