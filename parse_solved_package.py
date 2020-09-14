@@ -143,10 +143,11 @@ def parse_solved_package() -> None:
                 {"topic_name": "thoth.investigator.adviser-re-run", "message_contents": message_input}
             )
 
+    # 5. Store messages that need to be sent
+    with open(f"/mnt/workdir/adviser_runs_messages.json", "w") as json_file:
+        json.dump(output_messages, json_file)
+
     if output_messages:
-        # 5. Store messages that need to be sent
-        with open(f"/mnt/workdir/adviser_runs_messages.json", "w") as json_file:
-            json.dump(output_messages, json_file)
         _LOGGER.info("Successfully stored file with adviser re run messages!")
 
 
