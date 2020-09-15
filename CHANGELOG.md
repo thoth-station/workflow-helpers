@@ -75,3 +75,12 @@ all the things that you see...
 * Add info version (#73)
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-common from 0.18.1 to 0.18.2 (#75)
+
+## Release 0.1.8 (2020-09-15T08:43:01)
+### Features
+* Use correct value (#83)
+* Make pre-commit happy (#79)
+* Show all thoth libraries versions in logs (#78)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.7 to 0.25.8 (#81)
+* :pushpin: Automatic update of dependency thoth-common from 0.18.2 to 0.18.3 (#80)
