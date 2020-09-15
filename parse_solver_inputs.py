@@ -58,9 +58,10 @@ def parse_solver_inputs() -> None:
 
         output_messages.append({"topic_name": "thoth.solver.solved-package", "message_contents": message_input})
 
+    with open(f"/mnt/workdir/solved_messages.json", "w") as json_file:
+        json.dump(output_messages, json_file)
+
     if output_messages:
-        with open(f"/mnt/workdir/solved_messages.json", "w") as json_file:
-            json.dump(output_messages, json_file)
         _LOGGER.info("Successfully stored file with solved messages!")
 
 
