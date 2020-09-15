@@ -36,7 +36,7 @@ def parse_solver_inputs() -> None:
     solver_name = os.environ["THOTH_SOLVER_NAME"]
     package = os.environ["THOTH_SOLVER_PACKAGES"]
 
-    package_inputs = package.split("===")
+    package_inputs = package.split("==")
 
     solver_indexes = os.environ["THOTH_SOLVER_INDEXES"]
     indexes = solver_indexes.split(",")
