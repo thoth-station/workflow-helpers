@@ -84,3 +84,9 @@ all the things that you see...
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.7 to 0.25.8 (#81)
 * :pushpin: Automatic update of dependency thoth-common from 0.18.2 to 0.18.3 (#80)
+
+## Release 0.1.9 (2020-09-15T11:29:02)
+### Features
+* Store file always to avoid workflow failing (#82)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thamos from 0.12.2 to 1.0.0 (#88)
