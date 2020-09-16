@@ -37,6 +37,10 @@ def parse_solver_inputs() -> None:
     package = os.environ["THOTH_SOLVER_PACKAGES"]
 
     package_inputs = package.split("===")
+    package_name = package_inputs[0]
+    package_version = package_inputs[1]
+
+    _LOGGER.info(f"Solved package {package_name} in version: {package_version}")
 
     solver_indexes = os.environ["THOTH_SOLVER_INDEXES"]
     indexes = solver_indexes.split(",")
@@ -50,8 +54,8 @@ def parse_solver_inputs() -> None:
         message_input = {
             "component_name": {"type": "str", "value": component_name},
             "service_version": {"type": "str", "value": service_version},
-            "package_name": {"type": "str", "value": package_inputs[0]},
-            "package_version": {"type": "str", "value": package_inputs[1]},
+            "package_name": {"type": "str", "value": package_name},
+            "package_version": {"type": "str", "value": package_version},
             "index_url": {"type": "str", "value": index_url},
             "solver": {"type": "str", "value": solver_name},
         }
