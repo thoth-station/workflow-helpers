@@ -150,7 +150,7 @@ def parse_solved_package() -> None:
         json.dump(output_messages, json_file)
 
     if output_messages:
-        _LOGGER.info(f"Successfully stored file with adviser re run messages!: {output_messages})
+        _LOGGER.info(f"Successfully stored file with adviser re run messages!: {output_messages}")
 
 
 if __name__ == "__main__":
