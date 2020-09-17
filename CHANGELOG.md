@@ -103,3 +103,7 @@ all the things that you see...
 * Show messages sent (#98)
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.9 to 0.25.10 (#100)
+
+## Release 0.1.12 (2020-09-17T09:30:10)
+### Features
+* Add missing ' (#103)
