@@ -97,3 +97,9 @@ all the things that you see...
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.8 to 0.25.9 (#94)
 * :pushpin: Automatic update of dependency thoth-common from 0.18.3 to 0.19.0 (#91)
+
+## Release 0.1.11 (2020-09-17T08:13:51)
+### Features
+* Show messages sent (#98)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.9 to 0.25.10 (#100)
