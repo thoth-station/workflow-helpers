@@ -52,7 +52,7 @@ def parse_solver_output() -> None:
 
         output_messages.append({"topic_name": "thoth.solver.solved-package", "message_contents": message_input})
 
-    with open(f"/mnt/workdir/solved_messages.json", "w") as json_file:
+    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
         json.dump(output_messages, json_file)
 
     if output_messages:
