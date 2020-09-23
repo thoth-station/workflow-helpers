@@ -19,3 +19,11 @@
 
 class TriggerFinishedWebhookInputsMissing(Exception):
     """An exception raised if there are inputs missing for Triggering Finished Webhook."""
+
+
+class SourceDistroNotFound(Exception):
+    """An exception is raised if there is no source distro found for a given package."""
+
+
+class VersionDoesNotExist(Exception):
+    """An exception is raised if the requested version does not exist at all."""
