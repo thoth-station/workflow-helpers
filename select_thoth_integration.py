@@ -53,6 +53,12 @@ def trigger_integration_workflow() -> None:
             git_service = parse.urlsplit(metadata["origin"]).hostname.split(".")[-2]
             f.write(git_service)
 
+    else:
+        with open("/mnt/workdir/metadata_origin", "w") as f:
+            f.write("")
+        with open("/mnt/workdir/git_service", "w") as f:
+            f.write("")
+
     if source_type == ThothAdviserIntegrationEnum.GITHUB_APP.name:
         trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)
 
