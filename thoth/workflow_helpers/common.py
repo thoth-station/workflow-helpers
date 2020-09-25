@@ -23,12 +23,10 @@ import json
 _LOGGER = logging.getLogger(__name__)
 
 
-def retrieve_solver_service_version(document_path: str):
-    """Retrieve solver service version from solver document."""
+def retrieve_solver_document(document_path: str):
+    """Retrieve solver document."""
     _LOGGER.info("Loading document from a local file: %r", document_path)
     with open(document_path, "r") as document_file:
         solver_document = json.loads(document_file.read())
 
-    solver_report_metadata = solver_document["metadata"]
-
-    return solver_report_metadata["analyzer_version"]
+    return solver_document
