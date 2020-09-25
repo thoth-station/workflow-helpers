@@ -107,3 +107,17 @@ all the things that you see...
 ## Release 0.1.12 (2020-09-17T09:30:10)
 ### Features
 * Add missing ' (#103)
+
+## Release 0.1.13 (2020-09-25T06:10:52)
+### Features
+* parse solver document (#107)
+* :nut_and_bolt: store default empty string for other source types (#110)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.10 to 0.25.11 (#119)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.10 to 0.25.11 (#118)
+* :pushpin: Automatic update of dependency thoth-python from 0.10.1 to 0.10.2 (#117)
+* :pushpin: Automatic update of dependency thoth-python from 0.10.1 to 0.10.2 (#116)
+* :pushpin: Automatic update of dependency thoth-python from 0.10.1 to 0.10.2 (#115)
+* :pushpin: Automatic update of dependency thoth-common from 0.19.0 to 0.20.0 (#114)
+* :pushpin: Automatic update of dependency thoth-common from 0.19.0 to 0.20.0 (#113)
+* :pushpin: Automatic update of dependency thoth-common from 0.19.0 to 0.20.0 (#112)
