@@ -21,11 +21,14 @@ import tarfile
 import zipfile
 import os
 import logging
+from urllib import request
 
 from thoth.analyzer import run_command
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
-
+from thoth.messaging.is_package_si_analyzable import IsPackageSIAnalyzableMessage
+from thoth.messaging.missing_version import MissingVersionMessage
+from bs4 import BeautifulSoup, SoupStrainer
 
 WORKDIR = "/mnt/workdir"
 
@@ -35,6 +38,39 @@ _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_vers
 
 def download_py_package():
     """Download package which needs to be analyzed by future steps."""
+    is_analyzable = IsPackageSIAnalyzableMessage()
+    missing_version = MissingVersionMessage()
+
+    page = request.urlopen(os.path.join(Configuration.PACKAGE_INDEX, Configuration.PACKAGE_NAME))
+    version_exists = False
+
+    for link in BeautifulSoup(
+        page, "html.parser", from_encoding=page.info().get_param("charset"), parse_only=SoupStrainer("a")
+    ):
+        if link.string.endswith(f"-{Configuration.PACKAGE_VERSION}.zip") or link.string.endswith(
+            f"-{Configuration.PACKAGE_VERSION}.tar.gz"
+        ):
+            break
+        elif f"-{Configuration.PACKAGE_VERSION}-" in link.string:
+            version_exists = True
+    else:
+        if version_exists:
+            message_contents = is_analyzable.MessageContents(
+                package_name=Configuration.PACKAGE_NAME,
+                package_version=Configuration.PACKAGE_VERSION,
+                index_url=Configuration.PACKAGE_INDEX,
+                value=False,
+            )
+            is_analyzable.publish_to_topic(message_contents)
+            raise Exception("foo")
+        else:
+            message_contents = missing_version.MessageContents(
+                package_name=Configuration.PACKAGE_NAME,
+                package_version=Configuration.PACKAGE_VERSION,
+                index_url=Configuration.PACKAGE_INDEX,
+            )
+            raise Exception("foo")
+
     command = (
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
         f"{Configuration.PACKAGE_NAME}==={Configuration.PACKAGE_VERSION}"
