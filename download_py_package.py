@@ -26,7 +26,7 @@ from urllib import request
 from thoth.analyzer import run_command
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
-from thoth.messaging.is_package_si_analyzable import IsPackageSIAnalyzableMessage
+from thoth.messaging.is_package_si_analyzable import UpdateProvidesSourceDistroMessage
 from thoth.messaging.missing_version import MissingVersionMessage
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -38,7 +38,7 @@ _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_vers
 
 def download_py_package():
     """Download package which needs to be analyzed by future steps."""
-    is_analyzable = IsPackageSIAnalyzableMessage()
+    provides_source = UpdateProvidesSourceDistroMessage()
     missing_version = MissingVersionMessage()
 
     page = request.urlopen(os.path.join(Configuration.PACKAGE_INDEX, Configuration.PACKAGE_NAME))
@@ -55,21 +55,20 @@ def download_py_package():
             version_exists = True
     else:
         if version_exists:
-            message_contents = is_analyzable.MessageContents(
+            message_contents = provides_source.MessageContents(
                 package_name=Configuration.PACKAGE_NAME,
                 package_version=Configuration.PACKAGE_VERSION,
                 index_url=Configuration.PACKAGE_INDEX,
                 value=False,
             )
-            is_analyzable.publish_to_topic(message_contents)
-            raise Exception("foo")
+            provides_source.sync_publish_to_topic(message_contents)
         else:
             message_contents = missing_version.MessageContents(
                 package_name=Configuration.PACKAGE_NAME,
                 package_version=Configuration.PACKAGE_VERSION,
                 index_url=Configuration.PACKAGE_INDEX,
             )
-            raise Exception("foo")
+            missing_version.sync_publish_to_topic(message_contents)
 
     command = (
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
