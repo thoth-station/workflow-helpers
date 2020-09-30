@@ -21,6 +21,7 @@ import tarfile
 import zipfile
 import os
 import logging
+import json
 from urllib import request
 
 from thoth.analyzer import run_command
@@ -32,15 +33,14 @@ from bs4 import BeautifulSoup, SoupStrainer
 
 WORKDIR = "/mnt/workdir"
 
+MESSAGE_LOCATION = "/mnt/workdir/message"
+
 _LOGGER = logging.getLogger("thoth.download_package")
 _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_version__)
 
 
 def download_py_package():
     """Download package which needs to be analyzed by future steps."""
-    provides_source = UpdateProvidesSourceDistroMessage()
-    missing_version = MissingVersionMessage()
-
     page = request.urlopen(os.path.join(Configuration.PACKAGE_INDEX, Configuration.PACKAGE_NAME))
     version_exists = False
 
@@ -55,20 +55,36 @@ def download_py_package():
             version_exists = True
     else:
         if version_exists:
-            message_contents = provides_source.MessageContents(
-                package_name=Configuration.PACKAGE_NAME,
-                package_version=Configuration.PACKAGE_VERSION,
-                index_url=Configuration.PACKAGE_INDEX,
-                value=False,
-            )
-            provides_source.sync_publish_to_topic(message_contents)
+            message_contents = [
+                {
+                    "topic_name": UpdateProvidesSourceDistroMessage.topic_name,
+                    "message_contents": {
+                        "package_name": Configuration.PACKAGE_NAME,
+                        "package_version": Configuration.PACKAGE_VERSION,
+                        "index_url": Configuration.PACKAGE_INDEX,
+                        "value": False,
+                    },
+                }
+            ]
+            with open(MESSAGE_LOCATION, "w") as f:
+                content = json.dumps(message_contents, indent=4)
+                f.write(content)
+            raise Exception("Missing source distro (message being sent)")
         else:
-            message_contents = missing_version.MessageContents(
-                package_name=Configuration.PACKAGE_NAME,
-                package_version=Configuration.PACKAGE_VERSION,
-                index_url=Configuration.PACKAGE_INDEX,
-            )
-            missing_version.sync_publish_to_topic(message_contents)
+            message_contents = [
+                {
+                    "topic_name": MissingVersionMessage.topic_name,
+                    "message_contents": {
+                        "package_name": Configuration.PACKAGE_NAME,
+                        "package_version": Configuration.PACKAGE_VERSION,
+                        "index_url": Configuration.PACKAGE_INDEX,
+                    },
+                }
+            ]
+            with open(MESSAGE_LOCATION, "w") as f:
+                content = json.dumps(message_contents, indent=4)
+                f.write(content)
+            raise Exception("Missing package version (message being sent)")
 
     command = (
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
