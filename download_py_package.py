@@ -34,6 +34,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 WORKDIR = "/mnt/workdir"
 
 MESSAGE_LOCATION = "/mnt/workdir/message"
+FAIL_FILE = "/mnt/workdir/failed"
 
 _LOGGER = logging.getLogger("thoth.download_package")
 _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_version__)
@@ -69,7 +70,8 @@ def download_py_package():
             with open(MESSAGE_LOCATION, "w") as f:
                 content = json.dumps(message_contents, indent=4)
                 f.write(content)
-            raise Exception("Missing source distro (message being sent)")
+            with open(FAIL_FILE, "w") as f:
+                f.write("1")
         else:
             message_contents = [
                 {
@@ -84,7 +86,8 @@ def download_py_package():
             with open(MESSAGE_LOCATION, "w") as f:
                 content = json.dumps(message_contents, indent=4)
                 f.write(content)
-            raise Exception("Missing package version (message being sent)")
+            with open(FAIL_FILE, "w") as f:
+                f.write("1")
 
     command = (
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
