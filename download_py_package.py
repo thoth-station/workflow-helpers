@@ -40,7 +40,7 @@ _LOGGER = logging.getLogger("thoth.download_package")
 _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_version__)
 
 
-def download_py_package():
+def download_py_package() -> None:
     """Download package which needs to be analyzed by future steps."""
     page = request.urlopen(os.path.join(Configuration.PACKAGE_INDEX, Configuration.PACKAGE_NAME))
     version_exists = False
@@ -62,6 +62,11 @@ def download_py_package():
 
     else:
         if version_exists:
+            _LOGGER.warning(
+                f"version {Configuration.PACKAGE_VERSION}"
+                f"for package {Configuration.PACKAGE_NAME}"
+                f"from {Configuration.PACKAGE_INDEX} does not provide source distro."
+            )
             message_contents = [
                 {
                     "topic_name": UpdateProvidesSourceDistroMessage.topic_name,
@@ -78,7 +83,14 @@ def download_py_package():
                 f.write(content)
             with open(FAILED_STATUS_FILE, "w") as f:
                 f.write("1")
+
+            return
         else:
+            _LOGGER.warning(
+                f"version {Configuration.PACKAGE_VERSION}"
+                f"for package {Configuration.PACKAGE_NAME}"
+                f"from {Configuration.PACKAGE_INDEX} is missing."
+            )
             message_contents = [
                 {
                     "topic_name": MissingVersionMessage.topic_name,
@@ -92,8 +104,10 @@ def download_py_package():
             with open(MESSAGE_LOCATION, "w") as f:
                 content = json.dumps(message_contents, indent=4)
                 f.write(content)
-            with open(FAIL_FILE, "w") as f:
+            with open(FAILED_STATUS_FILE, "w") as f:
                 f.write("1")
+
+            return
 
     command = (
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
