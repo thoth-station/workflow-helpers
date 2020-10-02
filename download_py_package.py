@@ -116,15 +116,15 @@ def download_py_package() -> None:
     )
     run_command(command)
 
-    for f in os.listdir(WORKDIR):
-        if f.endswith(".tar.gz"):
-            full_path = os.path.join(WORKDIR, f)
+    for file_ in os.listdir(WORKDIR):
+        if file_.endswith(".tar.gz"):
+            full_path = os.path.join(WORKDIR, file_)
             tar = tarfile.open(full_path, "r:gz")
             tar.extractall(os.path.join(WORKDIR, "package"))
             break
-        elif f.endswith(".zip"):
-            full_path = os.path.join(WORKDIR, f)
-            with zipfile.ZipFile(os.path.join(WORKDIR, f), "r") as zip_ref:
+        elif file_.endswith(".zip"):
+            full_path = os.path.join(WORKDIR, file_)
+            with zipfile.ZipFile(os.path.join(WORKDIR, file_), "r") as zip_ref:
                 zip_ref.extractall(os.path.join(WORKDIR, "package"))
             break
     else:
