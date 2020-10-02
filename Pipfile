@@ -9,6 +9,8 @@ thoth-common = "*"
 thoth-python = "*"
 thoth-analyzer = "*"
 thoth-storages = "*"
+thoth-messaging = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 
