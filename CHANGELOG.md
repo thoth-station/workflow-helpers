@@ -130,3 +130,9 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thoth-messaging from 0.7.8 to 0.7.10 (#126)
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.13 to 0.25.14 (#125)
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.13 to 0.25.14 (#124)
+
+## Release 0.1.15 (2020-10-02T10:24:06)
+### Features
+* Assign datatype in message (#132)
+### Bug Fixes
+* Do not fail on known errors (#131)
