@@ -27,14 +27,14 @@ from urllib import request
 from thoth.analyzer import run_command
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
-from thoth.messaging.is_package_si_analyzable import UpdateProvidesSourceDistroMessage
+from thoth.messaging.update_provides_src_distro import UpdateProvidesSourceDistroMessage
 from thoth.messaging.missing_version import MissingVersionMessage
 from bs4 import BeautifulSoup, SoupStrainer
 
 WORKDIR = "/mnt/workdir"
 
 MESSAGE_LOCATION = "/mnt/workdir/message"
-FAIL_FILE = "/mnt/workdir/failed"
+FAILED_STATUS_FILE = "/mnt/workdir/failed_status"
 
 _LOGGER = logging.getLogger("thoth.download_package")
 _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_version__)
@@ -54,6 +54,12 @@ def download_py_package():
             break
         elif f"-{Configuration.PACKAGE_VERSION}-" in link.string:
             version_exists = True
+
+        with open(MESSAGE_LOCATION, "w") as f:
+            f.write("")
+        with open(FAILED_STATUS_FILE, "w") as f:
+            f.write("0")
+
     else:
         if version_exists:
             message_contents = [
@@ -70,7 +76,7 @@ def download_py_package():
             with open(MESSAGE_LOCATION, "w") as f:
                 content = json.dumps(message_contents, indent=4)
                 f.write(content)
-            with open(FAIL_FILE, "w") as f:
+            with open(FAILED_STATUS_FILE, "w") as f:
                 f.write("1")
         else:
             message_contents = [
