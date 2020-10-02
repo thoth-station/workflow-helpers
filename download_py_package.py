@@ -51,14 +51,14 @@ def download_py_package():
         if link.string.endswith(f"-{Configuration.PACKAGE_VERSION}.zip") or link.string.endswith(
             f"-{Configuration.PACKAGE_VERSION}.tar.gz"
         ):
+            with open(MESSAGE_LOCATION, "w") as f:
+                f.write("")
+            with open(FAILED_STATUS_FILE, "w") as f:
+                f.write("0")
             break
+
         elif f"-{Configuration.PACKAGE_VERSION}-" in link.string:
             version_exists = True
-
-        with open(MESSAGE_LOCATION, "w") as f:
-            f.write("")
-        with open(FAILED_STATUS_FILE, "w") as f:
-            f.write("0")
 
     else:
         if version_exists:
