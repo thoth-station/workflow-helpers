@@ -51,10 +51,6 @@ def download_py_package() -> None:
         if link.string.endswith(f"-{Configuration.PACKAGE_VERSION}.zip") or link.string.endswith(
             f"-{Configuration.PACKAGE_VERSION}.tar.gz"
         ):
-            with open(MESSAGE_LOCATION, "w") as f:
-                f.write("")
-            with open(FAILED_STATUS_FILE, "w") as f:
-                f.write("0")
             break
 
         elif f"-{Configuration.PACKAGE_VERSION}-" in link.string:
@@ -71,10 +67,10 @@ def download_py_package() -> None:
                 {
                     "topic_name": UpdateProvidesSourceDistroMessage.topic_name,
                     "message_contents": {
-                        "package_name": Configuration.PACKAGE_NAME,
-                        "package_version": Configuration.PACKAGE_VERSION,
-                        "index_url": Configuration.PACKAGE_INDEX,
-                        "value": False,
+                        "package_name": {"type": "str", "value": Configuration.PACKAGE_NAME},
+                        "package_version": {"type": "str", "value": Configuration.PACKAGE_VERSION},
+                        "index_url": {"type": "str", "value": Configuration.PACKAGE_INDEX},
+                        "value": {"type": "bool", "value": False},
                     },
                 }
             ]
@@ -95,9 +91,9 @@ def download_py_package() -> None:
                 {
                     "topic_name": MissingVersionMessage.topic_name,
                     "message_contents": {
-                        "package_name": Configuration.PACKAGE_NAME,
-                        "package_version": Configuration.PACKAGE_VERSION,
-                        "index_url": Configuration.PACKAGE_INDEX,
+                        "package_name": {"type": "str", "value": Configuration.PACKAGE_NAME},
+                        "package_version": {"type": "str", "value": Configuration.PACKAGE_VERSION},
+                        "index_url": {"type": "str", "value": Configuration.PACKAGE_INDEX},
                     },
                 }
             ]
@@ -108,6 +104,11 @@ def download_py_package() -> None:
                 f.write("1")
 
             return
+
+    with open(MESSAGE_LOCATION, "w") as f:
+        f.write("")
+    with open(FAILED_STATUS_FILE, "w") as f:
+        f.write("0")
 
     command = (
         f"pip download --no-binary=:all: --no-deps -d {WORKDIR} -i {Configuration.PACKAGE_INDEX} "
