@@ -121,3 +121,12 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thoth-common from 0.19.0 to 0.20.0 (#114)
 * :pushpin: Automatic update of dependency thoth-common from 0.19.0 to 0.20.0 (#113)
 * :pushpin: Automatic update of dependency thoth-common from 0.19.0 to 0.20.0 (#112)
+
+## Release 0.1.14 (2020-10-02T08:14:58)
+### Features
+* Correct import and add defaults (#128)
+* Feature/is analyzable message (#122)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-messaging from 0.7.8 to 0.7.10 (#126)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.13 to 0.25.14 (#125)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.13 to 0.25.14 (#124)
