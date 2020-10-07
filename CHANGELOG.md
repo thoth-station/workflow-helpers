@@ -136,3 +136,11 @@ all the things that you see...
 * Assign datatype in message (#132)
 ### Bug Fixes
 * Do not fail on known errors (#131)
+
+## Release 0.1.16 (2020-10-07T16:49:57)
+### Features
+* Qebhwt workflow now saves the adviser message (#136)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.14 to 0.25.15 (#140)
+* :pushpin: Automatic update of dependency thoth-messaging from 0.7.10 to 0.7.11 (#139)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.14 to 0.25.15 (#138)
