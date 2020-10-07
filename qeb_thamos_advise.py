@@ -26,10 +26,7 @@ from pathlib import Path
 from thoth.python import Project
 from thamos.swagger_client import PythonStack
 from thamos.config import _Configuration
-from thamos.exceptions import NoRuntimeEnvironmentError
-from thamos.exceptions import NoRequirementsFormatError
 
-from thoth.python.exceptions import FileLoadError
 from thoth.common.enums import ThothAdviserIntegrationEnum
 from thoth.common import OpenShift
 
