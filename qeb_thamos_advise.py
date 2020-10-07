@@ -113,7 +113,7 @@ def qeb_hwt_thamos_advise() -> None:
         pipfile_lock_str = project.pipfile_lock.to_string() if project.pipfile_lock else ""
         application_stack = PythonStack(
             requirements=pipfile, requirements_lock=pipfile_lock_str, requirements_format=requirements_format
-        )
+        ).to_dict()
     except Exception as exception:
         _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
         exception_message = json.loads(exception.body)["error"]  # type: ignore
