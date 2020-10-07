@@ -118,24 +118,8 @@ def qeb_hwt_thamos_advise() -> None:
             requirements=pipfile, requirements_lock=pipfile_lock_str, requirements_format=requirements_format
         )
     except Exception as exception:
-        if isinstance(
-            exception,
-            (
-                NoRuntimeEnvironmentError,
-                NoRequirementsFormatError,
-                FileNotFoundError,
-                FileLoadError,
-                KeyError,
-                ValueError,
-                AttributeError,
-            ),
-        ):
-            _LOGGER.debug(exception)
-            exception_message = str(exception)
-        else:
-            _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
-            exception_message = json.loads(exception.body)["error"]  # type: ignore
-
+        _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
+        exception_message = json.loads(exception.body)["error"]  # type: ignore
         trigger_finished_webhook(exception_message=exception_message, has_error=True)
         return
 
