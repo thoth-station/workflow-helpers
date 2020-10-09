@@ -131,7 +131,7 @@ def qeb_hwt_thamos_advise() -> None:
         "github_installation_id": {"type": "int", "value": int(Configuration._GITHUB_INSTALLATION_ID)},
         "github_base_repo_url": {"type": "str", "value": Configuration._GITHUB_BASE_REPO_URL},
         "origin": {"type": "str", "value": Configuration._ORIGIN},
-        "source_type": {"type": "str", "value": ThothAdviserIntegrationEnum.GITHUB_APP},
+        "source_type": {"type": "str", "value": ThothAdviserIntegrationEnum.GITHUB_APP.name},
     }
 
     # We store the message to put in the output file here.
