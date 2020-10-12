@@ -144,3 +144,9 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.14 to 0.25.15 (#140)
 * :pushpin: Automatic update of dependency thoth-messaging from 0.7.10 to 0.7.11 (#139)
 * :pushpin: Automatic update of dependency thoth-storages from 0.25.14 to 0.25.15 (#138)
+
+## Release 0.1.17 (2020-10-12T06:23:04)
+### Features
+* Fixed source tpye not parseable" (#143)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-common from 0.20.0 to 0.20.1 (#145)
