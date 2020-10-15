@@ -23,7 +23,7 @@ import logging
 import json
 import os
 
-from typing import Dict, Any, Tuple, Optional
+from typing import Optional
 from pathlib import Path
 from thoth.python import Pipfile
 from thoth.common import OpenShift
@@ -35,7 +35,8 @@ _LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_
 
 __COMPONENT_NAME__ = "adviser"
 
-def parse_adviser_output(file_test_path: Optional[Path] = None) -> Tuple[Dict[Any, Any], Optional[str]]:
+
+def parse_adviser_output(file_test_path: Optional[Path] = None) -> None:
     """Investigate on unresolved packages."""
     if file_test_path:
         _LOGGER.debug("Dry run..")
@@ -106,7 +107,6 @@ def parse_adviser_output(file_test_path: Optional[Path] = None) -> Tuple[Dict[An
 
     if output_messages:
         _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
-
 
 
 if __name__ == "__main__":
