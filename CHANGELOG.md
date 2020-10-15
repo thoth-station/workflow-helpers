@@ -150,3 +150,9 @@ all the things that you see...
 * Fixed source tpye not parseable" (#143)
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-common from 0.20.0 to 0.20.1 (#145)
+
+## Release 0.1.18 (2020-10-15T17:15:19)
+### Features
+* Add method to send unresolved packages message from adviser report inspection (#150)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-messaging from 0.7.11 to 0.7.13 (#149)
