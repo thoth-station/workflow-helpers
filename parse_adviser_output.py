@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # workflow-helpers
-# Copyright(C) 2020 Kevin Postlethwait
+# Copyright(C) 2020 Francesco Murdaca
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,12 +30,12 @@ from thoth.common import OpenShift
 
 from thoth.workflow_helpers import __service_version__
 
-_LOGGER = logging.getLogger("thoth.parse_unresolved_packages")
-_LOGGER.info("Thoth workflow-helpers task: parse_unresolved_packages v%s", __service_version__)
+_LOGGER = logging.getLogger("thoth.parse_adviser_output")
+_LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_version__)
 
 __COMPONENT_NAME__ = "adviser"
 
-def parse_unresolved_packages(file_test_path: Optional[Path] = None) -> Tuple[Dict[Any, Any], Optional[str]]:
+def parse_adviser_output(file_test_path: Optional[Path] = None) -> Tuple[Dict[Any, Any], Optional[str]]:
     """Investigate on unresolved packages."""
     if file_test_path:
         _LOGGER.debug("Dry run..")
@@ -110,4 +110,4 @@ def parse_unresolved_packages(file_test_path: Optional[Path] = None) -> Tuple[Di
 
 
 if __name__ == "__main__":
-    parse_unresolved_packages()
+    parse_adviser_output()

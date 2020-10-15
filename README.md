@@ -38,10 +38,10 @@ REPO_PATH=. THOTH_WORKFLOW_TASK=trigger_integration ./app.sh
 uses `select_thoth_integration.py` which is used in adviser workflow to trigger
 the correct tasks depending on which Thoth integration requested adviser to run (CLI, Qeb-Hwt, S2I, etc.)
 
-## parse_unresolved_packages.py
+## parse_adviser_output.py
 
 ```shell
-REPO_PATH=. THOTH_WORKFLOW_TASK=parse_unresolved_packages ./app.sh
+REPO_PATH=. THOTH_WORKFLOW_TASK=parse_adviser_output ./app.sh
 ```
 
 It checks for any unresolved packages in the adviser report.
