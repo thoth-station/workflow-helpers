@@ -48,3 +48,8 @@ class Configuration:
     PACKAGE_NAME = os.getenv("THOTH_PACKAGE_NAME")
     PACKAGE_VERSION = os.getenv("THOTH_PACKAGE_VERSION")
     PACKAGE_INDEX = os.getenv("THOTH_PACKAGE_INDEX")
+
+    # Kebechet Administrator
+    # This needs package info + solver type + message type
+    SOLVER_NAME = os.getenv("THOTH_SOLVER_NAME")
+    MESSAGE_TYPE = os.getenv("MESSAGE_TYPE")
