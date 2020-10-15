@@ -36,7 +36,7 @@ from thoth.workflow_helpers import __service_version__
 
 _LOGGER = logging.getLogger("thoth.qebhwt")
 _LOGGER.info("Thoth workflow-helpers task: qebhwt v%s", __service_version__)
-__COMPOENENT_NAME__ = "Qeb-hwt"
+__COMPONENT_NAME__ = "Qeb-hwt"
 
 
 def _create_message_config_file_error(no_file: bool):
@@ -122,7 +122,7 @@ def qeb_hwt_thamos_advise() -> None:
 
     # The input for AdviserTriggerMessage if no exceptions were found
     message_input = {
-        "component_name": {"type": "str", "value": __COMPOENENT_NAME__},
+        "component_name": {"type": "str", "value": __COMPONENT_NAME__},
         "service_version": {"type": "str", "value": __service_version__},
         "application_stack": {"type": "Dict", "value": application_stack},
         "recommendation_type": {"type": "str", "value": recommendation_type},
