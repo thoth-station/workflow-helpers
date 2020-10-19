@@ -15,18 +15,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Kebechet Administrator
+"""Kebechet Administrator.
 
-   This script run in a workflow task to take and incoming message and decide and decides which repositores
-   Kebechet needs to be run on and schedules the necessary messages.
+This script run in a workflow task to take and incoming message and decide and decides which repositores
+Kebechet needs to be run on and schedules the necessary messages.
 """
 
 import logging
-from typing import List
+import json
+from typing import Dict
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.messaging import __all__ as all_messages
 from thoth.workflow_helpers import __service_version__
+
+__COMPONENT_NAME__ = "Kebechet Administrator"
 
 _LOGGER = logging.getLogger("thoth.run_kebechet_administrator")
 _LOGGER.info("Thoth workflow-helpers task: run_kebechet_administrator v%s", __service_version__)
@@ -35,12 +38,81 @@ _LOGGER.info("Thoth workflow-helpers task: run_kebechet_administrator v%s", __se
 GRAPH = GraphDatabase()
 GRAPH.connect()
 
+_URL_PREFIX = "https://github.com/"
+
+output_messages = []  # Messages to be sent by producer.
+
+
+def _handle_solved_message(Configuration):  # noqa: N803
+    """Handle all the messages for which Kebechet needs to run on if the sovler type matches the os type."""
+    solver_string = Configuration.get("THOTH_SOLVER_NAME")  # ex - solver-fedora-31-py38
+    _, os_name, os_version, python_version = solver_string.rsplit(sep="-", maxsplit=3)
+    python_version = ".".join([i for i in python_version if i.isdigit()])  # generates '3.8' from 'py39'
+    repositories: Dict[str, Dict] = GRAPH.get_kebechet_github_installations_info_for_python_package_version(
+        package_name=Configuration.PACKAGE_NAME,
+        index_url=Configuration.PACKAGE_INDEX,
+        os_name=os_name,
+        os_version=os_version,
+        python_version=python_version,
+    )  # We query without the package_version.
+    for key in repositories.keys():
+        repo_info = repositories[key]
+        # Construct the message input
+        if repo_info.get("private"):
+            continue  # We skip for private repo's.
+        if repo_info.get("package_version") == Configuration.PACKAGE_VERSION:
+            continue  # We dont schedule, if the package is at the solved package version.
+        message_input = {
+            "component_name": {"type": "str", "value": __COMPONENT_NAME__},
+            "service_version": {"type": "str", "value": __service_version__},
+            "url": {"type": "str", "value": _URL_PREFIX + key},
+            "service_name": {"type": "str", "value": "github"},
+            "installation_id": {"type": "str", "value": repo_info.get("installation_id")},
+        }
+
+        # We store the message to put in the output file here.
+        output_messages.append({"topic_name": "thoth.kebechet-run-url-trigger", "message_contents": message_input})
+
+
+def _handle_package_issue(Configuration):  # noqa: N803
+    """Handle all the messages for which Kebechet needs to run on all repos associated."""
+    # We getch all the Kebechet repos using a non optimal package(missing package or CVE or missing version)
+    repositories: Dict[str, Dict] = GRAPH.get_kebechet_github_installations_info_for_python_package_version(
+        package_name=Configuration.PACKAGE_NAME,
+        version=Configuration.PACKAGE_VERSION,
+        index_url=Configuration.PACKAGE_INDEX,
+    )
+    # The keys represent the repo names and the value dictionary is the details for the repo.
+    for key in repositories.keys():
+        repo_info = repositories[key]
+        # Construct the message input
+        if repo_info.get("private"):
+            continue  # We skip for private repo's.
+        message_input = {
+            "component_name": {"type": "str", "value": __COMPONENT_NAME__},
+            "service_version": {"type": "str", "value": __service_version__},
+            "url": {"type": "str", "value": _URL_PREFIX + key},
+            "service_name": {"type": "str", "value": "github"},
+            "installation_id": {"type": "str", "value": repo_info.get("installation_id")},
+        }
+
+        # We store the message to put in the output file here.
+        output_messages.append({"topic_name": "thoth.kebechet-run-url-trigger", "message_contents": message_input})
+
+
+# This handler dispatches the specific method based on a paticular message.
+_message_handler = {
+    "SolvedPackageMessage": _handle_solved_message,
+    "HashMismatchMessage": _handle_package_issue,
+    "MissingPackageMessage": _handle_package_issue,
+    "MissingVersionMessage": _handle_package_issue,
+    "CVEProvidedMessage": _handle_package_issue,
+}
+
 
 def _input_validation():
     required_inputs = frozenset({"PACKAGE_NAME", "PACKAGE_VERSION", "PACKAGE_INDEX", "MESSAGE_TYPE"})
-    supported_messages = frozenset(
-        {"SolvedPackageMessage", "HashMismatchMessage", "MissingPackageMessage", "MissingVersionMessage"}
-    )
+    supported_messages = _message_handler.keys()
     for env_var in required_inputs:
         if not getattr(Configuration, env_var):
             _LOGGER.error(f"No value has been provided to the {env_var} env variable.")
@@ -61,8 +133,15 @@ def run_kebechet_administrator():
     """Run Kebechet Administrator to determine the repositories on which Kebechet will be triggered internally."""
     # We check if all the necessary env variables have been set correctly.
     _input_validation()
+    # If input validation passes, we call the specific handler to generater the messagees for the producer.
+    _message_handler[Configuration.MESSAGE_TYPE](Configuration)
 
-    print(all_messages)
+    # Store message to file that need to be sent.
+    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
+        json.dump(output_messages, json_file)
+
+    if output_messages:
+        _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
 
 
 if __name__ == "__main__":
