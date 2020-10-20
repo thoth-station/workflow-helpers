@@ -156,3 +156,9 @@ all the things that you see...
 * Add method to send unresolved packages message from adviser report inspection (#150)
 ### Automatic Updates
 * :pushpin: Automatic update of dependency thoth-messaging from 0.7.11 to 0.7.13 (#149)
+
+## Release 0.1.19 (2020-10-20T08:54:45)
+### Features
+* Do not return before saving default (#156)
+* Method should not fail and output default always present (#155)
+* lock down thoth-messaging (#153)
