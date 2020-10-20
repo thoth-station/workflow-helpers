@@ -9,7 +9,7 @@ thoth-common = "*"
 thoth-python = "*"
 thoth-analyzer = "*"
 thoth-storages = "*"
-thoth-messaging = "*"
+thoth-messaging = "==0.7.13"
 beautifulsoup4 = "*"
 semver = "*"
 
