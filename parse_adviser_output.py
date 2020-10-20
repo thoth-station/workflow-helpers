@@ -63,6 +63,8 @@ def parse_adviser_output() -> None:
             _LOGGER.warning("No packages to be solved with priority identified.")
             return
 
+        _LOGGER.info(f"Identified the following unresolved packages: {unresolved_packages}")
+
         parameters = content["result"]["parameters"]
         runtime_environment = parameters["project"].get("runtime_environment")
 
