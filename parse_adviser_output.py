@@ -39,6 +39,7 @@ def parse_adviser_output() -> None:
     adviser_run_path = Path(os.environ["FILE_PATH"])
 
     file_found = True
+    unresolved_found = True
 
     unresolved_packages = []
     packages_to_solve = {}
@@ -61,30 +62,31 @@ def parse_adviser_output() -> None:
 
         if not unresolved_packages:
             _LOGGER.warning("No packages to be solved with priority identified.")
-            return
+            unresolved_found = False
 
-        _LOGGER.info(f"Identified the following unresolved packages: {unresolved_packages}")
+        if unresolved_found:
+            _LOGGER.info(f"Identified the following unresolved packages: {unresolved_packages}")
 
-        parameters = content["result"]["parameters"]
-        runtime_environment = parameters["project"].get("runtime_environment")
+            parameters = content["result"]["parameters"]
+            runtime_environment = parameters["project"].get("runtime_environment")
 
-        solver = OpenShift.obtain_solver_from_runtime_environment(runtime_environment=runtime_environment)
+            solver = OpenShift.obtain_solver_from_runtime_environment(runtime_environment=runtime_environment)
 
-        requirements = parameters["project"].get("requirements")
+            requirements = parameters["project"].get("requirements")
 
-        pipfile = Pipfile.from_dict(requirements)
-        packages = pipfile.packages.packages
-        dev_packages = pipfile.dev_packages.packages
+            pipfile = Pipfile.from_dict(requirements)
+            packages = pipfile.packages.packages
+            dev_packages = pipfile.dev_packages.packages
 
-        for package_name in unresolved_packages:
+            for package_name in unresolved_packages:
 
-            if package_name in packages:
-                packages_to_solve[package_name] = packages[package_name]
+                if package_name in packages:
+                    packages_to_solve[package_name] = packages[package_name]
 
-            if package_name in dev_packages:
-                packages_to_solve[package_name] = dev_packages[package_name]
+                if package_name in dev_packages:
+                    packages_to_solve[package_name] = dev_packages[package_name]
 
-        _LOGGER.info(f"Unresolved packages identified.. {packages_to_solve}")
+            _LOGGER.info(f"Unresolved packages identified.. {packages_to_solve}")
 
     output_messages = []
 
