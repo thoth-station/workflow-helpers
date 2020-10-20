@@ -18,12 +18,10 @@
 """This script run in a workflow task to parse adviser output."""
 
 
-import sys
 import logging
 import json
 import os
 
-from typing import Optional
 from pathlib import Path
 from thoth.python import Pipfile
 from thoth.common import OpenShift
@@ -36,52 +34,55 @@ _LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_
 __COMPONENT_NAME__ = "adviser"
 
 
-def parse_adviser_output(file_test_path: Optional[Path] = None) -> None:
-    """Investigate on unresolved packages."""
-    if file_test_path:
-        _LOGGER.debug("Dry run..")
-        adviser_run_path = file_test_path
-    else:
-        adviser_run_path = Path(os.environ["FILE_PATH"])
+def parse_adviser_output() -> None:
+    """Investigate on unresolved packages in adviser output."""
+    adviser_run_path = Path(os.environ["FILE_PATH"])
 
-    if not adviser_run_path.exists():
-        raise FileNotFoundError(f"Cannot find the file on this path: {adviser_run_path}")
-
-    with open(adviser_run_path, "r") as f:
-        content = json.load(f)
+    file_found = True
 
     unresolved_packages = []
-    report = content["result"]["report"]
-    if report:
-        errors_details = report.get("_ERROR_DETAILS")
-        if errors_details:
-            unresolved_packages = errors_details["unresolved"]
-
-    if not unresolved_packages:
-        _LOGGER.warning("No packages to be solved with priority identified.")
-        sys.exit(2)
-
-    parameters = content["result"]["parameters"]
-    runtime_environment = parameters["project"].get("runtime_environment")
-
-    solver = OpenShift.obtain_solver_from_runtime_environment(runtime_environment=runtime_environment)
-
-    requirements = parameters["project"].get("requirements")
-
-    pipfile = Pipfile.from_dict(requirements)
-    packages = pipfile.packages.packages
-    dev_packages = pipfile.dev_packages.packages
-
     packages_to_solve = {}
-    for package_name in unresolved_packages:
 
-        if package_name in packages:
-            packages_to_solve[package_name] = packages[package_name]
+    if not adviser_run_path.exists():
+        _LOGGER.warning(f"Cannot find the file on this path: {adviser_run_path}")
+        file_found = False
 
-        if package_name in dev_packages:
-            packages_to_solve[package_name] = dev_packages[package_name]
+    if file_found:
 
-    _LOGGER.info(f"Unresolved packages identified.. {packages_to_solve}")
+        with open(adviser_run_path, "r") as f:
+            content = json.load(f)
+
+        report = content["result"]["report"]
+
+        if report:
+            errors_details = report.get("_ERROR_DETAILS")
+            if errors_details:
+                unresolved_packages = errors_details["unresolved"]
+
+        if not unresolved_packages:
+            _LOGGER.warning("No packages to be solved with priority identified.")
+            return
+
+        parameters = content["result"]["parameters"]
+        runtime_environment = parameters["project"].get("runtime_environment")
+
+        solver = OpenShift.obtain_solver_from_runtime_environment(runtime_environment=runtime_environment)
+
+        requirements = parameters["project"].get("requirements")
+
+        pipfile = Pipfile.from_dict(requirements)
+        packages = pipfile.packages.packages
+        dev_packages = pipfile.dev_packages.packages
+
+        for package_name in unresolved_packages:
+
+            if package_name in packages:
+                packages_to_solve[package_name] = packages[package_name]
+
+            if package_name in dev_packages:
+                packages_to_solve[package_name] = dev_packages[package_name]
+
+        _LOGGER.info(f"Unresolved packages identified.. {packages_to_solve}")
 
     output_messages = []
 
