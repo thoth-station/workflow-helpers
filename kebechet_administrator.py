@@ -133,7 +133,7 @@ def run_kebechet_administrator():
     """Run Kebechet Administrator to determine the repositories on which Kebechet will be triggered internally."""
     # We check if all the necessary env variables have been set correctly.
     _input_validation()
-    # If input validation passes, we call the specific handler to generater the messagees for the producer.
+    # If input validation passes, we call the specific handler to generate the messages for the producer.
     _message_handler[Configuration.MESSAGE_TYPE](Configuration)
 
     # Store message to file that need to be sent.

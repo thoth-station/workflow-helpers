@@ -52,4 +52,4 @@ class Configuration:
     # Kebechet Administrator
     # This needs package info + solver type + message type
     SOLVER_NAME = os.getenv("THOTH_SOLVER_NAME")
-    MESSAGE_TYPE = os.getenv("MESSAGE_TYPE")
+    MESSAGE_TYPE = os.getenv("THOTH_MESSAGE_TYPE")
