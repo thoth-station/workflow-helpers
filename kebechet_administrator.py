@@ -23,6 +23,7 @@ Kebechet needs to be run on and schedules the necessary messages.
 
 import logging
 import json
+import semver
 from typing import Dict
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
@@ -60,8 +61,8 @@ def _handle_solved_message(Configuration):  # noqa: N803
         # Construct the message input
         if repo_info.get("private"):
             continue  # We skip for private repo's.
-        if repo_info.get("package_version") == Configuration.PACKAGE_VERSION:
-            continue  # We dont schedule, if the package is at the solved package version.
+        if semver.compare(repo_info.get("package_version"), Configuration.PACKAGE_VERSION):
+            continue  # We dont schedule, if the package version > version of the solved package version.
         message_input = {
             "component_name": {"type": "str", "value": __COMPONENT_NAME__},
             "service_version": {"type": "str", "value": __service_version__},
