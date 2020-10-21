@@ -47,6 +47,11 @@ output_messages = []  # Messages to be sent by producer.
 def _handle_solved_message(Configuration):  # noqa: N803
     """Handle all the messages for which Kebechet needs to run on if the sovler type matches the os type."""
     solver_string = Configuration.get("THOTH_SOLVER_NAME")  # ex - solver-fedora-31-py38
+    if not solver_string:
+        raise ValueError(
+            f"SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
+            but solver name is missing."
+        )
     _, os_name, os_version, python_version = solver_string.rsplit(sep="-", maxsplit=3)
     python_version = ".".join([i for i in python_version if i.isdigit()])  # generates '3.8' from 'py39'
     repositories: Dict[str, Dict] = GRAPH.get_kebechet_github_installations_info_for_python_package_version(
