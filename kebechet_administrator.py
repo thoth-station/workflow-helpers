@@ -17,8 +17,8 @@
 
 """Kebechet Administrator.
 
-This script run in a workflow task to take and incoming message and decide and decides which repositores
-Kebechet needs to be run on and schedules the necessary messages.
+This script run in a workflow task to take an incoming message and decides which repositories Kebechet
+needs to be run on and store the necessary messages to be sent.
 """
 
 import logging
