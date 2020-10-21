@@ -110,7 +110,7 @@ def _handle_package_issue(Configuration):  # noqa: N803
 _message_handler = {
     "SolvedPackageMessage": _handle_solved_message,
     "HashMismatchMessage": _handle_package_issue,
-    "MissingPackageMessage": _handle_package_issue,
+    # "MissingPackageMessage": _handle_package_issue, # To be implemented.
     "MissingVersionMessage": _handle_package_issue,
     "CVEProvidedMessage": _handle_package_issue,
 }
