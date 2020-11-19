@@ -29,6 +29,7 @@ from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.messaging import __all__ as all_messages
 from thoth.workflow_helpers import __service_version__
+from thoth.common import OpenShift as OpenShift
 
 __COMPONENT_NAME__ = "Kebechet Administrator"
 
@@ -52,8 +53,12 @@ def _handle_solved_message(Configuration):  # noqa: N803
             f"SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
             but solver name is missing."
         )
-    _, os_name, os_version, python_version = solver_string.rsplit(sep="-", maxsplit=3)
-    python_version = ".".join([i for i in python_version if i.isdigit()])  # generates '3.8' from 'py39'
+    solver_dict = OpenShift.parse_python_solver_name(solver_string)
+    os_name, os_version, python_version = (
+        solver_dict["os_name"],
+        solver_dict["os_version"],
+        solver_dict["python_version"],
+    )
     repositories: Dict[str, Dict] = GRAPH.get_kebechet_github_installations_info_for_python_package_version(
         package_name=Configuration.PACKAGE_NAME,
         index_url=Configuration.PACKAGE_INDEX,
