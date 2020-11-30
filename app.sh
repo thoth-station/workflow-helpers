@@ -24,4 +24,6 @@ elif [ "$THOTH_WORKFLOW_TASK" = "parse_adviser_output" ]; then
     exec python3 parse_adviser_output.py
 elif [ "$THOTH_WORKFLOW_TASK" = "kebechet_administrator" ]; then
     exec python3 kebechet_administrator.py
+elif [ "$THOTH_WORKFLOW_TASK" = "graph_schema_update" ]; then
+    exec python3 graph_schema_update.py
 fi
