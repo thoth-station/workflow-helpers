@@ -26,7 +26,7 @@ _LOGGER = logging.getLogger("thoth.graph_schema_update")
 _LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_version__)
 
 
-def main():
+def main() -> None:
     """Perform schema update for the graph database."""
     graph = GraphDatabase()
     graph.connect()
