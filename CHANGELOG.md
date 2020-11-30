@@ -162,3 +162,20 @@ all the things that you see...
 * Do not return before saving default (#156)
 * Method should not fail and output default always present (#155)
 * lock down thoth-messaging (#153)
+
+## Release 0.2.0 (2020-11-30T20:30:08)
+### Features
+* Kebechet admin (#154)
+* :arrow_up: Automatic update of dependencies by kebechet. (#170)
+### Automatic Updates
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.15 to 0.25.16 (#165)
+* :pushpin: Automatic update of dependency thoth-storages from 0.25.15 to 0.25.16 (#164)
+* :pushpin: Automatic update of dependency thoth-common from 0.20.2 to 0.20.4 (#163)
+* :pushpin: Automatic update of dependency thoth-common from 0.20.2 to 0.20.4 (#162)
+* :pushpin: Automatic update of dependency thamos from 1.0.1 to 1.1.1 (#161)
+* :pushpin: Automatic update of dependency thoth-common from 0.20.1 to 0.20.2 (#160)
+* :pushpin: Automatic update of dependency thoth-common from 0.20.1 to 0.20.2 (#159)
+
+## Release 0.3.0 (2020-11-30T21:05:16)
+### Features
+* Add graph schema update task (#168)
