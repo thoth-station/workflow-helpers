@@ -175,3 +175,7 @@ all the things that you see...
 * :pushpin: Automatic update of dependency thamos from 1.0.1 to 1.1.1 (#161)
 * :pushpin: Automatic update of dependency thoth-common from 0.20.1 to 0.20.2 (#160)
 * :pushpin: Automatic update of dependency thoth-common from 0.20.1 to 0.20.2 (#159)
+
+## Release 0.3.0 (2020-11-30T21:05:16)
+### Features
+* Add graph schema update task (#168)
