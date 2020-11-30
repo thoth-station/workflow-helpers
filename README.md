@@ -48,3 +48,13 @@ It checks for any unresolved packages in the adviser report.
 When the unresolved packages are present, it store messages to be sent for
 an [UnresolvedPackageMessage](https://github.com/thoth-station/messaging/blob/a579a480819a9b35123e9002243f4bba6d082929/thoth/messaging/unresolved_package.py#L35),
 so that these packages can be solved using Thoth [Solver](https://github.com/thoth-station/solver) workflow.
+
+
+## kebechet_administrator.py
+
+```shell
+REPO_PATH=. THOTH_WORKFLOW_TASK=kebechet_administrator ./app.sh
+```
+
+It reacts to a particular message and queries the Kebechet repositories impacted by the message, and schedules a Kebechet run for these repositories.
+When the impacted repositories exist, it store messages to be sent of the type [KebechetRunUrlTrigger](https://github.com/thoth-station/messaging/blob/master/thoth/messaging/kebechet_run_url.py).
