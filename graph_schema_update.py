@@ -23,7 +23,7 @@ from thoth.workflow_helpers import __service_version__
 from thoth.storages import GraphDatabase
 
 _LOGGER = logging.getLogger("thoth.graph_schema_update")
-_LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_version__)
+_LOGGER.info("Thoth workflow-helpers task: graph_schema_update v%s", __service_version__)
 
 
 def update_schema() -> None:
@@ -32,6 +32,7 @@ def update_schema() -> None:
     graph.connect()
 
     graph.initialize_schema()
+
 
 if __name__ == "__main__":
     update_schema()
