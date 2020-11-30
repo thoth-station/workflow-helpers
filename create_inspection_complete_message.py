@@ -35,10 +35,18 @@ def create_inspection_complete_message():
         "deployment_name": {"type": "str", "value": deployment_name},
     }
 
-    messages = [{"topic_name": "thoth.inspection-completed", "message_contents": message_contents}]
+    message = {"topic_name": "thoth.inspection-completed", "message_contents": message_contents}
 
-    with open(MSG_FILE, "w") as f:
-        json.dump(messages, f)
+    with open(MSG_FILE, "rw") as f:
+        if os.stat(f).st_size != 0:
+            all_messages: list = json.load(f)
+            if type(all_messages) != list:
+                raise TypeError(f"Message file must be a list of messages. Got type {type(all_messages)}")
+            all_messages.append(message)
+        else:
+            all_messages = [message]
+
+        json.dump(all_messages, f)
 
 
 if __name__ == "__main__":
