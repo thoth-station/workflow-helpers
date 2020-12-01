@@ -179,3 +179,10 @@ all the things that you see...
 ## Release 0.3.0 (2020-11-30T21:05:16)
 ### Features
 * Add graph schema update task (#168)
+
+## Release 0.3.1 (2020-12-01T07:33:29)
+### Features
+* :arrow_up: Automatic update of dependencies by kebechet. (#181)
+* Update .thoth.yaml (#172)
+* :arrow_up: Automatic update of dependencies by kebechet. (#179)
+* Add pre-commit (#175)
