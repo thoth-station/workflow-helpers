@@ -291,7 +291,7 @@
                 "sha256:cfd47e756825eb8c6d197c1a2f25199aef2895cd31b522c74ec2dbb95dfa6fcc",
                 "sha256:ffcd350ea29d528f6814fc9a42b5e50e130310da054a93e9d8216ef89a254611"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==1.10.4"
         },
         "google-auth": {
@@ -1213,7 +1213,7 @@
                 "sha256:cedb2f9e1f990918ea061f28a0f0077a07702e3819602d3507e2ff98c8d20636",
                 "sha256:e8caf961e1b1a945db76f1b5fa9c91498d15f545ac0ababbe575cfab185d3bd8"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4.0'",
             "version": "==5.3"
         },
         "dataclasses": {
