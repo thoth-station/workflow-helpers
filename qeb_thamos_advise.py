@@ -96,10 +96,13 @@ def qeb_hwt_thamos_advise() -> None:
         trigger_finished_webhook(exception_message=exception_message, has_error=True, error_type="MissingThothYamlFile")
         return
 
-    # Fetch recommedation type
+
     try:
-        thoth_yaml_runtime_env = thoth_yaml_config.content.get("runtime_environments")
-        recommendation_type = thoth_yaml_runtime_env[0].get("recommendation_type") if thoth_yaml_config else "latest"
+        # Consider first runtime environment
+        runtime_environment = thoth_yaml_config.content.get("runtime_environments")[0]
+
+        # Fetch recommendation type
+        recommendation_type = runtime_environment.get("recommendation_type") if thoth_yaml_config else "latest"
 
         requirements_format = thoth_yaml_config.requirements_format
         if requirements_format == "pipenv":
@@ -114,6 +117,7 @@ def qeb_hwt_thamos_advise() -> None:
         application_stack = PythonStack(
             requirements=pipfile, requirements_lock=pipfile_lock_str, requirements_format=requirements_format
         ).to_dict()
+
     except Exception as exception:
         _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
         exception_message = json.loads(exception.body)["error"]  # type: ignore
@@ -125,6 +129,7 @@ def qeb_hwt_thamos_advise() -> None:
         "component_name": {"type": "str", "value": __COMPONENT_NAME__},
         "service_version": {"type": "str", "value": __service_version__},
         "application_stack": {"type": "Dict", "value": application_stack},
+        "runtime_environment": {"type": "Dict", "value": runtime_environment},
         "recommendation_type": {"type": "str", "value": recommendation_type},
         "github_event_type": {"type": "str", "value": Configuration._GITHUB_EVENT_TYPE},
         "github_check_run_id": {"type": "int", "value": int(Configuration._GITHUB_CHECK_RUN_ID)},
