@@ -96,7 +96,6 @@ def qeb_hwt_thamos_advise() -> None:
         trigger_finished_webhook(exception_message=exception_message, has_error=True, error_type="MissingThothYamlFile")
         return
 
-
     try:
         # Consider first runtime environment
         runtime_environment = thoth_yaml_config.content.get("runtime_environments")[0]
