@@ -186,3 +186,10 @@ all the things that you see...
 * Update .thoth.yaml (#172)
 * :arrow_up: Automatic update of dependencies by kebechet. (#179)
 * Add pre-commit (#175)
+
+## Release 0.3.2 (2021-01-11T08:50:36)
+### Features
+* Send also runtime environment in adviser trigger message (#187)
+* :arrow_up: Automatic update of dependencies by kebechet. (#185)
+* :arrow_up: Automatic update of dependencies by kebechet. (#184)
+* get inspection info from env (#167)
