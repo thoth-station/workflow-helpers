@@ -28,6 +28,8 @@ from thoth.common import OpenShift
 
 from thoth.workflow_helpers import __service_version__
 
+from thoth.workflow_helpers.common import store_messages
+
 _LOGGER = logging.getLogger("thoth.parse_adviser_output")
 _LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_version__)
 
@@ -107,11 +109,7 @@ def parse_adviser_output() -> None:
         )
 
     # Store message to file that need to be sent.
-    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
-        json.dump(output_messages, json_file)
-
-    if output_messages:
-        _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
+    store_messages(output_messages)
 
 
 if __name__ == "__main__":
