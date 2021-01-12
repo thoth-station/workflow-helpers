@@ -19,7 +19,6 @@
 
 import os
 import logging
-import json
 
 from typing import List
 from thoth.storages import GraphDatabase
@@ -27,6 +26,7 @@ from thoth.storages import AdvisersResultsStore
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
+from thoth.workflow_helpers.common import store_message
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -156,11 +156,7 @@ def parse_solver_output() -> None:
                 )
 
     # 5. Store messages that need to be sent
-    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
-        json.dump(output_messages, json_file)
-
-    if output_messages:
-        _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
+    store_message(output_messages)
 
 
 if __name__ == "__main__":
