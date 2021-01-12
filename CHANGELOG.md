@@ -193,3 +193,7 @@ all the things that you see...
 * :arrow_up: Automatic update of dependencies by kebechet. (#185)
 * :arrow_up: Automatic update of dependencies by kebechet. (#184)
 * get inspection info from env (#167)
+
+## Release 0.3.3 (2021-01-12T12:30:12)
+### Bug Fixes
+* Always store file to avoid error in Argo (#192)
