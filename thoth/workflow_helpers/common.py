@@ -32,8 +32,8 @@ def retrieve_solver_document(document_path: str):
     return solver_document
 
 
-def store_message(output_messages: list):
-    """Store message."""
+def store_messages(output_messages: list):
+    """Store messages."""
     # Store message to file that need to be sent.
     with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
         json.dump(output_messages, json_file)

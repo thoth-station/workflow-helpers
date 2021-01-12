@@ -31,7 +31,7 @@ from thoth.common.enums import ThothAdviserIntegrationEnum
 from thoth.common import OpenShift
 
 from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
-from thoth.workflow_helpers.common import store_message
+from thoth.workflow_helpers.common import store_messages
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
 
@@ -96,7 +96,7 @@ def qeb_hwt_thamos_advise() -> None:
 
     if not thoth_yaml_config.config_file_exists():
         exception_message = _create_message_config_file_error(no_file=True)
-        store_message(output_messages)
+        store_messages(output_messages)
         trigger_finished_webhook(exception_message=exception_message, has_error=True, error_type="MissingThothYamlFile")
         return
 
@@ -124,7 +124,7 @@ def qeb_hwt_thamos_advise() -> None:
     except Exception as exception:
         _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
         exception_message = json.loads(exception.body)["error"]  # type: ignore
-        store_message(output_messages)
+        store_messages(output_messages)
         trigger_finished_webhook(exception_message=exception_message, has_error=True)
         return
 
@@ -146,7 +146,7 @@ def qeb_hwt_thamos_advise() -> None:
     # We store the message to put in the output file here.
     output_messages = [{"topic_name": "thoth.adviser-trigger", "message_contents": message_input}]
 
-    store_message(output_messages)
+    store_messages(output_messages)
 
 
 if __name__ == "__main__":
