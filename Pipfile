@@ -9,9 +9,9 @@ thoth-common = "*"
 thoth-python = "*"
 thoth-analyzer = "*"
 thoth-storages = "*"
-thoth-messaging = "==0.7.13"
 beautifulsoup4 = "*"
 semver = "*"
+thoth-messaging = "*"
 
 [dev-packages]
 pytest = "*"
