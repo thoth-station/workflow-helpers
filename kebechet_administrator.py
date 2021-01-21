@@ -31,6 +31,8 @@ from thoth.messaging import __all__ as all_messages
 from thoth.workflow_helpers import __service_version__
 from thoth.common import OpenShift as OpenShift
 
+from thoth.workflow_helpers.common import send_metrics
+
 __COMPONENT_NAME__ = "Kebechet Administrator"
 
 _LOGGER = logging.getLogger("thoth.run_kebechet_administrator")
@@ -163,4 +165,5 @@ def run_kebechet_administrator():
 
 
 if __name__ == "__main__":
+    send_metrics(job="kebechet-administrator")
     run_kebechet_administrator()

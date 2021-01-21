@@ -35,4 +35,5 @@ def update_schema() -> None:
 
 
 if __name__ == "__main__":
+    send_metrics(job="graph-schema-update")
     update_schema()
