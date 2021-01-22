@@ -26,13 +26,11 @@ MSG_FILE = "/mnt/workdir/messages_to_be_sent.json"
 def create_inspection_complete_message():
     """Create message file (InspectionCompleteMessage) to be sent by thoth-messaging cli."""
     inspection_id = os.getenv("THOTH_AMUN_INSPECTION_ID")
-    amun_api_url = os.getenv("THOTH_AMUN_API_URL")
-    deployment_name = os.getenv("THOTH_DEPLOYMENT_NAME")
+    force_sync = bool(int(os.getenv("FORCE_SYNC")))
 
     message_contents = {
         "inspection_id": {"type": "str", "value": inspection_id},
-        "amun_api_url": {"type": "str", "value": amun_api_url},
-        "deployment_name": {"type": "str", "value": deployment_name},
+        "force_sync": {"type": "bool", "value": force_sync},
     }
 
     message = {"topic_name": "thoth.inspection-completed", "message_contents": message_contents}
