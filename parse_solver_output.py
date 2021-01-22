@@ -160,5 +160,5 @@ def parse_solver_output() -> None:
 
 
 if __name__ == "__main__":
-    send_metrics(job="parse-solver-output")
+    send_metrics(component_name="parse-solver-output")
     parse_solver_output()
