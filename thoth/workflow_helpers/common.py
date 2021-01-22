@@ -66,7 +66,7 @@ def send_metrics(component_name: str):
 
     if deployment_name:
         database_schema_revision_script.labels(
-            "kebechet-administrator", GraphDatabase().get_script_alembic_version_head(), deployment_name
+            component_name, GraphDatabase().get_script_alembic_version_head(), deployment_name
         ).inc()
     else:
         _LOGGER.warning("THOTH_DEPLOYMENT_NAME env variable is not set.")
