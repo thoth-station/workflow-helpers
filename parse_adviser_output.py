@@ -113,5 +113,5 @@ def parse_adviser_output() -> None:
 
 
 if __name__ == "__main__":
-    send_metrics(component_name="parse-adviser-output")
+    send_metrics()
     parse_adviser_output()

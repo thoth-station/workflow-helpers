@@ -55,14 +55,12 @@ def store_messages(output_messages: list):
         _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
 
 
-def send_metrics(component_name: str):
+def send_metrics():
     """Send metrics to pushgateway."""
     pushgateway_url = Configuration._THOTH_METRICS_PUSHGATEWAY_URL
     deployment_name = Configuration._THOTH_DEPLOYMENT_NAME
 
-    prefix = "workflow-helpers"
-
-    job = f"{prefix}-{component_name}"
+    component_name = "workflow-helpers"
 
     if deployment_name:
         database_schema_revision_script.labels(

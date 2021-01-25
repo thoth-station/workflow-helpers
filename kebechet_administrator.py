@@ -165,5 +165,5 @@ def run_kebechet_administrator():
 
 
 if __name__ == "__main__":
-    send_metrics(component_name="kebechet-administrator")
+    send_metrics()
     run_kebechet_administrator()

@@ -36,5 +36,5 @@ def update_schema() -> None:
 
 
 if __name__ == "__main__":
-    send_metrics(component_name="graph-schema-update")
+    send_metrics()
     update_schema()
