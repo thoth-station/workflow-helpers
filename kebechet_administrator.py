@@ -52,7 +52,7 @@ def _handle_solved_message(Configuration):  # noqa: N803
     solver_string = Configuration.get("THOTH_SOLVER_NAME")  # ex - solver-fedora-31-py38
     if not solver_string:
         raise ValueError(
-            f"SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
+            "SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
             but solver name is missing."
         )
     solver_dict = OpenShift.parse_python_solver_name(solver_string)
@@ -157,7 +157,7 @@ def run_kebechet_administrator():
     _message_handler[Configuration.MESSAGE_TYPE](Configuration)
 
     # Store message to file that need to be sent.
-    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
+    with open("/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
         json.dump(output_messages, json_file)
 
     if output_messages:

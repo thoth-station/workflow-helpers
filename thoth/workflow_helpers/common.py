@@ -48,7 +48,7 @@ def retrieve_solver_document(document_path: str):
 def store_messages(output_messages: list):
     """Store messages."""
     # Store message to file that need to be sent.
-    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
+    with open("/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
         json.dump(output_messages, json_file)
 
     if output_messages:
@@ -73,7 +73,9 @@ def send_metrics():
         try:
             _LOGGER.debug(f"Submitting metrics to Prometheus pushgateway {pushgateway_url}")
             push_to_gateway(
-                pushgateway_url, job=job, registry=prometheus_registry,
+                pushgateway_url,
+                job=component_name,
+                registry=prometheus_registry,
             )
         except Exception as e:
             _LOGGER.exception(f"An error occurred pushing the metrics: {str(e)}")
