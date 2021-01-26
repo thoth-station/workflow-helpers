@@ -58,7 +58,7 @@ def store_messages(output_messages: list):
 def send_metrics():
     """Send metrics to pushgateway."""
     pushgateway_url = Configuration._THOTH_METRICS_PUSHGATEWAY_URL
-    deployment_name = Configuration._THOTH_DEPLOYMENT_NAME
+    deployment_name = Configuration.THOTH_DEPLOYMENT_NAME
 
     component_name = "workflow-helpers"
 
