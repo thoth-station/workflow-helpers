@@ -53,3 +53,7 @@ class Configuration:
     # This needs package info + solver type + message type
     SOLVER_NAME = os.getenv("THOTH_SOLVER_NAME")
     MESSAGE_TYPE = os.getenv("THOTH_MESSAGE_TYPE")
+
+    # metrics
+    THOTH_METRICS_PUSHGATEWAY_URL = os.getenv("PROMETHEUS_PUSHGATEWAY_URL")
+    THOTH_DEPLOYMENT_NAME = os.getenv("THOTH_DEPLOYMENT_NAME")

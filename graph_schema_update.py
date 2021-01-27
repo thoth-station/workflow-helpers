@@ -21,6 +21,7 @@ import logging
 
 from thoth.workflow_helpers import __service_version__
 from thoth.storages import GraphDatabase
+from thoth.workflow_helpers.common import send_metrics
 
 _LOGGER = logging.getLogger("thoth.graph_schema_update")
 _LOGGER.info("Thoth workflow-helpers task: graph_schema_update v%s", __service_version__)
@@ -35,4 +36,5 @@ def update_schema() -> None:
 
 
 if __name__ == "__main__":
+    send_metrics()
     update_schema()

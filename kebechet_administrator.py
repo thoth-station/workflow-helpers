@@ -31,6 +31,8 @@ from thoth.messaging import __all__ as all_messages
 from thoth.workflow_helpers import __service_version__
 from thoth.common import OpenShift as OpenShift
 
+from thoth.workflow_helpers.common import send_metrics
+
 __COMPONENT_NAME__ = "Kebechet Administrator"
 
 _LOGGER = logging.getLogger("thoth.run_kebechet_administrator")
@@ -50,7 +52,7 @@ def _handle_solved_message(Configuration):  # noqa: N803
     solver_string = Configuration.get("THOTH_SOLVER_NAME")  # ex - solver-fedora-31-py38
     if not solver_string:
         raise ValueError(
-            f"SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
+            "SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
             but solver name is missing."
         )
     solver_dict = OpenShift.parse_python_solver_name(solver_string)
@@ -66,13 +68,17 @@ def _handle_solved_message(Configuration):  # noqa: N803
         os_version=os_version,
         python_version=python_version,
     )  # We query without the package_version.
+
     for key in repositories.keys():
         repo_info = repositories[key]
+
         # Construct the message input
         if repo_info.get("private"):
             continue  # We skip for private repo's.
+
         if semver.compare(repo_info.get("package_version"), Configuration.PACKAGE_VERSION):
             continue  # We dont schedule, if the package version > version of the solved package version.
+
         message_input = {
             "component_name": {"type": "str", "value": __COMPONENT_NAME__},
             "service_version": {"type": "str", "value": __service_version__},
@@ -87,15 +93,17 @@ def _handle_solved_message(Configuration):  # noqa: N803
 
 def _handle_package_issue(Configuration):  # noqa: N803
     """Handle all the messages for which Kebechet needs to run on all repos associated."""
-    # We getch all the Kebechet repos using a non optimal package(missing package or CVE or missing version)
+    # We get all the Kebechet repos using a non optimal package(missing package or CVE or missing version)
     repositories: Dict[str, Dict] = GRAPH.get_kebechet_github_installations_info_for_python_package_version(
         package_name=Configuration.PACKAGE_NAME,
         version=Configuration.PACKAGE_VERSION,
         index_url=Configuration.PACKAGE_INDEX,
     )
+
     # The keys represent the repo names and the value dictionary is the details for the repo.
     for key in repositories.keys():
         repo_info = repositories[key]
+
         # Construct the message input
         if repo_info.get("private"):
             continue  # We skip for private repo's.
@@ -128,6 +136,7 @@ def _input_validation():
         if not getattr(Configuration, env_var):
             _LOGGER.error(f"No value has been provided to the {env_var} env variable.")
             raise ValueError(f"No value has been provided to the {env_var} env variable.")
+
     # Validation on the message type  # ex - `SolvedPackageMessage.__name__`
     if Configuration.MESSAGE_TYPE not in supported_messages or Configuration.MESSAGE_TYPE not in all_messages:
         _LOGGER.error(
@@ -148,7 +157,7 @@ def run_kebechet_administrator():
     _message_handler[Configuration.MESSAGE_TYPE](Configuration)
 
     # Store message to file that need to be sent.
-    with open(f"/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
+    with open("/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
         json.dump(output_messages, json_file)
 
     if output_messages:
@@ -156,4 +165,5 @@ def run_kebechet_administrator():
 
 
 if __name__ == "__main__":
+    send_metrics()
     run_kebechet_administrator()

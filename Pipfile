@@ -12,6 +12,7 @@ thoth-storages = "*"
 beautifulsoup4 = "*"
 semver = "*"
 thoth-messaging = "*"
+prometheus-client = "*"
 
 [dev-packages]
 pytest = "*"

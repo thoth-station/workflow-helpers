@@ -26,7 +26,7 @@ from thoth.storages import AdvisersResultsStore
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
-from thoth.workflow_helpers.common import store_messages
+from thoth.workflow_helpers.common import store_messages, send_metrics
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -160,4 +160,5 @@ def parse_solver_output() -> None:
 
 
 if __name__ == "__main__":
+    send_metrics()
     parse_solver_output()

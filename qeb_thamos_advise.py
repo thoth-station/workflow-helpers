@@ -76,7 +76,7 @@ def _create_message_config_file_error(no_file: bool):
 def qeb_hwt_thamos_advise() -> None:
     """Qeb-Hwt Thamos Advise Task."""
     if not Configuration._REPO_PATH:
-        raise Exception(f"No path has been provided to REPO_PATH env variable.")
+        raise Exception("No path has been provided to REPO_PATH env variable.")
 
     if not Path(Configuration._REPO_PATH).exists():
         raise FileNotFoundError(f"Cannot find the file on this path: {Configuration._REPO_PATH}")
