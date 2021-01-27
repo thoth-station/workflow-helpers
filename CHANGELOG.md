@@ -197,3 +197,12 @@ all the things that you see...
 ## Release 0.3.3 (2021-01-12T12:30:12)
 ### Bug Fixes
 * Always store file to avoid error in Argo (#192)
+
+## Release 0.4.0 (2021-01-27T07:36:29)
+### Features
+* Introduce metrics for revision (#197)
+* :arrow_up: Automatic update of dependencies by kebechet. (#196)
+* :arrow_up: Automatic update of dependencies by kebechet. (#188)
+* update to latest messaging (#195)
+### Improvements
+* change message contents of inspection complete (#198)
