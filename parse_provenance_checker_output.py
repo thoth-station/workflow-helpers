@@ -24,8 +24,6 @@ import os
 
 from typing import List, Any, Dict
 from pathlib import Path
-from thoth.python import Pipfile
-from thoth.common import OpenShift
 
 from thoth.workflow_helpers import __service_version__
 
@@ -37,9 +35,7 @@ _LOGGER.info("Thoth workflow-helpers task: parse_provenance_checker_output v%s",
 __COMPONENT_NAME__ = "provenance-checker"
 
 
-def _parse_provenance_check_report(
-    report: List[Any]
-) -> List[Dict[str, str]]:
+def _parse_provenance_check_report(report: List[Any]) -> List[Dict[str, str]]:
     """Retrieve unsolved packages from provenance checker run."""
     package_id = "MISSING-PACKAGE"
 
@@ -51,7 +47,7 @@ def _parse_provenance_check_report(
                 {
                     "package_name": package["package_name"],
                     "package_version": package["package_version"],
-                    "index_url": package["source"]["url"]
+                    "index_url": package["source"]["url"],
                 }
             )
 
@@ -84,7 +80,6 @@ def parse_provenance_checker_output() -> None:
 
         if not unresolved_packages:
             _LOGGER.warning("No packages to be solved with priority identified.")
-            unresolved_found = False
 
         else:
             _LOGGER.info(f"Identified the following unresolved packages: {unresolved_packages}")
@@ -97,9 +92,9 @@ def parse_provenance_checker_output() -> None:
         message_input = {
             "component_name": {"type": "str", "value": __COMPONENT_NAME__},
             "service_version": {"type": "str", "value": __service_version__},
-            "package_name": {"type": "Dict", "value": package['package_name']},
-            "package_version": {"type": "str", "value": package['package_version']},
-            "index_url": {"type": "str", "value": package['index_url']},
+            "package_name": {"type": "Dict", "value": package["package_name"]},
+            "package_version": {"type": "str", "value": package["package_version"]},
+            "index_url": {"type": "str", "value": package["index_url"]},
             "solver": {"type": "str", "value": solver},
         }
 
