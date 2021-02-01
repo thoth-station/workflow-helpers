@@ -100,7 +100,7 @@ def parse_adviser_output() -> None:
             "package_name": {"type": "Dict", "value": package_info.name},
             "package_version": {"type": "str", "value": package_info.version},
             "index_url": {"type": "str", "value": package_info.index},
-            "solver": {"type": "int", "value": solver},
+            "solver": {"type": "str", "value": solver},
         }
 
         # We store the message to put in the output file here.
