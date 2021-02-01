@@ -46,7 +46,7 @@ def _parse_provenance_check_report(report: List[Any]) -> List[Dict[str, str]]:
             unresolved_packages.append(
                 {
                     "package_name": package["package_name"],
-                    "package_version": package["package_version"],
+                    "package_version": package["package_version"].lstrip("=="),
                     "index_url": package["source"]["url"],
                 }
             )
