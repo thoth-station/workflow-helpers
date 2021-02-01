@@ -28,7 +28,7 @@ from thoth.common import OpenShift
 
 from thoth.workflow_helpers import __service_version__
 
-from thoth.workflow_helpers.common import store_messages, send_metrics
+from thoth.workflow_helpers.common import store_messages
 
 _LOGGER = logging.getLogger("thoth.parse_adviser_output")
 _LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_version__)
@@ -113,5 +113,4 @@ def parse_adviser_output() -> None:
 
 
 if __name__ == "__main__":
-    send_metrics()
     parse_adviser_output()
