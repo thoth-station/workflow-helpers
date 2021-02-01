@@ -49,6 +49,16 @@ When the unresolved packages are present, it store messages to be sent for
 an [UnresolvedPackageMessage](https://github.com/thoth-station/messaging/blob/a579a480819a9b35123e9002243f4bba6d082929/thoth/messaging/unresolved_package.py#L35),
 so that these packages can be solved using Thoth [Solver](https://github.com/thoth-station/solver) workflow.
 
+## parse_provenance_checker_output.py
+
+```shell
+REPO_PATH=. THOTH_WORKFLOW_TASK=parse_provenance_checker_output ./app.sh
+```
+
+It checks for any unresolved packages in the provenance checker report.
+When the unresolved packages are present, it store messages to be sent for
+an [UnresolvedPackageMessage](https://github.com/thoth-station/messaging/blob/a579a480819a9b35123e9002243f4bba6d082929/thoth/messaging/unresolved_package.py#L35),
+so that these packages can be solved using Thoth [Solver](https://github.com/thoth-station/solver) workflow.
 
 ## kebechet_administrator.py
 
