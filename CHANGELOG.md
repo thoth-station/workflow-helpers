@@ -206,3 +206,9 @@ all the things that you see...
 * update to latest messaging (#195)
 ### Improvements
 * change message contents of inspection complete (#198)
+
+## Release 0.4.1 (2021-02-01T15:22:59)
+### Features
+* Add kebechet templates (#205)
+* :arrow_up: Automatic update of dependencies by kebechet. (#206)
+* :arrow_up: Automatic update of dependencies by kebechet. (#202)
