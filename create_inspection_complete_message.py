@@ -20,6 +20,8 @@
 import os
 import json
 
+from thoth.messaging.unresolved_package import InspectionCompletedMessage
+
 MSG_FILE = "/mnt/workdir/messages_to_be_sent.json"
 
 
@@ -33,7 +35,7 @@ def create_inspection_complete_message():
         "force_sync": {"type": "bool", "value": force_sync},
     }
 
-    message = {"topic_name": "thoth.inspection-completed", "message_contents": message_contents}
+    message = {"topic_name": InspectionCompletedMessage().topic_name, "message_contents": message_contents}
 
     with open(MSG_FILE, "rw") as f:
         if os.stat(f).st_size != 0:
