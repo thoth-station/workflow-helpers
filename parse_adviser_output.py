@@ -109,9 +109,7 @@ def parse_adviser_output() -> None:
         }
 
         # We store the message to put in the output file here.
-        output_messages.append(
-            {"topic_name": UnresolvedPackageMessage().topic_name, "message_contents": message_input}
-        )
+        output_messages.append({"topic_name": UnresolvedPackageMessage().topic_name, "message_contents": message_input})
 
     # Store message to file that need to be sent.
     store_messages(output_messages)

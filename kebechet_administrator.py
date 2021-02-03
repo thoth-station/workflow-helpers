@@ -22,7 +22,6 @@ needs to be run on and store the necessary messages to be sent.
 """
 
 import logging
-import json
 import semver
 from typing import Dict
 from thoth.storages import GraphDatabase
@@ -93,7 +92,9 @@ def _handle_solved_message(Configuration):  # noqa: N803
         }
 
         # We store the message to put in the output file here.
-        output_messages.append({"topic_name": KebechetRunUrlTriggerMessage().topic_name, "message_contents": message_input})
+        output_messages.append(
+            {"topic_name": KebechetRunUrlTriggerMessage().topic_name, "message_contents": message_input}
+        )
 
 
 def _handle_package_issue(Configuration):  # noqa: N803
@@ -121,7 +122,9 @@ def _handle_package_issue(Configuration):  # noqa: N803
         }
 
         # We store the message to put in the output file here.
-        output_messages.append({"topic_name": KebechetRunUrlTriggerMessage().topic_name, "message_contents": message_input})
+        output_messages.append(
+            {"topic_name": KebechetRunUrlTriggerMessage().topic_name, "message_contents": message_input}
+        )
 
 
 # This handler dispatches the specific method based on a paticular message.
