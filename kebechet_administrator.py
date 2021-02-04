@@ -30,6 +30,7 @@ from thoth.workflow_helpers.configuration import Configuration
 from thoth.messaging import __all__ as all_messages
 from thoth.workflow_helpers import __service_version__
 from thoth.common import OpenShift as OpenShift
+from thoth.common.enums import InternalTriggerEnum
 
 from thoth.workflow_helpers.common import send_metrics
 
@@ -45,6 +46,14 @@ GRAPH.connect()
 _URL_PREFIX = "https://github.com/"
 
 output_messages = []  # Messages to be sent by producer.
+
+_JUSTIFICATION_MAPPING = {
+    "SolvedPackageMessage": InternalTriggerEnum.NEW_RELEASE.value,
+    "HashMismatchMessage": InternalTriggerEnum.HASH_MISMATCH.value,
+    # "MissingPackageMessage": InternalTriggerEnum.MISSING_PACKAGE.value, # To be implemented.
+    "MissingVersionMessage": InternalTriggerEnum.MISSING_VERSION.value,
+    "CVEProvidedMessage": InternalTriggerEnum.CVE.value,
+}
 
 
 def _handle_solved_message(Configuration):  # noqa: N803
@@ -85,6 +94,10 @@ def _handle_solved_message(Configuration):  # noqa: N803
             "url": {"type": "str", "value": _URL_PREFIX + key},
             "service_name": {"type": "str", "value": "github"},
             "installation_id": {"type": "str", "value": repo_info.get("installation_id")},
+            "kebechet_metadata": {
+                "type": "dict",
+                "value": {"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
+            },
         }
 
         # We store the message to put in the output file here.
@@ -113,6 +126,10 @@ def _handle_package_issue(Configuration):  # noqa: N803
             "url": {"type": "str", "value": _URL_PREFIX + key},
             "service_name": {"type": "str", "value": "github"},
             "installation_id": {"type": "str", "value": repo_info.get("installation_id")},
+            "kebechet_metadata": {
+                "type": "dict",
+                "value": {"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
+            },
         }
 
         # We store the message to put in the output file here.
