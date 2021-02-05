@@ -157,7 +157,7 @@ def parse_solver_output() -> None:
                 }
 
                 output_messages.append(
-                    {"topic_name": AdviserReRunMessage().topic_name, "message_contents": message_input}
+                    {"topic_name": AdviserReRunMessage.base_name, "message_contents": message_input}
                 )
 
     # 5. Store messages that need to be sent
@@ -165,7 +165,7 @@ def parse_solver_output() -> None:
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=AdviserReRunMessage().topic_name,
+        message_type=AdviserReRunMessage.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
     )

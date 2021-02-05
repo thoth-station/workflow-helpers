@@ -93,7 +93,7 @@ def _handle_solved_message(Configuration):  # noqa: N803
 
         # We store the message to put in the output file here.
         output_messages.append(
-            {"topic_name": KebechetRunUrlTriggerMessage().topic_name, "message_contents": message_input}
+            {"topic_name": KebechetRunUrlTriggerMessage.base_name, "message_contents": message_input}
         )
 
 
@@ -123,7 +123,7 @@ def _handle_package_issue(Configuration):  # noqa: N803
 
         # We store the message to put in the output file here.
         output_messages.append(
-            {"topic_name": KebechetRunUrlTriggerMessage().topic_name, "message_contents": message_input}
+            {"topic_name": KebechetRunUrlTriggerMessage.base_name, "message_contents": message_input}
         )
 
 
@@ -169,7 +169,7 @@ def run_kebechet_administrator():
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=KebechetRunUrlTriggerMessage().topic_name,
+        message_type=KebechetRunUrlTriggerMessage.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
         is_storages_used=False,

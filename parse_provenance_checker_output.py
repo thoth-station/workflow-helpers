@@ -106,14 +106,14 @@ def parse_provenance_checker_output() -> None:
         }
 
         # We store the message to put in the output file here.
-        output_messages.append({"topic_name": UnresolvedPackageMessage().topic_name, "message_contents": message_input})
+        output_messages.append({"topic_name": UnresolvedPackageMessage.base_name, "message_contents": message_input})
 
     # Store message to file that need to be sent.
     store_messages(output_messages)
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=UnresolvedPackageMessage().topic_name,
+        message_type=UnresolvedPackageMessage.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
         is_storages_used=False,
