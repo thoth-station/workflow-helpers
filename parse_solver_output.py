@@ -156,9 +156,7 @@ def parse_solver_output() -> None:
                     "source_type": {"type": "Optional[str]", "value": source_type},
                 }
 
-                output_messages.append(
-                    {"topic_name": AdviserReRunMessage.base_name, "message_contents": message_input}
-                )
+                output_messages.append({"topic_name": AdviserReRunMessage.base_name, "message_contents": message_input})
 
     # 5. Store messages that need to be sent
     store_messages(output_messages)
