@@ -22,7 +22,6 @@ needs to be run on and store the necessary messages to be sent.
 """
 
 import logging
-import json
 import semver
 from typing import Dict
 from thoth.storages import GraphDatabase
@@ -31,9 +30,10 @@ from thoth.messaging import __all__ as all_messages
 from thoth.workflow_helpers import __service_version__
 from thoth.common import OpenShift as OpenShift
 
-from thoth.workflow_helpers.common import send_metrics
+from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
+from thoth.messaging.unresolved_package import KebechetRunUrlTriggerMessage
 
-__COMPONENT_NAME__ = "Kebechet Administrator"
+__COMPONENT_NAME__ = "kebechet-administrator"
 
 _LOGGER = logging.getLogger("thoth.run_kebechet_administrator")
 _LOGGER.info("Thoth workflow-helpers task: run_kebechet_administrator v%s", __service_version__)
@@ -43,6 +43,10 @@ GRAPH = GraphDatabase()
 GRAPH.connect()
 
 _URL_PREFIX = "https://github.com/"
+
+metric_messages_sent = parametrize_metric_messages_sent(
+    component_name=__COMPONENT_NAME__, description="Thoth Kebechet Administrator Workflow number messages sent"
+)
 
 output_messages = []  # Messages to be sent by producer.
 
@@ -88,7 +92,9 @@ def _handle_solved_message(Configuration):  # noqa: N803
         }
 
         # We store the message to put in the output file here.
-        output_messages.append({"topic_name": "thoth.kebechet-run-url-trigger", "message_contents": message_input})
+        output_messages.append(
+            {"topic_name": KebechetRunUrlTriggerMessage.base_name, "message_contents": message_input}
+        )
 
 
 def _handle_package_issue(Configuration):  # noqa: N803
@@ -116,7 +122,9 @@ def _handle_package_issue(Configuration):  # noqa: N803
         }
 
         # We store the message to put in the output file here.
-        output_messages.append({"topic_name": "thoth.kebechet-run-url-trigger", "message_contents": message_input})
+        output_messages.append(
+            {"topic_name": KebechetRunUrlTriggerMessage.base_name, "message_contents": message_input}
+        )
 
 
 # This handler dispatches the specific method based on a paticular message.
@@ -157,13 +165,18 @@ def run_kebechet_administrator():
     _message_handler[Configuration.MESSAGE_TYPE](Configuration)
 
     # Store message to file that need to be sent.
-    with open("/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
-        json.dump(output_messages, json_file)
+    store_messages(output_messages)
 
-    if output_messages:
-        _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
+    set_metrics(
+        metric_messages_sent=metric_messages_sent,
+        message_type=KebechetRunUrlTriggerMessage.base_name,
+        service_version=__service_version__,
+        number_messages_sent=len(output_messages),
+        is_storages_used=False,
+    )
+
+    send_metrics()
 
 
 if __name__ == "__main__":
-    send_metrics()
     run_kebechet_administrator()

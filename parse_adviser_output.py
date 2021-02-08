@@ -28,12 +28,17 @@ from thoth.common import OpenShift
 
 from thoth.workflow_helpers import __service_version__
 
-from thoth.workflow_helpers.common import store_messages
+from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
+from thoth.messaging.unresolved_package import UnresolvedPackageMessage
 
 _LOGGER = logging.getLogger("thoth.parse_adviser_output")
 _LOGGER.info("Thoth workflow-helpers task: parse_adviser_output v%s", __service_version__)
 
 __COMPONENT_NAME__ = "adviser"
+
+metric_messages_sent = parametrize_metric_messages_sent(
+    component_name=__COMPONENT_NAME__, description="Thoth Adviser Workflow number messages sent"
+)
 
 
 def parse_adviser_output() -> None:
@@ -104,12 +109,20 @@ def parse_adviser_output() -> None:
         }
 
         # We store the message to put in the output file here.
-        output_messages.append(
-            {"topic_name": "thoth.investigator.unresolved-package", "message_contents": message_input}
-        )
+        output_messages.append({"topic_name": UnresolvedPackageMessage.base_name, "message_contents": message_input})
 
     # Store message to file that need to be sent.
     store_messages(output_messages)
+
+    set_metrics(
+        metric_messages_sent=metric_messages_sent,
+        message_type=UnresolvedPackageMessage.base_name,
+        service_version=__service_version__,
+        number_messages_sent=len(output_messages),
+        is_storages_used=False,
+    )
+
+    send_metrics()
 
 
 if __name__ == "__main__":

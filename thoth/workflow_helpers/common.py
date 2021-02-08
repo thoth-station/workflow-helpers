@@ -20,20 +20,35 @@
 import logging
 import json
 
-from prometheus_client import Gauge, CollectorRegistry, push_to_gateway
+from prometheus_client import Metric, Gauge, Counter, CollectorRegistry, push_to_gateway
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
 
 _LOGGER = logging.getLogger(__name__)
 
-prometheus_registry = CollectorRegistry()
+PROMETHEUS_REGISTRY = CollectorRegistry()
+
+PUSHGATEWAY_URL = Configuration.THOTH_METRICS_PUSHGATEWAY_URL
+DEPLOYMENT_NAME = Configuration.THOTH_DEPLOYMENT_NAME
 
 database_schema_revision_script = Gauge(
     "thoth_database_schema_revision_script",
     "Thoth database schema revision from script",
     ["component", "revision", "env"],
-    registry=prometheus_registry,
+    registry=PROMETHEUS_REGISTRY,
 )
+
+
+def parametrize_metric_messages_sent(component_name: str, description: str):
+    """Parametrize metric for number of messages to be sent."""
+    metric_messages_sent = Counter(
+        f"thoth_{component_name}_messages_sent",
+        description,
+        ["message_type", "env", "version"],
+        registry=PROMETHEUS_REGISTRY,
+    )
+
+    return metric_messages_sent
 
 
 def retrieve_solver_document(document_path: str):
@@ -55,27 +70,40 @@ def store_messages(output_messages: list):
         _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
 
 
-def send_metrics():
-    """Send metrics to pushgateway."""
-    pushgateway_url = Configuration.THOTH_METRICS_PUSHGATEWAY_URL
-    deployment_name = Configuration.THOTH_DEPLOYMENT_NAME
+def set_metrics(
+    metric_messages_sent: Metric,
+    message_type: str,
+    service_version: str,
+    number_messages_sent: int,
+    is_storages_used: bool = True,
+):
+    """Set metrics to be sent to pushgateway."""
+    if DEPLOYMENT_NAME:
+        if is_storages_used:
+            database_schema_revision_script.labels(
+                "workflow-helpers", GraphDatabase().get_script_alembic_version_head(), DEPLOYMENT_NAME
+            ).inc()
 
-    component_name = "workflow-helpers"
+        metric_messages_sent.labels(
+            message_type=message_type,
+            env=DEPLOYMENT_NAME,
+            version=service_version,
+        ).inc(number_messages_sent)
 
-    if deployment_name:
-        database_schema_revision_script.labels(
-            component_name, GraphDatabase().get_script_alembic_version_head(), deployment_name
-        ).inc()
     else:
         _LOGGER.warning("THOTH_DEPLOYMENT_NAME env variable is not set.")
 
-    if pushgateway_url and deployment_name:
+
+def send_metrics():
+    """Send metrics to pushgateway."""
+    component_name = "workflow-helpers"
+    if PUSHGATEWAY_URL and DEPLOYMENT_NAME:
         try:
-            _LOGGER.debug(f"Submitting metrics to Prometheus pushgateway {pushgateway_url}")
+            _LOGGER.debug(f"Submitting metrics to Prometheus pushgateway {PUSHGATEWAY_URL}")
             push_to_gateway(
-                pushgateway_url,
+                PUSHGATEWAY_URL,
                 job=component_name,
-                registry=prometheus_registry,
+                registry=PROMETHEUS_REGISTRY,
             )
         except Exception as e:
             _LOGGER.exception(f"An error occurred pushing the metrics: {str(e)}")

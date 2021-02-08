@@ -26,7 +26,8 @@ from thoth.storages import AdvisersResultsStore
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
-from thoth.workflow_helpers.common import store_messages, send_metrics
+from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
+from thoth.messaging.unresolved_package import AdviserReRunMessage
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -40,6 +41,10 @@ document_path = os.environ["THOTH_SOLVER_DOCUMENT_PATH"]
 
 _LOGGER = logging.getLogger("thoth.parse_solver_output")
 _LOGGER.info("Thoth workflow-helpers task: parse_solver_output v%s", __service_version__)
+
+metric_messages_sent = parametrize_metric_messages_sent(
+    component_name=component_name, description="Thoth Provenance Checker Workflow number messages sent"
+)
 
 
 def _check_unsolved_packages(
@@ -151,14 +156,20 @@ def parse_solver_output() -> None:
                     "source_type": {"type": "Optional[str]", "value": source_type},
                 }
 
-                output_messages.append(
-                    {"topic_name": "thoth.investigator.adviser-re-run", "message_contents": message_input}
-                )
+                output_messages.append({"topic_name": AdviserReRunMessage.base_name, "message_contents": message_input})
 
     # 5. Store messages that need to be sent
     store_messages(output_messages)
 
+    set_metrics(
+        metric_messages_sent=metric_messages_sent,
+        message_type=AdviserReRunMessage.base_name,
+        service_version=__service_version__,
+        number_messages_sent=len(output_messages),
+    )
+
+    send_metrics()
+
 
 if __name__ == "__main__":
-    send_metrics()
     parse_solver_output()
