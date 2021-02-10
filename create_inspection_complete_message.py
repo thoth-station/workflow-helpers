@@ -40,7 +40,6 @@ def create_inspection_complete_message():
     }
 
     message = {"topic_name": InspectionCompletedMessage.base_name, "message_contents": message_contents}
-
     store_messages([message])
 
 
