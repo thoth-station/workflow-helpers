@@ -37,7 +37,7 @@ def create_inspection_complete_message():
 
     message = {"topic_name": InspectionCompletedMessage.base_name, "message_contents": message_contents}
 
-    with open(MSG_FILE, "rw") as f:
+    with open(MSG_FILE, "w") as f:
         if os.stat(f).st_size != 0:
             all_messages: list = json.load(f)
             if type(all_messages) != list:
