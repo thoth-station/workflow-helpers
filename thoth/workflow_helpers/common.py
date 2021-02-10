@@ -19,6 +19,7 @@
 
 import logging
 import json
+import os
 
 from prometheus_client import Metric, Gauge, Counter, CollectorRegistry, push_to_gateway
 from thoth.storages import GraphDatabase
@@ -30,6 +31,8 @@ PROMETHEUS_REGISTRY = CollectorRegistry()
 
 PUSHGATEWAY_URL = Configuration.THOTH_METRICS_PUSHGATEWAY_URL
 DEPLOYMENT_NAME = Configuration.THOTH_DEPLOYMENT_NAME
+
+MSG_OUT_FILE = "/mnt/workdir/messages_to_be_sent.json"
 
 database_schema_revision_script = Gauge(
     "thoth_database_schema_revision_script",
@@ -63,8 +66,19 @@ def retrieve_solver_document(document_path: str):
 def store_messages(output_messages: list):
     """Store messages."""
     # Store message to file that need to be sent.
-    with open("/mnt/workdir/messages_to_be_sent.json", "w") as json_file:
-        json.dump(output_messages, json_file)
+    try:
+        with open(MSG_OUT_FILE, "r") as json_file:
+            if os.stat(MSG_OUT_FILE).st_size != 0:
+                all_messages: list = json.load(json_file)
+                if type(all_messages) != list:
+                    raise TypeError(f"Message file must be a list of messages. Got type {type(all_messages)}")
+                all_messages = all_messages + output_messages
+    except Exception as e:
+        print(e)
+        all_messages = output_messages
+
+    with open(MSG_OUT_FILE, "w") as json_file:
+        json.dump(all_messages, json_file)
 
     if output_messages:
         _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
