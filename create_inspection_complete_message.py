@@ -30,7 +30,7 @@ COMPONENT_NAME = "workflow_helper.create_inspection_complete_message"
 def create_inspection_complete_message():
     """Create message file (InspectionCompleteMessage) to be sent by thoth-messaging cli."""
     inspection_id = os.getenv("THOTH_AMUN_INSPECTION_ID")
-    force_sync = bool(int(os.getenv("FORCE_SYNC")))
+    force_sync = bool(int(os.getenv("THOTH_FORCE_SYNC")))
 
     message_contents = {
         "service_version": {"type": "str", "value": __service_version__},
