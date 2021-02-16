@@ -216,3 +216,16 @@ all the things that you see...
 ## Release 0.5.0 (2021-02-02T06:56:44)
 ### Improvements
 * Add parse provenance check method (#203)
+
+## Release 0.6.0 (2021-02-16T20:51:35)
+### Features
+* add new param for v2 of run-url message (#215)
+* :arrow_up: Automatic update of dependencies by Kebechet (#220)
+* keep message file contents (#219)
+* permission must be single char (#217)
+* :arrow_up: Automatic update of dependencies by Kebechet (#218)
+* Update OWNERS
+* :arrow_up: Automatic update of dependencies by Kebechet (#216)
+* :arrow_up: Automatic update of dependencies by Kebechet (#214)
+### Improvements
+* Introduce metrics for messages sent and enforce consistency (#212)
