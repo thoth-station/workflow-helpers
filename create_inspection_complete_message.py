@@ -18,35 +18,29 @@
 """This task creates a message file to be used by messaging cli in a workflow."""
 
 import os
-import json
 
-from thoth.messaging.unresolved_package import InspectionCompletedMessage
+from thoth.messaging.inspection_complete import InspectionCompletedMessage
 
-MSG_FILE = "/mnt/workdir/messages_to_be_sent.json"
+from thoth.workflow_helpers.common import store_messages
+from thoth.workflow_helpers import __service_version__
+
+COMPONENT_NAME = "workflow_helper.create_inspection_complete_message"
 
 
 def create_inspection_complete_message():
     """Create message file (InspectionCompleteMessage) to be sent by thoth-messaging cli."""
     inspection_id = os.getenv("THOTH_AMUN_INSPECTION_ID")
-    force_sync = bool(int(os.getenv("FORCE_SYNC")))
+    force_sync = bool(int(os.getenv("THOTH_FORCE_SYNC")))
 
     message_contents = {
+        "service_version": {"type": "str", "value": __service_version__},
+        "component_name": {"type": "str", "value": COMPONENT_NAME},
         "inspection_id": {"type": "str", "value": inspection_id},
         "force_sync": {"type": "bool", "value": force_sync},
     }
 
     message = {"topic_name": InspectionCompletedMessage.base_name, "message_contents": message_contents}
-
-    with open(MSG_FILE, "w") as f:
-        if os.stat(f).st_size != 0:
-            all_messages: list = json.load(f)
-            if type(all_messages) != list:
-                raise TypeError(f"Message file must be a list of messages. Got type {type(all_messages)}")
-            all_messages.append(message)
-        else:
-            all_messages = [message]
-
-        json.dump(all_messages, f)
+    store_messages([message])
 
 
 if __name__ == "__main__":
