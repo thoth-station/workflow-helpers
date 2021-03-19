@@ -229,3 +229,8 @@ all the things that you see...
 * :arrow_up: Automatic update of dependencies by Kebechet (#214)
 ### Improvements
 * Introduce metrics for messages sent and enforce consistency (#212)
+
+## Release 0.6.1 (2021-03-19T13:18:07)
+### Features
+* configure ci/cd prow on the app
+* :arrow_up: Automatic update of dependencies by Kebechet (#225)
