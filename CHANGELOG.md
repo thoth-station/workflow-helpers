@@ -234,3 +234,7 @@ all the things that you see...
 ### Features
 * configure ci/cd prow on the app
 * :arrow_up: Automatic update of dependencies by Kebechet (#225)
+
+## Release 0.6.2 (2021-03-28T05:38:27)
+### Features
+* constrain thoth-messaging (#228)
