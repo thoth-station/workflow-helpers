@@ -32,7 +32,16 @@ from thoth.common import OpenShift as OpenShift
 from thoth.common.enums import InternalTriggerEnum
 
 from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
-from thoth.messaging.unresolved_package import KebechetRunUrlTriggerMessage
+
+from thoth.messaging import (
+    cve_provided_message,
+    hash_mismatch_message,
+    kebechet_run_url_trigger_message,
+    missing_version_message,
+    solved_package_message,
+)
+
+from thoth.messaging.kebechet_run_url import MessageContents as KebechetRunUrlMessageContents
 
 __COMPONENT_NAME__ = "kebechet-administrator"
 
@@ -52,11 +61,11 @@ metric_messages_sent = parametrize_metric_messages_sent(
 output_messages = []  # Messages to be sent by producer.
 
 _JUSTIFICATION_MAPPING = {
-    "SolvedPackageMessage": InternalTriggerEnum.NEW_RELEASE.value,
-    "HashMismatchMessage": InternalTriggerEnum.HASH_MISMATCH.value,
-    # "MissingPackageMessage": InternalTriggerEnum.MISSING_PACKAGE.value, # To be implemented.
-    "MissingVersionMessage": InternalTriggerEnum.MISSING_VERSION.value,
-    "CVEProvidedMessage": InternalTriggerEnum.CVE.value,
+    cve_provided_message.base_name: InternalTriggerEnum.NEW_RELEASE.value,
+    hash_mismatch_message.base_name: InternalTriggerEnum.HASH_MISMATCH.value,
+    # missing_package_message.base_name: InternalTriggerEnum.MISSING_PACKAGE.value, # To be implemented.
+    missing_version_message.base_name: InternalTriggerEnum.MISSING_VERSION.value,
+    cve_provided_message.base_name: InternalTriggerEnum.CVE.value,
 }
 
 
@@ -92,21 +101,18 @@ def _handle_solved_message(Configuration):  # noqa: N803
         if semver.compare(repo_info.get("package_version"), Configuration.PACKAGE_VERSION):
             continue  # We dont schedule, if the package version > version of the solved package version.
 
-        message_input = {
-            "component_name": {"type": "str", "value": __COMPONENT_NAME__},
-            "service_version": {"type": "str", "value": __service_version__},
-            "url": {"type": "str", "value": _URL_PREFIX + key},
-            "service_name": {"type": "str", "value": "github"},
-            "installation_id": {"type": "str", "value": repo_info.get("installation_id")},
-            "kebechet_metadata": {
-                "type": "dict",
-                "value": {"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
-            },
-        }
+        message_input = KebechetRunUrlMessageContents(
+            component_name=__COMPONENT_NAME__,
+            service_version=__service_version__,
+            url=_URL_PREFIX + key,
+            service_name="github",
+            installation_id=repo_info.get("installation_id"),
+            kebechet_metadata={"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
+        ).dict()
 
         # We store the message to put in the output file here.
         output_messages.append(
-            {"topic_name": KebechetRunUrlTriggerMessage.base_name, "message_contents": message_input}
+            {"topic_name": kebechet_run_url_trigger_message.base_name, "message_contents": message_input}
         )
 
 
@@ -126,31 +132,29 @@ def _handle_package_issue(Configuration):  # noqa: N803
         # Construct the message input
         if repo_info.get("private"):
             continue  # We skip for private repo's.
-        message_input = {
-            "component_name": {"type": "str", "value": __COMPONENT_NAME__},
-            "service_version": {"type": "str", "value": __service_version__},
-            "url": {"type": "str", "value": _URL_PREFIX + key},
-            "service_name": {"type": "str", "value": "github"},
-            "installation_id": {"type": "str", "value": repo_info.get("installation_id")},
-            "kebechet_metadata": {
-                "type": "dict",
-                "value": {"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
-            },
-        }
+
+        message_input = KebechetRunUrlMessageContents(
+            component_name=__COMPONENT_NAME__,
+            service_version=__service_version__,
+            url=_URL_PREFIX + key,
+            service_name="github",
+            installation_id=repo_info.get("installation_id"),
+            kebechet_metadata={"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
+        ).dict()
 
         # We store the message to put in the output file here.
         output_messages.append(
-            {"topic_name": KebechetRunUrlTriggerMessage.base_name, "message_contents": message_input}
+            {"topic_name": kebechet_run_url_trigger_message.base_name, "message_contents": message_input}
         )
 
 
 # This handler dispatches the specific method based on a paticular message.
 _message_handler = {
-    "SolvedPackageMessage": _handle_solved_message,
-    "HashMismatchMessage": _handle_package_issue,
-    # "MissingPackageMessage": _handle_package_issue, # To be implemented.
-    "MissingVersionMessage": _handle_package_issue,
-    "CVEProvidedMessage": _handle_package_issue,
+    solved_package_message.base_name: _handle_solved_message,
+    hash_mismatch_message.base_name: _handle_package_issue,
+    # missing_package_message.base_name: _handle_package_issue, # To be implemented.
+    missing_version_message.base_name: _handle_package_issue,
+    cve_provided_message.base_name: _handle_package_issue,
 }
 
 
@@ -186,7 +190,7 @@ def run_kebechet_administrator():
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=KebechetRunUrlTriggerMessage.base_name,
+        message_type=kebechet_run_url_trigger_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
         is_storages_used=False,

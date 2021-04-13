@@ -35,6 +35,9 @@ from thoth.workflow_helpers.common import store_messages
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
 
+from thoth.messaging import adviser_trigger_message
+from thoth.messaging.adviser_trigger import MessageContents as AdviserTriggerContents
+
 _LOGGER = logging.getLogger("thoth.qebhwt")
 _LOGGER.info("Thoth workflow-helpers task: qebhwt v%s", __service_version__)
 __COMPONENT_NAME__ = "Qeb-hwt"
@@ -128,6 +131,38 @@ def qeb_hwt_thamos_advise() -> None:
         trigger_finished_webhook(exception_message=exception_message, has_error=True)
         return
 
+    message_input = AdviserTriggerContents(
+        component_name=__COMPONENT_NAME__,
+        service_version=__service_version__,
+        authenticated=True,
+        recommendation_type=recommendation_type,
+        github_event_type=Configuration._GITHUB_EVENT_TYPE,
+        github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
+        github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
+        github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
+        origin=Configuration._ORIGIN,
+        source_type=ThothAdviserIntegrationEnum.GITHUB_APP.name,
+    ).dict()
+
+    # recommendation_type: str
+    # dev: bool = False
+    # debug: bool = False
+    # authenticated: bool = False
+    # count: Optional[int]
+    # limit: Optional[int]
+    # origin: Optional[str]
+    # job_id: Optional[str]
+    # limit_latest_versions: Optional[int]
+    # github_event_type: Optional[str]
+    # github_check_run_id: Optional[int]
+    # github_installation_id: Optional[int]
+    # github_base_repo_url: Optional[str]
+    # re_run_adviser_id: Optional[str]
+    # source_type: Optional[str]
+    # kebechet_metadata: Optional[Dict[str, Any]]
+    # justification: Optional[List[Dict[str, Any]]]
+    # stack_info = Optional[List[Dict[str, Any]]]
+
     # The input for AdviserTriggerMessage if no exceptions were found
     message_input = {
         "component_name": {"type": "str", "value": __COMPONENT_NAME__},
@@ -144,7 +179,7 @@ def qeb_hwt_thamos_advise() -> None:
     }
 
     # We store the message to put in the output file here.
-    output_messages = [{"topic_name": "thoth.adviser-trigger", "message_contents": message_input}]
+    output_messages = [{"topic_name": adviser_trigger_message.base_name, "message_contents": message_input}]
 
     store_messages(output_messages)
 

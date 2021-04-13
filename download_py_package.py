@@ -27,9 +27,11 @@ from urllib import request
 from thoth.analyzer import run_command
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
-from thoth.messaging.update_provides_src_distro import UpdateProvidesSourceDistroMessage
-from thoth.messaging.missing_version import MissingVersionMessage
 from bs4 import BeautifulSoup, SoupStrainer
+
+from thoth.messaging import update_provides_source_distro_message, missing_version_message
+from thoth.messaging.update_provides_src_distro import MessageContents as UpdateProvidesSrcDistroContents
+from thoth.messaging.missing_version import MessageContents as MissingVersionContents
 
 WORKDIR = "/mnt/workdir"
 
@@ -38,6 +40,8 @@ FAILED_STATUS_FILE = "/mnt/workdir/failed_status"
 
 _LOGGER = logging.getLogger("thoth.download_package")
 _LOGGER.info("Thoth workflow-helpers task: download_package v%s", __service_version__)
+
+COMPONENT_NAME = "workflow_helper.download_py_package"
 
 
 def download_py_package() -> None:
@@ -65,13 +69,15 @@ def download_py_package() -> None:
             )
             message_contents = [
                 {
-                    "topic_name": UpdateProvidesSourceDistroMessage.topic_name,
-                    "message_contents": {
-                        "package_name": {"type": "str", "value": Configuration.PACKAGE_NAME},
-                        "package_version": {"type": "str", "value": Configuration.PACKAGE_VERSION},
-                        "index_url": {"type": "str", "value": Configuration.PACKAGE_INDEX},
-                        "value": {"type": "bool", "value": False},
-                    },
+                    "topic_name": update_provides_source_distro_message.base_name,
+                    "message_contents": UpdateProvidesSrcDistroContents(
+                        service_version=__service_version__,
+                        component_name=COMPONENT_NAME,
+                        package_name=Configuration.PACKAGE_NAME,
+                        package_version=Configuration.PACKAGE_VERSION,
+                        index_url=Configuration.PACKAGE_INDEX,
+                        value=False,
+                    ).dict(),
                 }
             ]
             with open(MESSAGE_LOCATION, "w") as f:
@@ -89,12 +95,14 @@ def download_py_package() -> None:
             )
             message_contents = [
                 {
-                    "topic_name": MissingVersionMessage.topic_name,
-                    "message_contents": {
-                        "package_name": {"type": "str", "value": Configuration.PACKAGE_NAME},
-                        "package_version": {"type": "str", "value": Configuration.PACKAGE_VERSION},
-                        "index_url": {"type": "str", "value": Configuration.PACKAGE_INDEX},
-                    },
+                    "topic_name": missing_version_message.base_name,
+                    "message_contents": MissingVersionContents(
+                        service_version=__service_version__,
+                        component_name=COMPONENT_NAME,
+                        package_name=Configuration.PACKAGE_NAME,
+                        package_version=Configuration.PACKAGE_VERSION,
+                        index_url=Configuration.PACKAGE_INDEX,
+                    ).dict(),
                 }
             ]
             with open(MESSAGE_LOCATION, "w") as f:
