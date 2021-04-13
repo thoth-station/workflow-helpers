@@ -132,8 +132,10 @@ def qeb_hwt_thamos_advise() -> None:
     message_input = {
         "component_name": {"type": "str", "value": __COMPONENT_NAME__},
         "service_version": {"type": "str", "value": __service_version__},
-        "application_stack": {"type": "Dict", "value": application_stack},
-        "runtime_environment": {"type": "Dict", "value": runtime_environment},
+        "stack_info": {
+            "type": "List[Dict[str, Any]]",
+            "value": [{"stack": application_stack, "runtime_environment": runtime_environment}],
+        },
         "recommendation_type": {"type": "str", "value": recommendation_type},
         "github_event_type": {"type": "str", "value": Configuration._GITHUB_EVENT_TYPE},
         "github_check_run_id": {"type": "int", "value": int(Configuration._GITHUB_CHECK_RUN_ID)},
