@@ -22,12 +22,14 @@ presubmits:
     context: aicoe-ci/prow/mypy
     spec:
       containers:
-        - image: quay.io/thoth-station/thoth-pytest-ubi8-py38:v0.12.5
+        - image: quay.io/thoth-station/thoth-pytest-ubi8-py38:v0.12.6
           command:
-            - "/usr/local/bin/mypy"
+            - "run-mypy"
+          args:
             - "."
             - "--ignore-missing-imports"
-            - "--config-file mypyi.ini"
+            - "--config-file"
+            - "mypy.ini"
           resources:
             requests:
               memory: "2Gi"

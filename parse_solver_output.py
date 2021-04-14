@@ -122,17 +122,9 @@ def parse_solver_output() -> None:
                 # 3. Retrieve adviser inputs to re run from adviser id
                 document = ADVISER_STORE.retrieve_document(adviser_id)
                 parameters = document["result"]["parameters"]
-                cli_inputs = document["metadata"]["arguments"]
                 cli_arguments = document["metadata"]["arguments"]["thoth-adviser"]
 
-                application_stack = {
-                    "requirements": cli_inputs["requirements"],
-                    "requirements_lock": cli_inputs["requirements_lock"],
-                    "requirements_format": cli_inputs["requirements_format"],
-                }
-
                 recommendation_type = parameters["recommendation_type"]
-                runtime_environment = parameters["project"].get("runtime_environment")
 
                 origin = cli_arguments["metadata"]["origin"]
                 github_event_type = cli_arguments["metadata"]["github_event_type"]
