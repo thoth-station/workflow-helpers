@@ -11,8 +11,8 @@ thoth-analyzer = "*"
 thoth-storages = "*"
 beautifulsoup4 = "*"
 semver = "*"
-thoth-messaging = {path = "./../messaging"}
 prometheus-client = "*"
+thoth-messaging = "*"
 
 [dev-packages]
 pytest = "*"
