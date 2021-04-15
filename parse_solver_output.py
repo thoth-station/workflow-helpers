@@ -19,17 +19,20 @@
 
 import os
 import logging
+import json
 
 from typing import List, Optional
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
+from thoth.common import OpenShift
+from thamos.lib import advise_using_config
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
 from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
-from thoth.messaging import solved_package_message, adviser_rerun_message
+from thoth.messaging import solved_package_message, adviser_trigger_message
 from thoth.messaging.solved_package import MessageContents as SolvedPackageContents
-from thoth.messaging.adviser_re_run import MessageContents as AdviserReRunContents
+from thoth.messaging.adviser_trigger import MessageContents as AdviserTriggerContents
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -119,46 +122,47 @@ def parse_solver_output() -> None:
             if number_packages_solved >= len(unsolved_packages):
                 _LOGGER.info("All packages have been solved! Adviser can re run.")
 
-                # 3. Retrieve adviser inputs to re run from adviser id
-                document = ADVISER_STORE.retrieve_document(adviser_id)
-                parameters = document["result"]["parameters"]
-                cli_arguments = document["metadata"]["arguments"]["thoth-adviser"]
+                # 3. Retrieve adviser inputs to create a new request and schedule adviser with thamos
 
-                recommendation_type = parameters["recommendation_type"]
+                retrieved_parameters = True
+                try: 
+                    parameters = ADVISER_STORE.retrieve_request(adviser_id)
+                except Exception as retrieve_error:
+                    _LOGGER.error(f"Failed to retrieve parameters for request with adviser id: {adviser_id}: {retrieve_error}")
+                    retrieved_parameters = False
 
-                origin = cli_arguments["metadata"]["origin"]
-                github_event_type = cli_arguments["metadata"]["github_event_type"]
-                github_check_run_id = cli_arguments["metadata"]["github_event_type"]
-                github_installation_id = cli_arguments["metadata"]["github_event_type"]
-                github_base_repo_url = cli_arguments["metadata"]["github_event_type"]
+                if retrieved_parameters:
+                    thoth_config = {
+                        "host": "khemenu.thoth-station.ninja",
+                        "tls_verify": False,
+                        "requirements_format": "pipenv",
+                        "runtime_environments": [parameters["runtime_environment"]]
+                    }
 
-                source_type = (cli_arguments.get("metadata") or {}).get("source_type")
-                source_type = source_type.upper() if source_type else None
+                    response = advise_using_config(
+                        pipfile=parameters["application_stack"]["requirements"],
+                        pipfile_lock=parameters["application_stack"]["requirements_lock"],
+                        config=json.dumps(thoth_config),
+                        authenticated=True,
+                        nowait=True,
+                        github_event_type=parameters["github_event_type"],
+                        github_check_run_id=parameters["github_check_run_id"],
+                        github_installation_id=parameters["github_installation_id"],
+                        github_base_repo_url=parameters["github_base_repo_url"],
+                        origin=parameters["origin"],
+                        recommendation_type=parameters["recommendation_type"],
+                        re_run_adviser_id=adviser_id,
+                        source_type=parameters["source_type"],
+                    )
 
-                # 4. Save adviser_id_message inputs
-                message_input = AdviserReRunContents(
-                    component_name=component_name,
-                    service_version=service_version,
-                    github_event_type=github_event_type,
-                    github_check_run_id=github_check_run_id,
-                    github_installation_id=github_installation_id,
-                    github_base_repo_url=github_base_repo_url,
-                    origin=origin,
-                    recommendation_type=recommendation_type,
-                    re_run_adviser_id=adviser_id,
-                    source_type=source_type,
-                ).dict()
-
-                output_messages.append(
-                    {"topic_name": adviser_rerun_message.base_name, "message_contents": message_input}
-                )
+                _LOGGER.info(f"thamos advise response: {response} for adviser re run id: {adviser_id}.")
 
     # 5. Store messages that need to be sent
     store_messages(output_messages)
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=adviser_rerun_message.base_name,
+        message_type=adviser_trigger_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
     )
