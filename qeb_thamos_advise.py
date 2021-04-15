@@ -130,6 +130,7 @@ def qeb_hwt_thamos_advise() -> None:
         origin=Configuration._ORIGIN,
         source_type=ThothAdviserIntegrationEnum.GITHUB_APP,
         no_static_analysis=False,
+        nowait=True,
     )
 
     _LOGGER.info(f"thamos advise response: {response}.")
