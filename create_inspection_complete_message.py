@@ -19,7 +19,8 @@
 
 import os
 
-from thoth.messaging.inspection_complete import InspectionCompletedMessage
+from thoth.messaging import inspection_completed_message
+from thoth.messaging.inspection_complete import MessageContents as InspectionCompleteContents
 
 from thoth.workflow_helpers.common import store_messages
 from thoth.workflow_helpers import __service_version__
@@ -32,14 +33,14 @@ def create_inspection_complete_message():
     inspection_id = os.getenv("THOTH_AMUN_INSPECTION_ID")
     force_sync = bool(int(os.getenv("THOTH_FORCE_SYNC")))
 
-    message_contents = {
-        "service_version": {"type": "str", "value": __service_version__},
-        "component_name": {"type": "str", "value": COMPONENT_NAME},
-        "inspection_id": {"type": "str", "value": inspection_id},
-        "force_sync": {"type": "bool", "value": force_sync},
-    }
+    message_contents = InspectionCompleteContents(
+        service_version=__service_version__,
+        component_name=COMPONENT_NAME,
+        inspection_id=inspection_id,
+        force_sync=force_sync,
+    ).dict()
 
-    message = {"topic_name": InspectionCompletedMessage.base_name, "message_contents": message_contents}
+    message = {"topic_name": inspection_completed_message.base_name, "message_contents": message_contents}
     store_messages([message])
 
 

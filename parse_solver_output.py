@@ -20,14 +20,16 @@
 import os
 import logging
 
-from typing import List
+from typing import List, Optional
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
 from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
-from thoth.messaging.unresolved_package import AdviserReRunMessage
+from thoth.messaging import solved_package_message, adviser_rerun_message
+from thoth.messaging.solved_package import MessageContents as SolvedPackageContents
+from thoth.messaging.adviser_re_run import MessageContents as AdviserReRunContents
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -80,6 +82,7 @@ def parse_solver_output() -> None:
     service_version = solver_document["metadata"]["analyzer_version"]
 
     # 1. Retrieve adviser ids for specific thoth_integrations with need_re_run == True
+    source_type: Optional[str]
     source_type = ThothAdviserIntegrationEnum.GITHUB_APP.name
     unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type=source_type)
 
@@ -90,16 +93,16 @@ def parse_solver_output() -> None:
         package_version = python_package_info["package_version_requested"]
         index_url = python_package_info["index_url"]
 
-        message_input = {
-            "component_name": {"type": "str", "value": component_name},
-            "service_version": {"type": "str", "value": service_version},
-            "package_name": {"type": "str", "value": package_name},
-            "package_version": {"type": "str", "value": package_version},
-            "index_url": {"type": "str", "value": index_url},
-            "solver": {"type": "str", "value": solver_name},
-        }
+        messgae_input = SolvedPackageContents(
+            component_name=component_name,
+            service_version=service_version,
+            index_url=index_url,
+            package_name=package_name,
+            package_version=package_version,
+            solver=solver_name,
+        ).dict()
 
-        output_messages.append({"topic_name": "thoth.solver.solved-package", "message_contents": message_input})
+        output_messages.append({"topic_name": solved_package_message.base_name, "message_contents": messgae_input})
 
         for adviser_id in unsolved_per_adviser_runs:
 
@@ -133,27 +136,29 @@ def parse_solver_output() -> None:
                 source_type = source_type.upper() if source_type else None
 
                 # 4. Save adviser_id_message inputs
-                message_input = {
-                    "component_name": {"type": "str", "value": component_name},
-                    "service_version": {"type": "str", "value": service_version},
-                    "re_run_adviser_id": {"type": "str", "value": adviser_id},
-                    "recommendation_type": {"type": "str", "value": recommendation_type},
-                    "origin": {"type": "Optional[str]", "value": origin},
-                    "github_event_type": {"type": "Optional[str]", "value": github_event_type},
-                    "github_check_run_id": {"type": "Optional[str]", "value": github_check_run_id},
-                    "github_installation_id": {"type": "Optional[str]", "value": github_installation_id},
-                    "github_base_repo_url": {"type": "Optional[str]", "value": github_base_repo_url},
-                    "source_type": {"type": "Optional[str]", "value": source_type},
-                }
+                message_input = AdviserReRunContents(
+                    component_name=component_name,
+                    service_version=service_version,
+                    github_event_type=github_event_type,
+                    github_check_run_id=github_check_run_id,
+                    github_installation_id=github_installation_id,
+                    github_base_repo_url=github_base_repo_url,
+                    origin=origin,
+                    recommendation_type=recommendation_type,
+                    re_run_adviser_id=adviser_id,
+                    source_type=source_type,
+                ).dict()
 
-                output_messages.append({"topic_name": AdviserReRunMessage.base_name, "message_contents": message_input})
+                output_messages.append(
+                    {"topic_name": adviser_rerun_message.base_name, "message_contents": message_input}
+                )
 
     # 5. Store messages that need to be sent
     store_messages(output_messages)
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=AdviserReRunMessage.base_name,
+        message_type=adviser_rerun_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
     )

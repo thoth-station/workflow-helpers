@@ -15,3 +15,22 @@ presubmits:
             requests:
               memory: "2Gi"
               cpu: "2"
+  - name: thoth-mypy-py38
+    decorate: true
+    skip_report: false
+    always_run: true
+    context: aicoe-ci/prow/mypy
+    spec:
+      containers:
+        - image: quay.io/thoth-station/thoth-pytest-py38:v0.12.6
+          command:
+            - "run-mypy"
+          args:
+            - "."
+            - "--ignore-missing-imports"
+            - "--config-file"
+            - "mypy.ini"
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "200m"

@@ -30,7 +30,8 @@ from thoth.workflow_helpers import __service_version__
 from thoth.workflow_helpers.common import store_messages
 
 from thoth.workflow_helpers.common import send_metrics, parametrize_metric_messages_sent, set_metrics
-from thoth.messaging.unresolved_package import UnresolvedPackageMessage
+from thoth.messaging import unresolved_package_message
+from thoth.messaging.unresolved_package import MessageContents as UnresolvedPackageContents
 
 _LOGGER = logging.getLogger("thoth.parse_provenance_checker_output")
 _LOGGER.info("Thoth workflow-helpers task: parse_provenance_checker_output v%s", __service_version__)
@@ -96,24 +97,24 @@ def parse_provenance_checker_output() -> None:
 
     for package in unresolved_packages:
 
-        message_input = {
-            "component_name": {"type": "str", "value": __COMPONENT_NAME__},
-            "service_version": {"type": "str", "value": __service_version__},
-            "package_name": {"type": "Dict", "value": package["package_name"]},
-            "package_version": {"type": "str", "value": package["package_version"]},
-            "index_url": {"type": "str", "value": package["index_url"]},
-            "solver": {"type": "str", "value": solver},
-        }
+        message_input = UnresolvedPackageContents(
+            component_name=__COMPONENT_NAME__,
+            service_version=__service_version__,
+            package_name=package["package_name"],
+            package_version=package["package_version"],
+            index_url=package["index_url"],
+            solver=solver,
+        ).dict()
 
         # We store the message to put in the output file here.
-        output_messages.append({"topic_name": UnresolvedPackageMessage.base_name, "message_contents": message_input})
+        output_messages.append({"topic_name": unresolved_package_message.base_name, "message_contents": message_input})
 
     # Store message to file that need to be sent.
     store_messages(output_messages)
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=UnresolvedPackageMessage.base_name,
+        message_type=unresolved_package_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
         is_storages_used=False,
