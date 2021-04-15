@@ -86,7 +86,7 @@ def parse_solver_output() -> None:
 
     # 1. Retrieve adviser ids for specific thoth_integrations with need_re_run == True
     source_type: Optional[str]
-    source_type = ThothAdviserIntegrationEnum.GITHUB_APP.name
+    source_type = ThothAdviserIntegrationEnum.GITHUB_APP.name  # TODO: Do we want to extend it to other source type?
     unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type=source_type)
 
     output_messages = []
