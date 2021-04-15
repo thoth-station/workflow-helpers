@@ -132,7 +132,7 @@ def qeb_hwt_thamos_advise() -> None:
         no_static_analysis=False,
     )
 
-    _LOGGER.info(f"qeb-hwt workflow scheduled an adviser workflow with id {response.analysis_id}")
+    _LOGGER.info(f"thamos advise response: {response}.")
 
 
 if __name__ == "__main__":
