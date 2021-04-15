@@ -135,9 +135,12 @@ def parse_solver_output() -> None:
                     )
                     retrieved_parameters = False
 
-                new_adviser_id = OpenShift.generate_id("adviser")
+                parameters.pop("job_id")
 
-                parameters = ADVISER_STORE.store_request(new_adviser_id, parameters)
+                new_adviser_id = OpenShift.generate_id("adviser")
+                parameters["job_id"] = new_adviser_id
+
+                ADVISER_STORE.store_request(parameters["job_id"], parameters)
 
                 if retrieved_parameters:
 
