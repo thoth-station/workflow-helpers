@@ -24,15 +24,13 @@ import json
 from typing import List, Optional
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
-from thoth.common import OpenShift
 from thamos.lib import advise_using_config
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
 from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
-from thoth.messaging import solved_package_message, adviser_trigger_message
+from thoth.messaging import solved_package_message
 from thoth.messaging.solved_package import MessageContents as SolvedPackageContents
-from thoth.messaging.adviser_trigger import MessageContents as AdviserTriggerContents
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -125,10 +123,12 @@ def parse_solver_output() -> None:
                 # 3. Retrieve adviser inputs to create a new request and schedule adviser with thamos
 
                 retrieved_parameters = True
-                try: 
+                try:
                     parameters = ADVISER_STORE.retrieve_request(adviser_id)
                 except Exception as retrieve_error:
-                    _LOGGER.error(f"Failed to retrieve parameters for request with adviser id: {adviser_id}: {retrieve_error}")
+                    _LOGGER.error(
+                        f"Failed to retrieve parameters for request with adviser id: {adviser_id}: {retrieve_error}"
+                    )
                     retrieved_parameters = False
 
                 if retrieved_parameters:
@@ -136,7 +136,7 @@ def parse_solver_output() -> None:
                         "host": "khemenu.thoth-station.ninja",
                         "tls_verify": False,
                         "requirements_format": "pipenv",
-                        "runtime_environments": [parameters["runtime_environment"]]
+                        "runtime_environments": [parameters["runtime_environment"]],
                     }
 
                     response = advise_using_config(
@@ -162,7 +162,7 @@ def parse_solver_output() -> None:
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=adviser_trigger_message.base_name,
+        message_type=solved_package_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
     )
