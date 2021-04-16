@@ -238,3 +238,14 @@ all the things that you see...
 ## Release 0.6.2 (2021-03-28T05:38:27)
 ### Features
 * constrain thoth-messaging (#228)
+
+## Release 0.7.0 (2021-04-16T06:59:09)
+### Features
+* Adjust adviser rerun logic (#240)
+* Messaging pydantic (#236)
+* :arrow_up: Automatic update of dependencies by Kebechet (#237)
+* :arrow_up: Automatic update of dependencies by Kebechet (#233)
+* Adjust AdviserTrigger message (#234)
+### Improvements
+* Use thamos and not messaging for qeb-hwt workflow (#239)
+* remove extra message contents removed in v2 (#229)
