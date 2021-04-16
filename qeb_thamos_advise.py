@@ -24,7 +24,6 @@ import logging
 from pathlib import Path
 
 from thoth.python import Project
-from thamos.swagger_client import PythonStack
 from thamos.config import _Configuration
 
 from thoth.common.enums import ThothAdviserIntegrationEnum
@@ -34,9 +33,7 @@ from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_web
 from thoth.workflow_helpers.common import store_messages
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
-
-from thoth.messaging import adviser_trigger_message
-from thoth.messaging.adviser_trigger import MessageContents as AdviserTriggerContents
+from thamos.lib import advise_using_config
 
 _LOGGER = logging.getLogger("thoth.qebhwt")
 _LOGGER.info("Thoth workflow-helpers task: qebhwt v%s", __service_version__)
@@ -104,12 +101,6 @@ def qeb_hwt_thamos_advise() -> None:
         return
 
     try:
-        # Consider first runtime environment
-        runtime_environment = thoth_yaml_config.content.get("runtime_environments")[0]
-
-        # Fetch recommendation type
-        recommendation_type = runtime_environment.get("recommendation_type") if thoth_yaml_config else "latest"
-
         requirements_format = thoth_yaml_config.requirements_format
         if requirements_format == "pipenv":
             project = Project.from_files(without_pipfile_lock=not os.path.exists("Pipfile.lock"))
@@ -118,11 +109,8 @@ def qeb_hwt_thamos_advise() -> None:
         else:
             raise ValueError(f"Unknown configuration option for requirements format: {requirements_format!r}")
 
-        pipfile = project.pipfile.to_string()
+        pipfile_str = project.pipfile.to_string()
         pipfile_lock_str = project.pipfile_lock.to_string() if project.pipfile_lock else ""
-        application_stack = PythonStack(
-            requirements=pipfile, requirements_lock=pipfile_lock_str, requirements_format=requirements_format
-        ).to_dict()
 
     except Exception as exception:
         _LOGGER.debug(json.loads(exception.body)["error"])  # type: ignore
@@ -131,59 +119,21 @@ def qeb_hwt_thamos_advise() -> None:
         trigger_finished_webhook(exception_message=exception_message, has_error=True)
         return
 
-    message_input = AdviserTriggerContents(
-        component_name=__COMPONENT_NAME__,
-        service_version=__service_version__,
-        authenticated=True,
-        recommendation_type=recommendation_type,
+    response = advise_using_config(
+        pipfile=pipfile_str,
+        pipfile_lock=pipfile_lock_str,
+        config=thoth_yaml_config.content,
         github_event_type=Configuration._GITHUB_EVENT_TYPE,
         github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
         github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
         github_base_repo_url=Configuration._GITHUB_BASE_REPO_URL,
         origin=Configuration._ORIGIN,
-        source_type=ThothAdviserIntegrationEnum.GITHUB_APP.name,
-    ).dict()
+        source_type=ThothAdviserIntegrationEnum.GITHUB_APP,
+        no_static_analysis=False,
+        nowait=True,
+    )
 
-    # recommendation_type: str
-    # dev: bool = False
-    # debug: bool = False
-    # authenticated: bool = False
-    # count: Optional[int]
-    # limit: Optional[int]
-    # origin: Optional[str]
-    # job_id: Optional[str]
-    # limit_latest_versions: Optional[int]
-    # github_event_type: Optional[str]
-    # github_check_run_id: Optional[int]
-    # github_installation_id: Optional[int]
-    # github_base_repo_url: Optional[str]
-    # re_run_adviser_id: Optional[str]
-    # source_type: Optional[str]
-    # kebechet_metadata: Optional[Dict[str, Any]]
-    # justification: Optional[List[Dict[str, Any]]]
-    # stack_info = Optional[List[Dict[str, Any]]]
-
-    # The input for AdviserTriggerMessage if no exceptions were found
-    message_input = {
-        "component_name": {"type": "str", "value": __COMPONENT_NAME__},
-        "service_version": {"type": "str", "value": __service_version__},
-        "stack_info": {
-            "type": "List[Dict[str, Any]]",
-            "value": [{"stack": application_stack, "runtime_environment": runtime_environment}],
-        },
-        "recommendation_type": {"type": "str", "value": recommendation_type},
-        "github_event_type": {"type": "str", "value": Configuration._GITHUB_EVENT_TYPE},
-        "github_check_run_id": {"type": "int", "value": int(Configuration._GITHUB_CHECK_RUN_ID)},
-        "github_installation_id": {"type": "int", "value": int(Configuration._GITHUB_INSTALLATION_ID)},
-        "github_base_repo_url": {"type": "str", "value": Configuration._GITHUB_BASE_REPO_URL},
-        "origin": {"type": "str", "value": Configuration._ORIGIN},
-        "source_type": {"type": "str", "value": ThothAdviserIntegrationEnum.GITHUB_APP.name},
-    }
-
-    # We store the message to put in the output file here.
-    output_messages = [{"topic_name": adviser_trigger_message.base_name, "message_contents": message_input}]
-
-    store_messages(output_messages)
+    _LOGGER.info(f"thamos advise response: {response}.")
 
 
 if __name__ == "__main__":
