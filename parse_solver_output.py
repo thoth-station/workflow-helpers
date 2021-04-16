@@ -23,13 +23,14 @@ import logging
 from typing import List, Optional
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
+from thoth.common import OpenShift
 from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
 from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
-from thoth.messaging import solved_package_message, adviser_rerun_message
+from thoth.messaging import solved_package_message, adviser_trigger_message
 from thoth.messaging.solved_package import MessageContents as SolvedPackageContents
-from thoth.messaging.adviser_re_run import MessageContents as AdviserReRunContents
+from thoth.messaging.adviser_trigger import MessageContents as AdviserTriggerContents
 from thoth.workflow_helpers import __service_version__
 
 GRAPH = GraphDatabase()
@@ -83,10 +84,12 @@ def parse_solver_output() -> None:
 
     # 1. Retrieve adviser ids for specific thoth_integrations with need_re_run == True
     source_type: Optional[str]
-    source_type = ThothAdviserIntegrationEnum.GITHUB_APP.name
+    source_type = ThothAdviserIntegrationEnum.GITHUB_APP.name  # TODO: Do we want to extend it to other source type?
     unsolved_per_adviser_runs = GRAPH.get_unsolved_python_packages_all_per_adviser_run(source_type=source_type)
 
     output_messages = []
+    solver_messages_count = 0
+    adviser_messages_count = 0
 
     for python_package_info in solver_document["result"]["tree"]:
         package_name = python_package_info["package_name"]
@@ -104,6 +107,8 @@ def parse_solver_output() -> None:
 
         output_messages.append({"topic_name": solved_package_message.base_name, "message_contents": messgae_input})
 
+        solver_messages_count += 1
+
         for adviser_id in unsolved_per_adviser_runs:
 
             unsolved_packages = unsolved_per_adviser_runs[adviser_id]
@@ -119,48 +124,73 @@ def parse_solver_output() -> None:
             if number_packages_solved >= len(unsolved_packages):
                 _LOGGER.info("All packages have been solved! Adviser can re run.")
 
-                # 3. Retrieve adviser inputs to re run from adviser id
-                document = ADVISER_STORE.retrieve_document(adviser_id)
-                parameters = document["result"]["parameters"]
-                cli_arguments = document["metadata"]["arguments"]["thoth-adviser"]
+                # 3. Retrieve adviser inputs to create a new request and schedule adviser with thamos
 
-                recommendation_type = parameters["recommendation_type"]
+                retrieved_parameters = True
+                try:
+                    parameters = ADVISER_STORE.retrieve_request(adviser_id)
+                except Exception as retrieve_error:
+                    _LOGGER.error(
+                        f"Failed to retrieve parameters for request with adviser id: {adviser_id}: {retrieve_error}"
+                    )
+                    retrieved_parameters = False
 
-                origin = cli_arguments["metadata"]["origin"]
-                github_event_type = cli_arguments["metadata"]["github_event_type"]
-                github_check_run_id = cli_arguments["metadata"]["github_event_type"]
-                github_installation_id = cli_arguments["metadata"]["github_event_type"]
-                github_base_repo_url = cli_arguments["metadata"]["github_event_type"]
+                parameters.pop("job_id")
 
-                source_type = (cli_arguments.get("metadata") or {}).get("source_type")
-                source_type = source_type.upper() if source_type else None
+                new_adviser_id = OpenShift.generate_id("adviser")
+                parameters["job_id"] = new_adviser_id
 
-                # 4. Save adviser_id_message inputs
-                message_input = AdviserReRunContents(
-                    component_name=component_name,
-                    service_version=service_version,
-                    github_event_type=github_event_type,
-                    github_check_run_id=github_check_run_id,
-                    github_installation_id=github_installation_id,
-                    github_base_repo_url=github_base_repo_url,
-                    origin=origin,
-                    recommendation_type=recommendation_type,
-                    re_run_adviser_id=adviser_id,
-                    source_type=source_type,
-                ).dict()
+                ADVISER_STORE.store_request(parameters["job_id"], parameters)
 
-                output_messages.append(
-                    {"topic_name": adviser_rerun_message.base_name, "message_contents": message_input}
-                )
+                if retrieved_parameters:
+
+                    try:
+                        message_input = AdviserTriggerContents(
+                            job_id=new_adviser_id,
+                            component_name=component_name,
+                            service_version=__service_version__,
+                            authenticated=True,
+                            github_event_type=parameters["github_event_type"],
+                            github_check_run_id=parameters["github_check_run_id"],
+                            github_installation_id=parameters["github_installation_id"],
+                            github_base_repo_url=parameters["github_base_repo_url"],
+                            origin=parameters["origin"],
+                            recommendation_type=parameters["recommendation_type"],
+                            re_run_adviser_id=adviser_id,
+                            source_type=parameters["source_type"],
+                            count=parameters["count"],
+                            debug=parameters["debug"],
+                            dev=parameters["dev"],
+                            limit=parameters["limit"],
+                        ).dict()
+
+                        output_messages.append(
+                            {"topic_name": adviser_trigger_message.base_name, "message_contents": message_input}
+                        )
+
+                        adviser_messages_count += 1
+
+                    except Exception as message_error:
+                        _LOGGER.error(
+                            f"Failed creating message for adviser trigger using parameters: {parameters}"
+                            f" from adviser id {adviser_id}: {message_error}"
+                        )
 
     # 5. Store messages that need to be sent
     store_messages(output_messages)
 
     set_metrics(
         metric_messages_sent=metric_messages_sent,
-        message_type=adviser_rerun_message.base_name,
+        message_type=adviser_trigger_message.base_name,
         service_version=__service_version__,
-        number_messages_sent=len(output_messages),
+        number_messages_sent=adviser_messages_count,
+    )
+
+    set_metrics(
+        metric_messages_sent=metric_messages_sent,
+        message_type=solved_package_message.base_name,
+        service_version=__service_version__,
+        number_messages_sent=solver_messages_count,
     )
 
     send_metrics()
