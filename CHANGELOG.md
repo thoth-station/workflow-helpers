@@ -249,3 +249,7 @@ all the things that you see...
 ### Improvements
 * Use thamos and not messaging for qeb-hwt workflow (#239)
 * remove extra message contents removed in v2 (#229)
+
+## Release 0.7.1 (2021-04-16T16:59:52)
+### Features
+* Adjust input to thamos method (#245)
