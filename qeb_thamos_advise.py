@@ -122,7 +122,7 @@ def qeb_hwt_thamos_advise() -> None:
     response = advise_using_config(
         pipfile=pipfile_str,
         pipfile_lock=pipfile_lock_str,
-        config=thoth_yaml_config.content,
+        config=json.dumps(thoth_yaml_config.content),
         github_event_type=Configuration._GITHUB_EVENT_TYPE,
         github_check_run_id=Configuration._GITHUB_CHECK_RUN_ID,
         github_installation_id=Configuration._GITHUB_INSTALLATION_ID,
@@ -130,6 +130,7 @@ def qeb_hwt_thamos_advise() -> None:
         origin=Configuration._ORIGIN,
         source_type=ThothAdviserIntegrationEnum.GITHUB_APP,
         no_static_analysis=False,
+        src_path=".",
         nowait=True,
     )
 
