@@ -103,7 +103,9 @@ def qeb_hwt_thamos_advise() -> None:
     try:
         requirements_format = thoth_yaml_config.requirements_format
         if requirements_format == "pipenv":
-            project = Project.from_files(without_pipfile_lock=not os.path.exists("Pipfile.lock"))
+            project = Project.from_files(
+                pipfile_path="Pipfile", without_pipfile_lock=not os.path.exists("Pipfile.lock")
+            )
         elif requirements_format in ("pip", "pip-tools", "pip-compile"):
             project = Project.from_pip_compile_files(allow_without_lock=True)
         else:

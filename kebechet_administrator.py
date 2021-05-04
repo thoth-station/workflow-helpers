@@ -26,7 +26,7 @@ import semver
 from typing import Dict
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
-from thoth.messaging import __all__ as all_messages
+from thoth.messaging import ALL_MESSAGES
 from thoth.workflow_helpers import __service_version__
 from thoth.common import OpenShift as OpenShift
 from thoth.common.enums import InternalTriggerEnum
@@ -67,6 +67,8 @@ _JUSTIFICATION_MAPPING = {
     missing_version_message.base_name: InternalTriggerEnum.MISSING_VERSION.value,
     cve_provided_message.base_name: InternalTriggerEnum.CVE.value,
 }
+
+all_messages = [m.base_name for m in ALL_MESSAGES]
 
 
 def _handle_solved_message(Configuration):  # noqa: N803
