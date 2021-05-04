@@ -23,6 +23,12 @@ import os
 _LOGGER = logging.getLogger(__name__)
 
 
+def _custom_getenv(env_var, default=None, empty2none=False):
+    to_ret = os.getenv(env_var, default)
+    if to_ret == "":
+        to_ret = default
+
+
 class Configuration:
     """Configuration for workflow-helpers."""
 
@@ -46,12 +52,12 @@ class Configuration:
 
     # Python Package Info
     PACKAGE_NAME = os.getenv("THOTH_PACKAGE_NAME")
-    PACKAGE_VERSION = os.getenv("THOTH_PACKAGE_VERSION")
+    PACKAGE_VERSION = _custom_getenv("THOTH_PACKAGE_VERSION", empty2none=True)
     PACKAGE_INDEX = os.getenv("THOTH_PACKAGE_INDEX")
 
     # Kebechet Administrator
     # This needs package info + solver type + message type
-    SOLVER_NAME = os.getenv("THOTH_SOLVER_NAME")
+    SOLVER_NAME = _custom_getenv("THOTH_SOLVER_NAME", empty2none=True)
     MESSAGE_TYPE = os.getenv("THOTH_MESSAGE_TYPE")
 
     # metrics

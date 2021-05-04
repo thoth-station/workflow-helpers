@@ -38,6 +38,7 @@ from thoth.messaging import (
     hash_mismatch_message,
     kebechet_run_url_trigger_message,
     missing_version_message,
+    missing_package_message,
     solved_package_message,
 )
 
@@ -63,7 +64,7 @@ output_messages = []  # Messages to be sent by producer.
 _JUSTIFICATION_MAPPING = {
     cve_provided_message.base_name: InternalTriggerEnum.NEW_RELEASE.value,
     hash_mismatch_message.base_name: InternalTriggerEnum.HASH_MISMATCH.value,
-    # missing_package_message.base_name: InternalTriggerEnum.MISSING_PACKAGE.value, # To be implemented.
+    missing_package_message.base_name: InternalTriggerEnum.MISSING_PACKAGE.value,
     missing_version_message.base_name: InternalTriggerEnum.MISSING_VERSION.value,
     cve_provided_message.base_name: InternalTriggerEnum.CVE.value,
 }
@@ -154,7 +155,7 @@ def _handle_package_issue(Configuration):  # noqa: N803
 _message_handler = {
     solved_package_message.base_name: _handle_solved_message,
     hash_mismatch_message.base_name: _handle_package_issue,
-    # missing_package_message.base_name: _handle_package_issue, # To be implemented.
+    missing_package_message.base_name: _handle_package_issue,
     missing_version_message.base_name: _handle_package_issue,
     cve_provided_message.base_name: _handle_package_issue,
 }
