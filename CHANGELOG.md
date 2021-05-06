@@ -253,3 +253,12 @@ all the things that you see...
 ## Release 0.7.1 (2021-04-16T16:59:52)
 ### Features
 * Adjust input to thamos method (#245)
+
+## Release 0.8.0 (2021-05-06T07:46:05)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet (#254)
+* adjust metric name (#252)
+* :arrow_up: Automatic update of dependencies by Kebechet (#248)
+### Bug Fixes
+* use python 3.8 fixes pydantic issues (#250)
+* __all__ was imported as all messages (#249)
