@@ -44,8 +44,9 @@ database_schema_revision_script = Gauge(
 
 def parametrize_metric_messages_sent(component_name: str, description: str):
     """Parametrize metric for number of messages to be sent."""
+    name = component_name.replace("-", "_")
     metric_messages_sent = Counter(
-        f"thoth_{component_name}_messages_sent",
+        f"thoth_{name}_messages_sent",
         description,
         ["message_type", "env", "version"],
         registry=PROMETHEUS_REGISTRY,
