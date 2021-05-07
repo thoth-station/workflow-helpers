@@ -123,7 +123,7 @@ def _handle_package_issue(Configuration):  # noqa: N803
     # We get all the Kebechet repos using a non optimal package(missing package or CVE or missing version)
     repositories: Dict[str, Dict] = GRAPH.get_kebechet_github_installations_info_for_python_package_version(
         package_name=Configuration.PACKAGE_NAME,
-        version=Configuration.PACKAGE_VERSION,
+        package_version=Configuration.PACKAGE_VERSION,
         index_url=Configuration.PACKAGE_INDEX,
     )
 
