@@ -13,8 +13,12 @@ presubmits:
             - "--all-files"
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "2"
+              memory: "500Mi"
+              cpu: "300m"
+            limits:
+              memory: "1Gi"
+              cpu: "300m"
+
   - name: thoth-mypy-py38
     decorate: true
     skip_report: false
@@ -32,5 +36,8 @@ presubmits:
             - "mypy.ini"
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "200m"
+              memory: "500Mi"
+              cpu: "300m"
+            limits:
+              memory: "1Gi"
+              cpu: "300m"
