@@ -262,3 +262,7 @@ all the things that you see...
 ### Bug Fixes
 * use python 3.8 fixes pydantic issues (#250)
 * __all__ was imported as all messages (#249)
+
+## Release 0.8.1 (2021-05-19T13:12:46)
+### Bug Fixes
+* package_version param was wrong (#256)
