@@ -25,8 +25,9 @@ _LOGGER = logging.getLogger(__name__)
 
 def _custom_getenv(env_var, default=None, empty2none=False):
     to_ret = os.getenv(env_var, default)
-    if to_ret == "":
+    if to_ret == "" and empty2none:
         to_ret = default
+    return to_ret
 
 
 class Configuration:
