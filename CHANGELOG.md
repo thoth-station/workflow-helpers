@@ -266,3 +266,14 @@ all the things that you see...
 ## Release 0.8.1 (2021-05-19T13:12:46)
 ### Bug Fixes
 * package_version param was wrong (#256)
+
+## Release 0.8.2 (2021-06-14T20:17:39)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet (#269)
+* :arrow_up: Automatic update of dependencies by Kebechet
+* return to_ret
+* :arrow_up: Automatic update of dependencies by Kebechet
+* :arrow_up: Automatic update of dependencies by Kebechet
+* enable sending missing package messages
+### Bug Fixes
+* mypy error fix for workflow-helpers (#270)
