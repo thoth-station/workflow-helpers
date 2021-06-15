@@ -277,3 +277,9 @@ all the things that you see...
 * enable sending missing package messages
 ### Bug Fixes
 * mypy error fix for workflow-helpers (#270)
+
+## Release 0.8.3 (2021-06-15T12:29:27)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet
+### Bug Fixes
+* Relock to fix missing typing_extensions
