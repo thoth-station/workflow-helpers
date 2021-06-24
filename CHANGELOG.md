@@ -283,3 +283,8 @@ all the things that you see...
 * :arrow_up: Automatic update of dependencies by Kebechet
 ### Bug Fixes
 * Relock to fix missing typing_extensions
+
+## Release 0.8.4 (2021-06-24T05:18:09)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet
+* :arrow_up: Automatic update of dependencies by Kebechet
