@@ -27,22 +27,7 @@ class Configuration:
     """Configuration for workflow-helpers."""
 
     # General
-    _THOTH_DOCUMENT_ID = os.getenv("THOTH_DOCUMENT_ID")
     _THOTH_ADVISER_METADATA = os.getenv("THOTH_ADVISER_METADATA")
-
-    # Qeb Hwt inner workflow task
-    _REPO_PATH = os.getenv("REPO_PATH")
-    _ORIGIN = os.getenv("ORIGIN")
-    _GITHUB_EVENT_TYPE = os.getenv("GITHUB_EVENT_TYPE")
-    _GITHUB_CHECK_RUN_ID = os.getenv("GITHUB_CHECK_RUN_ID")
-    _GITHUB_INSTALLATION_ID = os.getenv("GITHUB_INSTALLATION_ID")
-    _GITHUB_BASE_REPO_URL = os.getenv("GITHUB_BASE_REPO_URL")
-    _THOTH_HOST = os.getenv("THOTH_HOST")
-
-    # Trigger finished webhook workflow task
-    _WORKFLOW_NAME = os.getenv("WORKFLOW_NAME")
-    _KEY = os.getenv("WEBHOOK_SECRET")
-    _WEBHOOK_CALLBACK_URL = os.getenv("WEBHOOK_CALLBACK_URL")
 
     # Python Package Info
     PACKAGE_NAME = os.getenv("THOTH_PACKAGE_NAME")

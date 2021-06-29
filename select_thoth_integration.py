@@ -21,7 +21,6 @@ import json
 import logging
 from urllib import parse
 
-from thoth.workflow_helpers.trigger_finished_webhook import trigger_finished_webhook
 from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers import __service_version__
 
@@ -58,9 +57,6 @@ def trigger_integration_workflow() -> None:
             f.write("")
         with open("/mnt/workdir/git_service", "w") as f:
             f.write("")
-
-    if source_type == ThothAdviserIntegrationEnum.GITHUB_APP.name:
-        trigger_finished_webhook(metadata=metadata, document_id=Configuration._THOTH_DOCUMENT_ID)
 
 
 if __name__ == "__main__":
