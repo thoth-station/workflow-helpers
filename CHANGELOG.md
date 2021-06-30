@@ -288,3 +288,7 @@ all the things that you see...
 ### Features
 * :arrow_up: Automatic update of dependencies by Kebechet
 * :arrow_up: Automatic update of dependencies by Kebechet
+
+## Release 0.8.5 (2021-06-30T03:05:26)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet
