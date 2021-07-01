@@ -21,14 +21,6 @@ uses `parse_solver_outputs.py` which is used in Solver workflow to parse inputs 
 that is used by Kafka task to send messages. Moreover it is used to check adviser run that have unresolved packages
 and store messages file that is used by Kafka task to send messages.
 
-## qeb_thamos_advise
-
-```shell
-REPO_PATH=. THOTH_WORKFLOW_TASK=qeb_hwt ./app.sh
-```
-
-will trigger `qeb_thamos_advise.py` which is used in Qeb-Hwt Outer workflow before calling submitting an advise.
-
 ## select_thoth_integration
 
 ```shell
