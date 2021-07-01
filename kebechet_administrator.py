@@ -110,7 +110,12 @@ def _handle_solved_message(Configuration):  # noqa: N803
             url=_URL_PREFIX + key,
             service_name="github",
             installation_id=repo_info.get("installation_id"),
-            kebechet_metadata={"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
+            metadata={
+                "message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE],
+                "package_name": Configuration.PACKAGE_NAME,
+                "package_version": Configuration.PACKAGE_VERSION,
+                "package_index": Configuration.PACKAGE_INDEX,
+            },
         ).dict()
 
         # We store the message to put in the output file here.
@@ -142,7 +147,12 @@ def _handle_package_issue(Configuration):  # noqa: N803
             url=_URL_PREFIX + key,
             service_name="github",
             installation_id=repo_info.get("installation_id"),
-            metadata={"message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE]},
+            metadata={
+                "message_justification": _JUSTIFICATION_MAPPING[Configuration.MESSAGE_TYPE],
+                "package_name": Configuration.PACKAGE_NAME,
+                "package_version": Configuration.PACKAGE_VERSION,
+                "package_index": Configuration.PACKAGE_INDEX,
+            },
         ).dict()
 
         # We store the message to put in the output file here.
