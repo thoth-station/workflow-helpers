@@ -24,7 +24,7 @@ from typing import List, Optional
 from thoth.storages import GraphDatabase
 from thoth.storages import AdvisersResultsStore
 from thoth.common import OpenShift
-from thoth.storages.graph.enums import ThothAdviserIntegrationEnum
+from thoth.common.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
 from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
