@@ -292,3 +292,15 @@ all the things that you see...
 ## Release 0.8.5 (2021-06-30T03:05:26)
 ### Features
 * :arrow_up: Automatic update of dependencies by Kebechet
+
+## Release 0.8.6 (2021-07-02T06:52:13)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet (#297)
+* :arrow_up: Automatic update of dependencies by Kebechet (#295)
+* Use common enums
+* Deprecate qeb-hwt
+* new workflow helpers task to update keb installation in DB
+### Bug Fixes
+* :cloud: mypy fixes for the workflow-helpers
+### Improvements
+* Clean methods and README (#293)
