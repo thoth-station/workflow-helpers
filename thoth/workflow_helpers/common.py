@@ -85,20 +85,25 @@ def store_messages(output_messages: list):
         _LOGGER.info(f"Successfully stored file with messages to be sent!: {output_messages}")
 
 
-def set_metrics(
+def set_schema_metrics():
+    """Set metrics to be sent to pushgateway."""
+    if DEPLOYMENT_NAME:
+        database_schema_revision_script.labels(
+            "workflow-helpers", GraphDatabase().get_script_alembic_version_head(), DEPLOYMENT_NAME
+        ).inc()
+
+    else:
+        _LOGGER.warning("THOTH_DEPLOYMENT_NAME env variable is not set.")
+
+
+def set_messages_metrics(
     metric_messages_sent: Metric,
     message_type: str,
     service_version: str,
     number_messages_sent: int,
-    is_storages_used: bool = True,
 ):
-    """Set metrics to be sent to pushgateway."""
+    """Set message metrics to be sent to pushgateway."""
     if DEPLOYMENT_NAME:
-        if is_storages_used:
-            database_schema_revision_script.labels(
-                "workflow-helpers", GraphDatabase().get_script_alembic_version_head(), DEPLOYMENT_NAME
-            ).inc()
-
         metric_messages_sent.labels(
             message_type=message_type,
             env=DEPLOYMENT_NAME,

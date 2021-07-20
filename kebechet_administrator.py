@@ -31,7 +31,8 @@ from thoth.workflow_helpers import __service_version__
 from thoth.common import OpenShift as OpenShift
 from thoth.common.enums import InternalTriggerEnum
 
-from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
+from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent
+from thoth.workflow_helpers.common import set_messages_metrics, set_schema_metrics
 
 from thoth.messaging import (
     cve_provided_message,
@@ -201,13 +202,14 @@ def run_kebechet_administrator():
     # Store message to file that need to be sent.
     store_messages(output_messages)
 
-    set_metrics(
+    set_messages_metrics(
         metric_messages_sent=metric_messages_sent,
         message_type=kebechet_run_url_trigger_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
-        is_storages_used=False,
     )
+
+    set_schema_metrics()
 
     send_metrics()
 

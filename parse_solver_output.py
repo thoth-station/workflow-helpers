@@ -27,7 +27,8 @@ from thoth.common import OpenShift
 from thoth.common.enums import ThothAdviserIntegrationEnum
 
 from thoth.workflow_helpers.common import retrieve_solver_document
-from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent, set_metrics
+from thoth.workflow_helpers.common import send_metrics, store_messages, parametrize_metric_messages_sent
+from thoth.workflow_helpers.common import set_messages_metrics, set_schema_metrics
 from thoth.messaging import solved_package_message, adviser_trigger_message
 from thoth.messaging.solved_package import MessageContents as SolvedPackageContents
 from thoth.messaging.adviser_trigger import MessageContents as AdviserTriggerContents
@@ -179,20 +180,21 @@ def parse_solver_output() -> None:
     # 5. Store messages that need to be sent
     store_messages(output_messages)
 
-    set_metrics(
+    set_messages_metrics(
         metric_messages_sent=metric_messages_sent,
         message_type=adviser_trigger_message.base_name,
         service_version=__service_version__,
         number_messages_sent=adviser_messages_count,
     )
 
-    set_metrics(
+    set_messages_metrics(
         metric_messages_sent=metric_messages_sent,
         message_type=solved_package_message.base_name,
         service_version=__service_version__,
         number_messages_sent=solver_messages_count,
-        is_storages_used=False,
     )
+
+    set_schema_metrics()
 
     send_metrics()
 
