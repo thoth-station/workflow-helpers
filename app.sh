@@ -30,4 +30,6 @@ elif [ "$THOTH_WORKFLOW_TASK" = "graph_schema_update" ]; then
     exec python3 graph_schema_update.py
 elif [ "$THOTH_WORKFLOW_TASK" = "update_kebechet_installation" ]; then
     exec python3 update_keb_installation.py
+elif [ "$THOTH_WORKFLOW_TASK" = "create_purge_issues" ]; then
+    exec python3 create_purge_issues.py
 fi
