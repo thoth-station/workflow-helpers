@@ -191,6 +191,7 @@ def parse_solver_output() -> None:
         message_type=solved_package_message.base_name,
         service_version=__service_version__,
         number_messages_sent=solver_messages_count,
+        is_storages_used=False,
     )
 
     send_metrics()
