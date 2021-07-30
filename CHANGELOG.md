@@ -304,3 +304,12 @@ all the things that you see...
 * :cloud: mypy fixes for the workflow-helpers
 ### Improvements
 * Clean methods and README (#293)
+
+## Release 0.8.7 (2021-07-30T10:31:00)
+### Features
+* :arrow_up: Automatic update of dependencies by Kebechet (#307)
+* :arrow_up: Automatic update of dependencies by Kebechet
+* Fix sending metric twice
+* add new script for opening issues on data purge
+* :arrow_up: Automatic update of dependencies by Kebechet
+* add more args for issue/pr context and adviser update runs
