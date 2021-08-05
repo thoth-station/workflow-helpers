@@ -19,14 +19,15 @@
 
 import os
 from tempfile import TemporaryDirectory
+from typing import List
 
-import yaml
 import logging
 from ogr.services.github import GithubService
 
 from thoth.storages import GraphDatabase
 from thoth.common import init_logging, cwd, RuntimeEnvironment
 from thoth.python import Project
+from thamos import config as thoth_config
 
 from thoth.workflow_helpers import __service_version__
 
@@ -59,60 +60,79 @@ def update_keb_installation():
     raw_thoth_config = project.get_file_content(".thoth.yaml")
 
     with TemporaryDirectory() as repo_path, cwd(repo_path):
-        thoth_config = yaml.safe_load(raw_thoth_config)
-        requirements_format = thoth_config["requirements_format"]
-        # TODO: choose runtime_environment based on name
-        runtime_environment = RuntimeEnvironment.from_dict(thoth_config["runtime_environments"][0])
-        if requirements_format == "pipenv":
-            pipfile_r = project.get_file_content("Pipfile")
-            with open("Pipfile", "wb") as f:
-                f.write(pipfile_r)
-
-            try:
-                piplock_r = project.get_file_content("Pipfile.lock")
-                with open("Pipfile.lock", "wb") as f:
-                    f.write(piplock_r)
-                project = Project.from_files(pipfile_path="Pipfile", pipfile_lock_path="Pipfile.lock")
-            except Exception:
-                _LOGGER.debug("No Pipfile.lock found")
-                project = Project.from_files(
-                    pipfile_path="Pipfile",
-                    without_pipfile_lock=True,
-                    runtime_environment=runtime_environment,
-                )
-
-        elif requirements_format in ["pip", "pip-tools", "pip-compile"]:
-            try:
-                requirements_r = project.get_file_content("requirements.txt")
-                with open("requirements.txt", "wb") as f:
-                    f.write(requirements_r)
-                project = Project.from_pip_compile_files(
-                    requirements_path="requirements.txt",
-                    allow_without_lock=True,
-                    runtime_environment=runtime_environment,
-                )
-            except Exception:
-                _LOGGER.debug("No requirements.txt found, trying to download requirements.in")
-                requirements_r = project.get_file_content("requirements.in")
-                with open("requirements.in", "wb") as f:
-                    f.write(requirements_r.content)
-                project = Project.from_pip_compile_files(
-                    requirements_path="requirements.in",
-                    allow_without_lock=True,
-                    runtime_environment=runtime_environment,
-                )
-
-            project = Project.from_pip_compile_files(allow_without_lock=True)
+        thoth_config.load_config_from_string(raw_thoth_config)
+        requirements_format = thoth_config.content["requirements_format"]
+        overlays_dir = thoth_config.content.get("overlays_dir")
+        to_update: List[RuntimeEnvironment]
+        if overlays_dir is not None:
+            to_update = [RuntimeEnvironment.from_dict(r) for r in thoth_config.list_runtime_environments()]
         else:
-            raise NotImplementedError(f"{requirements_format} requirements format not supported.")
+            to_update = [RuntimeEnvironment.from_dict(thoth_config.get_runtime_environment())]
 
-        db.update_kebechet_installation_using_files(
-            slug=_SLUG,
-            installation_id=str(project.github_repo.id),
-            requirements=project.pipfile.to_dict(),
-            requirements_lock=project.pipfile_lock.to_dict(),
-            thoth_config=thoth_config,
-        )
+        for runtime_environment in to_update:
+            if overlays_dir:
+                prefix = f"{overlays_dir}/{runtime_environment.name}/"
+            else:
+                prefix = ""
+
+            if requirements_format == "pipenv":
+                pipfile_r = project.get_file_content(f"{prefix}Pipfile")
+                with open("Pipfile", "wb") as f:
+                    f.write(pipfile_r)
+
+                try:
+                    piplock_r = project.get_file_content(f"{prefix}Pipfile.lock")
+                    with open("Pipfile.lock", "wb") as f:
+                        f.write(piplock_r)
+                    project = Project.from_files(pipfile_path="Pipfile", pipfile_lock_path="Pipfile.lock")
+                except Exception:
+                    _LOGGER.debug("No Pipfile.lock found")
+                    project = Project.from_files(
+                        pipfile_path="Pipfile",
+                        without_pipfile_lock=True,
+                        runtime_environment=runtime_environment,
+                    )
+
+            elif requirements_format in ["pip", "pip-tools", "pip-compile"]:
+                try:
+                    requirements_r = project.get_file_content(f"{prefix}requirements.txt")
+                    with open("requirements.txt", "wb") as f:
+                        f.write(requirements_r)
+                    project = Project.from_pip_compile_files(
+                        requirements_path="requirements.txt",
+                        allow_without_lock=True,
+                        runtime_environment=runtime_environment,
+                    )
+                except Exception:
+                    _LOGGER.debug("No requirements.txt found, trying to download requirements.in")
+                    requirements_r = project.get_file_content(f"{prefix}requirements.in")
+                    with open("requirements.in", "wb") as f:
+                        f.write(requirements_r.content)
+                    project = Project.from_pip_compile_files(
+                        requirements_path="requirements.in",
+                        allow_without_lock=True,
+                        runtime_environment=runtime_environment,
+                    )
+
+                project = Project.from_pip_compile_files(allow_without_lock=True)
+            else:
+                raise NotImplementedError(f"{requirements_format} requirements format not supported.")
+
+            db.update_kebechet_installation_using_files(
+                slug=_SLUG,
+                runtime_environment_name=runtime_environment.name,
+                installation_id=str(project.github_repo.id),
+                requirements=project.pipfile.to_dict(),
+                requirements_lock=project.pipfile_lock.to_dict(),
+                thoth_config=thoth_config,
+            )
+
+        present_installations = db.get_kebechet_github_app_installations_all(slug=_SLUG)
+        cur_env_names = {r.name for r in to_update}
+        all_env_names = {installation["runtime_environment_name"] for installation in present_installations}
+        to_delete = all_env_names - cur_env_names
+        for name in to_delete:
+            db.delete_kebechet_github_app_installations(slug=_SLUG, runtime_environment=name)
 
 
 if __name__ == "__main__":
