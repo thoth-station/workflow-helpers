@@ -29,7 +29,8 @@ from thoth.workflow_helpers import __service_version__
 
 from thoth.workflow_helpers.common import store_messages
 
-from thoth.workflow_helpers.common import send_metrics, parametrize_metric_messages_sent, set_metrics
+from thoth.workflow_helpers.common import send_metrics, parametrize_metric_messages_sent
+from thoth.workflow_helpers.common import set_messages_metrics, set_schema_metrics
 from thoth.messaging import unresolved_package_message
 from thoth.messaging.unresolved_package import MessageContents as UnresolvedPackageContents
 
@@ -112,13 +113,13 @@ def parse_provenance_checker_output() -> None:
     # Store message to file that need to be sent.
     store_messages(output_messages)
 
-    set_metrics(
+    set_messages_metrics(
         metric_messages_sent=metric_messages_sent,
         message_type=unresolved_package_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
-        is_storages_used=False,
     )
+    set_schema_metrics()
 
     send_metrics()
 
