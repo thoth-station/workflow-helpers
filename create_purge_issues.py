@@ -25,7 +25,7 @@ from prometheus_client import Gauge
 
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers import __service_version__
-from thoth.workflow_helpers import Configuration
+from thoth.workflow_helpers.configuration import Configuration
 from thoth.workflow_helpers.common import send_metrics, set_schema_metrics, PROMETHEUS_REGISTRY
 
 
@@ -59,14 +59,16 @@ def main():
     os_version = os.getenv("PURGE_OS_VERSION") if os.getenv("PURGE_OS_VERSION") else None
     python_version = os.getenv("PURGE_PYTHON_VERSION") if os.getenv("PURGE_PYTHON_VERSION") else None
 
-    all_installations = GRAPH.get_kebechet_github_installations_info_for_software_environment_all(
+    all_installations = GRAPH.get_kebechet_github_installation_info_with_software_environment_all(
         os_name=os_name,
         os_version=os_version,
         python_version=python_version,
     )
 
     gh = GithubService(
-        github_app_id=os.getenv("GITHUB_APP_ID"), github_private_key_path=os.getenv("GITHUB_PRIVATE_KEY_PATH")
+        token=os.getenv("GITHUB_KEBECHET_TOKEN"),
+        github_app_id=os.getenv("GITHUB_APP_ID"),
+        github_private_key_path=os.getenv("GITHUB_PRIVATE_KEY_PATH"),
     )
 
     number_issues_total = len(all_installations)
