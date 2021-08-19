@@ -22,6 +22,7 @@ needs to be run on and store the necessary messages to be sent.
 """
 
 import logging
+import os
 import semver
 from typing import Dict
 from thoth.storages import GraphDatabase
@@ -73,9 +74,9 @@ _JUSTIFICATION_MAPPING = {
 all_messages = [m.base_name for m in ALL_MESSAGES]
 
 
-def _handle_solved_message(Configuration):  # noqa: N803
+def _handle_solved_message():  # noqa: N803
     """Handle all the messages for which Kebechet needs to run on if the sovler type matches the os type."""
-    solver_string = Configuration.get("THOTH_SOLVER_NAME")  # ex - solver-fedora-31-py38
+    solver_string = os.environ["THOTH_SOLVER_NAME"]  # ex - solver-fedora-31-py38
     if not solver_string:
         raise ValueError(
             "SolverMessageType has been provided to the MESSAGE_TYPE env variable. \
