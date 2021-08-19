@@ -1,5 +1,12 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.8.8 (2021-08-19T10:09:34)
+### Features
+* Fix env variable in kebechet administrator
+* storages function uses wrong name
+### Improvements
+* Refactor methods for metrics (#304)
+
 ## [0.1.0] - 2019-Sep-11 - goern
 
 ### Added
