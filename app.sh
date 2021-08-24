@@ -32,4 +32,6 @@ elif [ "$THOTH_WORKFLOW_TASK" = "update_kebechet_installation" ]; then
     exec python3 update_keb_installation.py
 elif [ "$THOTH_WORKFLOW_TASK" = "create_purge_issues" ]; then
     exec python3 create_purge_issues.py
+elif [ "$THOTH_WORKFLOW_TASK" = "thoth_repository_initialization" ]; then
+    exec python3 thoth_repository_initialization/fork_and_advise.py
 fi
