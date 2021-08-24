@@ -74,7 +74,7 @@ _JUSTIFICATION_MAPPING = {
 all_messages = [m.base_name for m in ALL_MESSAGES]
 
 
-def _handle_solved_message():  # noqa: N803
+def _handle_solved_message(Configuration):  # noqa: N803
     """Handle all the messages for which Kebechet needs to run on if the sovler type matches the os type."""
     solver_string = os.environ["THOTH_SOLVER_NAME"]  # ex - solver-fedora-31-py38
     if not solver_string:
