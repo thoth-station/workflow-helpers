@@ -1,5 +1,9 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.8.9 (2021-08-24T10:52:41)
+### Features
+* Fix kebechet administrator scheduling
+
 ## Release 0.8.8 (2021-08-19T10:09:34)
 ### Features
 * Fix env variable in kebechet administrator
