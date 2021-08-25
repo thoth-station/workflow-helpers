@@ -21,6 +21,8 @@ import logging
 import json
 import os
 
+from typing import Optional
+
 from prometheus_client import Metric, Gauge, Counter, CollectorRegistry, push_to_gateway
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
@@ -42,15 +44,23 @@ database_schema_revision_script = Gauge(
 )
 
 
-def parametrize_metric_messages_sent(component_name: str, description: str):
+def parametrize_metric_messages_sent(component_name: str, description: str, internal_trigger: bool = False):
     """Parametrize metric for number of messages to be sent."""
     name = component_name.replace("-", "_")
-    metric_messages_sent = Counter(
-        f"thoth_{name}_messages_sent",
-        description,
-        ["message_type", "env", "version"],
-        registry=PROMETHEUS_REGISTRY,
-    )
+    if not internal_trigger:
+        metric_messages_sent = Counter(
+            f"thoth_{name}_messages_sent",
+            description,
+            ["message_type", "env", "version"],
+            registry=PROMETHEUS_REGISTRY,
+        )
+    else:
+        metric_messages_sent = Counter(
+            f"thoth_{name}_messages_sent",
+            description,
+            ["message_type", "trigger", "env", "version"],
+            registry=PROMETHEUS_REGISTRY,
+        )
 
     return metric_messages_sent
 
@@ -101,14 +111,24 @@ def set_messages_metrics(
     message_type: str,
     service_version: str,
     number_messages_sent: int,
+    internal_trigger: bool = False,
+    trigger_message: Optional[str] = None,
 ):
     """Set message metrics to be sent to pushgateway."""
     if DEPLOYMENT_NAME:
-        metric_messages_sent.labels(
-            message_type=message_type,
-            env=DEPLOYMENT_NAME,
-            version=service_version,
-        ).inc(number_messages_sent)
+        if not internal_trigger:
+            metric_messages_sent.labels(
+                message_type=message_type,
+                env=DEPLOYMENT_NAME,
+                version=service_version,
+            ).inc(number_messages_sent)
+        else:
+            metric_messages_sent.labels(
+                message_type=message_type,
+                trigger=trigger_message,
+                env=DEPLOYMENT_NAME,
+                version=service_version,
+            ).inc(number_messages_sent)
 
     else:
         _LOGGER.warning("THOTH_DEPLOYMENT_NAME env variable is not set.")
