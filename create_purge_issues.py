@@ -19,6 +19,7 @@
 
 import os
 import logging
+import json
 
 from ogr.services.github import GithubService
 from prometheus_client import Gauge
@@ -35,6 +36,16 @@ GRAPH.connect()
 _LOGGER = logging.getLogger("thoth.create_purge_issues")
 _LOGGER.info("Thoth workflow-helpers task: create_purge_issue v%s", __service_version__)
 
+_ISSUE_BODY = """Thoth is constantly ingesting new data, it purges data as operating system and python versions are EOL.
+OS: {os_name}, Version: {os_version}, with Python Version: {python_version}, was just removed and Thoth will no longer
+be able to advise on this environment. Please update to a newer version or another supported operating system.
+
+**List of currently available runtimes**
+
+```json
+{available_runtimes}
+```
+"""
 
 number_purge_issues_created = Gauge(
     "thoth_number_purge_issues_created",
@@ -64,7 +75,7 @@ def main():
         os_version=os_version,
         python_version=python_version,
     )
-
+    available_software_runtimes = GRAPH.get_solved_python_package_versions_software_environment_all()
     gh = GithubService(
         token=os.getenv("GITHUB_KEBECHET_TOKEN"),
         github_app_id=os.getenv("GITHUB_APP_ID"),
@@ -80,12 +91,11 @@ def main():
             # We shouldn't have to check if the issue exists because the purge job is run for each env only once
             p.create_issue(
                 title=f"{os_name}:{os_version}py{python_version} being purged from Thoth DB",
-                body=(
-                    "Thoth is constantly ingesting new data, it purges data as operating system "
-                    "and python versions are EOL. "
-                    f"{os_name}:{os_version}py{python_version} was just removed "
-                    "and Thoth will no longer be able to advise on this environment. "
-                    "Please update to a newer version or another supported operating system."
+                body=_ISSUE_BODY.format(
+                    os_name=os_name,
+                    os_version=os_version,
+                    python_version=python_version,
+                    available_runtimes=json.dumps(available_software_runtimes, indent=4),
                 ),
                 private=i["private"],
                 labels=["bot"],
