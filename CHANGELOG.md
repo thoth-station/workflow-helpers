@@ -1,5 +1,13 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.0 (2021-09-14T20:59:55)
+### Features
+* Update of the dependencies
+* create new wfh task which initializes a repo with .thoth.yaml and example advise
+* add list of available runtimes to purge issue (#326)
+* set empty default to label
+* Add trigger type to the metrics to know how many messages are creted per trigger
+
 ## Release 0.8.9 (2021-08-24T10:52:41)
 ### Features
 * Fix kebechet administrator scheduling
