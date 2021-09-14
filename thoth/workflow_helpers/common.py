@@ -45,10 +45,11 @@ database_schema_revision_script = Gauge(
 def parametrize_metric_messages_sent(component_name: str, description: str):
     """Parametrize metric for number of messages to be sent."""
     name = component_name.replace("-", "_")
+
     metric_messages_sent = Counter(
         f"thoth_{name}_messages_sent",
         description,
-        ["message_type", "env", "version"],
+        ["message_type", "trigger", "env", "version"],
         registry=PROMETHEUS_REGISTRY,
     )
 
@@ -101,11 +102,13 @@ def set_messages_metrics(
     message_type: str,
     service_version: str,
     number_messages_sent: int,
+    trigger_message: str = "",
 ):
     """Set message metrics to be sent to pushgateway."""
     if DEPLOYMENT_NAME:
         metric_messages_sent.labels(
             message_type=message_type,
+            trigger=trigger_message,
             env=DEPLOYMENT_NAME,
             version=service_version,
         ).inc(number_messages_sent)

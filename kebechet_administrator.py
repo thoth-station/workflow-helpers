@@ -58,7 +58,9 @@ GRAPH.connect()
 _URL_PREFIX = "https://github.com/"
 
 metric_messages_sent = parametrize_metric_messages_sent(
-    component_name=__COMPONENT_NAME__, description="Thoth Kebechet Administrator Workflow number messages sent"
+    component_name=__COMPONENT_NAME__,
+    description="Thoth Kebechet Administrator Workflow number messages sent",
+    internal_trigger=True,
 )
 
 output_messages = []  # Messages to be sent by producer.
@@ -197,9 +199,13 @@ def run_kebechet_administrator():
     """Run Kebechet Administrator to determine the repositories on which Kebechet will be triggered internally."""
     # We check if all the necessary env variables have been set correctly.
     _input_validation()
+
+    _LOGGER.info(f"Kebechet administrator triggered by: {Configuration.MESSAGE_TYPE}")
     # If input validation passes, we call the specific handler to generate the messages for the producer.
     _message_handler[Configuration.MESSAGE_TYPE](Configuration)
 
+    _LOGGER.info(f"Number of messages to be sent: {len(output_messages)}")
+    _LOGGER.debug(f"Messages to be sent: {output_messages}")
     # Store message to file that need to be sent.
     store_messages(output_messages)
 
@@ -208,6 +214,7 @@ def run_kebechet_administrator():
         message_type=kebechet_run_url_trigger_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
+        trigger_message=Configuration.MESSAGE_TYPE.name,
     )
 
     set_schema_metrics()
