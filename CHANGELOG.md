@@ -1,5 +1,10 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.2 (2021-10-11T13:22:37)
+### Features
+* Remove missed parameter
+* :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+
 ## Release 0.9.1 (2021-09-27T20:58:19)
 ### Features
 * :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
