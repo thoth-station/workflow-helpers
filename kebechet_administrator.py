@@ -58,9 +58,7 @@ GRAPH.connect()
 _URL_PREFIX = "https://github.com/"
 
 metric_messages_sent = parametrize_metric_messages_sent(
-    component_name=__COMPONENT_NAME__,
-    description="Thoth Kebechet Administrator Workflow number messages sent",
-    internal_trigger=True,
+    component_name=__COMPONENT_NAME__, description="Thoth Kebechet Administrator Workflow number messages sent"
 )
 
 output_messages = []  # Messages to be sent by producer.
