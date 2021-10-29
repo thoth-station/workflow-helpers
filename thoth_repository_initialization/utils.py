@@ -24,9 +24,9 @@ from typing import Tuple
 from contextlib import contextmanager
 import urllib3
 from tempfile import TemporaryDirectory
-from kebechet.utils import cwd
 import git
 import os
+from thoth.common import cwd
 
 APP_NAME = os.getenv("GITHUB_APP_NAME", "khebhut")
 
