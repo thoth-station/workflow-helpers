@@ -23,8 +23,8 @@ from ogr.services.github import GithubService
 import thamos
 
 from utils import _parse_url_4_args, cloned_repo, _write_to_file, _write_result2files
-from . import templates
-from . import resources
+import templates
+import resources
 
 import click
 
