@@ -25,7 +25,7 @@ from thoth.python import __version__ as __python_version__
 from thoth.analyzer import __version__ as __analyzer_version__
 from thoth.storages import __version__ as __storages_version__
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 __service_version__ = (
     f"{__version__}+"
     f"thamos.{__thamos__version__}."
