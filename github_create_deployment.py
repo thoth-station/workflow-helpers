@@ -64,7 +64,7 @@ if __name__ == "__main__":
     # This is for our fake github server
     conn = http.client.HTTPSConnection("api.github.com")
 
-    r = conn.request(
+    conn.request(
         "POST",
         deployment_url,
         body=json.dumps(data),

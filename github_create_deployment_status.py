@@ -65,7 +65,7 @@ if __name__ == "__main__":
     _LOGGER.debug("sending to github: ", data)
 
     conn = http.client.HTTPSConnection("api.github.com")
-    r = conn.request(
+    conn.request(
         "POST",
         _deployment_status_url,
         body=json.dumps(data),
