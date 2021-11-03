@@ -27,13 +27,11 @@ import sys
 import http.client
 
 from thoth.workflow_helpers import __service_version__
-from thoth.workflow_helpers.common import send_metrics
 
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger("thoth.devops.create_github_deployment")
 _LOGGER.info("Thoth workflow-helpers: github_create_deployment v%s", __service_version__)
-
 
 
 REPO_FULL_NAME = os.getenv("REPO_FULL_NAME", None)
@@ -52,7 +50,7 @@ if __name__ == "__main__":
     if PAYLOAD is not None:
         payload = json.loads(PAYLOAD)
     else:
-        payload = [] 
+        payload = []
 
     data = {
         "ref": "HEAD",

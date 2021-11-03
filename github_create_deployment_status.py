@@ -27,7 +27,6 @@ import sys
 import http.client
 
 from thoth.workflow_helpers import __service_version__
-from thoth.workflow_helpers.common import send_metrics
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -35,11 +34,10 @@ _LOGGER = logging.getLogger("thoth.devops.create_github_deployment")
 _LOGGER.info("Thoth workflow-helpers: github_create_deployment v%s", __service_version__)
 
 
-
 REPO_FULL_NAME = os.getenv("REPO_FULL_NAME", None)
 DEPLOYMENT_ID = os.getenv("DEPLOYMENT_ID", None)
 PAYLOAD = os.getenv("PAYLOAD", None)
-STATE = os.getenv("STATE", "inactive") # TODO check is in the list of valid states
+STATE = os.getenv("STATE", "inactive")  # TODO check is in the list of valid states
 ENVIRONMENT = os.getenv("ENVIRONMENT", "test")
 ENVIRONMENT_URL = os.getenv("ENVIRONMENT_URL", None)
 DESCRIPTION = os.getenv("DESCRIPTION ", f"a deployment to {ENVIRONMENT} just changed state to {STATE}")
@@ -55,16 +53,14 @@ if __name__ == "__main__":
 
     _deployment_status_url = f"/repos/{REPO_FULL_NAME}/deployments/{DEPLOYMENT_ID}/statuses"
 
-
     data = {
-            "state": STATE,
-#            "log_url": "$(LOG_URL)",
-            "description": DESCRIPTION,
-            "environment_url": ENVIRONMENT_URL,
-            "environment": ENVIRONMENT,
-            "auto_inactive": "true",
-        }
-
+        "state": STATE,
+        #            "log_url": "$(LOG_URL)",
+        "description": DESCRIPTION,
+        "environment_url": ENVIRONMENT_URL,
+        "environment": ENVIRONMENT,
+        "auto_inactive": "true",
+    }
 
     _LOGGER.debug("sending to github: ", data)
 
