@@ -1,5 +1,8 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.4 (2021-11-08T20:25:32)
+* :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+
 ## Release 0.9.3 (2021-10-29T19:40:33)
 * :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
 * add cwd context from common instead of keb
