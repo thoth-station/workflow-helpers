@@ -212,7 +212,7 @@ def run_kebechet_administrator():
         message_type=kebechet_run_url_trigger_message.base_name,
         service_version=__service_version__,
         number_messages_sent=len(output_messages),
-        trigger_message=Configuration.MESSAGE_TYPE.name,
+        trigger_message=Configuration.MESSAGE_TYPE,
     )
 
     set_schema_metrics()
