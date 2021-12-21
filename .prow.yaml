@@ -28,7 +28,7 @@ presubmits:
       containers:
         - image: quay.io/thoth-station/thoth-pytest-py38:v0.12.9
           command:
-            - "run-mypy"
+            - "/usr/local/bin/mypy"
           args:
             - "."
             - "--ignore-missing-imports"
