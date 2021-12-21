@@ -1,5 +1,12 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.5 (2021-12-21T18:02:10)
+* :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* message type is a str env var does not have name field
+* :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* Update pyproject.toml to use Python 3.8
+
 ## Release 0.9.4 (2021-11-08T20:25:32)
 * :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
 
