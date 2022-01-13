@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Graph schema update task for Thoth project."""
+"""This task is used to update the Graph schema for Thoth project."""
 
 import logging
 

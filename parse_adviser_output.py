@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""This script run in a workflow task to parse adviser output."""
+"""This script run in adviser workflow task to parse adviser output."""
 
 
 import logging

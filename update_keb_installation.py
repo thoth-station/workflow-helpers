@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Update Kebechet installation details in DB during webhook workflows."""
+"""This task is run to update Kebechet installation details in DB during webhook workflows."""
 
 import os
 from tempfile import TemporaryDirectory
