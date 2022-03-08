@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # thoth-workflow-helpers
-# Copyright(C) 2020 Francesco Murdaca
+# Copyright(C) 2020, 2022 Francesco Murdaca, Christoph Görn
 #
 # This program is free software: you can redistribute it and / or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@ import logging
 import json
 import os
 
-from prometheus_client import Metric, Gauge, Counter, CollectorRegistry, push_to_gateway
+from typing import Union
+
+from prometheus_client import Gauge, Counter, CollectorRegistry, push_to_gateway
 from thoth.storages import GraphDatabase
 from thoth.workflow_helpers.configuration import Configuration
 
@@ -98,7 +100,7 @@ def set_schema_metrics():
 
 
 def set_messages_metrics(
-    metric_messages_sent: Metric,
+    metric_messages_sent: Union[Counter, Gauge],
     message_type: str,
     service_version: str,
     number_messages_sent: int,
