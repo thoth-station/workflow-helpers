@@ -1,5 +1,17 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.9 (2022-05-09T19:40:11)
+* 95e8f50 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#393)
+* 3f7b1c0 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#392)
+* 5c0ec92 update pre-commit plugins
+* 8864b3f :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* cd1a197 fix a typing, thanks @kpostoffice
+* 6007fd5 relocked dependencies
+* 29b1c61 fix two mypy findings
+* efc0353 fix F401
+* 73ee98c add two scripts to manage github deployment status
+* 328339f update all the CI/CD configs
+
 ## Release 0.9.8 (2022-01-31T21:58:15)
 * :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#385)
 * Update readme
