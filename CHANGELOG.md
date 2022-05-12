@@ -1,5 +1,8 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.10 (2022-05-12T14:36:59)
+* 33340c7 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#397)
+
 ## Release 0.9.9 (2022-05-09T19:40:11)
 * 95e8f50 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#393)
 * 3f7b1c0 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#392)
