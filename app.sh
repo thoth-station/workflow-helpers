@@ -34,4 +34,6 @@ elif [ "$THOTH_WORKFLOW_TASK" = "trigger_integration" ]; then
     exec python3 select_thoth_integration.py
 elif [ "$THOTH_WORKFLOW_TASK" = "update_kebechet_installation" ]; then
     exec python3 update_keb_installation.py
+elif [ "$THOTH_WORKFLOW_TASK" = "send_webhooks" ]; then
+    exec python3 send_webhooks.py
 fi
