@@ -15,6 +15,7 @@ pyyaml = "*"
 thoth-messaging = "*"
 thoth-storages = "*"
 ogr = "*"
+kubernetes = "*"
 
 [dev-packages]
 pytest = "*"
