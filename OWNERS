@@ -2,9 +2,14 @@
 
 approvers:
   - harshad16
-  - pacospace
+  - kpostoffice
+  - mayacostantini
   - sesheta
+
+emeritus_approvers:
+  - fridex
+  - pacospace
+
 reviewers:
   - kpostoffice
-  - fridex
-  - saisankargochhayat
+  - mayacostantini
