@@ -1,5 +1,11 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.11 (2022-08-09T07:01:45)
+* 4f71728 Update OWNERS (#407)
+* 0f64718 Fix writing source type when triggering advise workflow (#405)
+* 965c892 create new python script for sending webhooks in a directory
+* c363c96 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#400)
+
 ## Release 0.9.10 (2022-05-12T14:36:59)
 * 33340c7 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment (#397)
 
