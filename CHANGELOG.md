@@ -1,5 +1,8 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.12 (2022-08-23T04:16:17)
+* f3f186b :hatched_chick: Updated the dependencies and prow config (#412)
+
 ## Release 0.9.11 (2022-08-09T07:01:45)
 * 4f71728 Update OWNERS (#407)
 * 0f64718 Fix writing source type when triggering advise workflow (#405)
