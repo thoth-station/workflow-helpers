@@ -1,5 +1,12 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.13 (2022-09-21T19:45:08)
+* 5b6927e :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* ab329a7 :ship: Bump up base image initialized in CI.
+* ec8f3cf :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* b8d9f97 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* 6ab78b3 :ship: Bump up base image initialized in CI.
+
 ## Release 0.9.12 (2022-08-23T04:16:17)
 * f3f186b :hatched_chick: Updated the dependencies and prow config (#412)
 
