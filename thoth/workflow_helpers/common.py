@@ -77,8 +77,8 @@ def store_messages(output_messages: list):
                 if type(all_messages) != list:
                     raise TypeError(f"Message file must be a list of messages. Got type {type(all_messages)}")
                 all_messages = all_messages + output_messages
-    except Exception as e:
-        _LOGGER.exception(e)
+    except FileNotFoundError:
+        _LOGGER.info("No previous messages found.")
         all_messages = output_messages
 
     with open(MSG_OUT_FILE, "w") as json_file:
