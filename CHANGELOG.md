@@ -1,5 +1,11 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.14 (2022-10-05T20:28:11)
+* 6413ef3 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* 12f2f2d add error checking for loading kubeconfig
+* ae43a46 :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
+* 7b3d859 Downgrade logging level for normal operation
+
 ## Release 0.9.13 (2022-09-21T19:45:08)
 * 5b6927e :arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment
 * ab329a7 :ship: Bump up base image initialized in CI.
