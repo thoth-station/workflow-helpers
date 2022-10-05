@@ -25,14 +25,25 @@ from kubernetes import kubernetes as k8
 
 import requests
 
-k8.config.load_kube_config()
+_LOGGER = logging.getLogger("thoth.send_webhooks")
+
+try:
+    k8.config.load_kube_config()
+except Exception as exc:
+    # load_kube_config throws if there is no config,
+    # but does not document what it throws,
+    # so I can't rely on any particular type here
+    _LOGGER.warning(
+        "Failed to load kube config, fallback to incluster config: %s",
+        str(exc),
+    )
+    k8.config.load_incluster_config()
+
 core_api = k8.client.CoreV1Api()
 
 dir = os.environ["WEBHOOK_DIR"]
 document_id = os.environ["DOCUMENT_ID"]
 secret_namespace = os.environ["THOTH_BACKEND_NAMESPACE"]
-
-_LOGGER = logging.getLogger("thoth.send_webhooks")
 
 for f_name in os.listdir(dir):
     with open(os.path.join(dir, f_name), "r") as f:
