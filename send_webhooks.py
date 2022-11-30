@@ -22,6 +22,7 @@ import logging
 import os
 
 from kubernetes import kubernetes as k8
+from kubernetes.client.rest import ApiException as K8ApiException
 
 import requests
 
@@ -46,7 +47,10 @@ document_id = os.environ["DOCUMENT_ID"]
 secret_namespace = os.environ["THOTH_BACKEND_NAMESPACE"]
 
 for f_name in os.listdir(dir):
-    with open(os.path.join(dir, f_name), "r") as f:
+    path = os.path.join(dir, f_name)
+    if not os.path.isfile(path=path):
+        continue
+    with open(path, "r") as f:
         webhook = json.load(f)
     contents = {
         "client_data": webhook["client_data"],
@@ -58,4 +62,7 @@ for f_name in os.listdir(dir):
     except Exception as e:
         _LOGGER.exception(e)
 
-core_api.delete_namespaced_secret(name=f"callback-{document_id}", namespace=secret_namespace)
+try:
+    core_api.delete_namespaced_secret(name=f"callback-{document_id}", namespace=secret_namespace)
+except K8ApiException:
+    _LOGGER.debug(f"Callback secret (callback-{document_id}) does not exist.")
