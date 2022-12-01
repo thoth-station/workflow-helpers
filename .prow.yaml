@@ -26,3 +26,4 @@ presubmits:
             - "--ignore-missing-imports"
             - "--config-file"
             - "mypy.ini"
+            - "--no-namespace-packages"
