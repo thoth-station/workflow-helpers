@@ -29,4 +29,6 @@ PYTHON_PACKAGE_NAME=$(yq e .package_name ${CONFIG})
 PYTHON_INDEX_URL=$(yq e .index_url ${CONFIG})
 REASON=$(yq e .reason ${CONFIG})
 
+gh issue ${ISSUE_NUMBER} comment -b "I started ingesting ${PYTHON_PACKAGE_NAME}..."
+
 set -o allexport
