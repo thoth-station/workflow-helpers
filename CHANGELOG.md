@@ -1,5 +1,14 @@
 # Changelog for Thoth's Template GitHub Project
 
+## Release 0.9.16 (2023-01-18T21:37:11)
+* 6e6d068 ':arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment'
+* 0c76d09 Update add_package.sh
+* d00e1a0 Update add_package.sh
+* f907eb6 :arrow_up: update pre-commit hook versions
+* 2702b6a :sparkles: add add_package script for robozome
+* e989dd3 ':arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment'
+* caf398b :ship: Bump up base image initialized in CI.
+
 ## Release 0.9.15 (2022-12-02T20:25:07)
 * ed17341 :ship: Bump up base image initialized in CI. (#436)
 * 1a5d2ea ':arrow_up: Automatic update of dependencies by Kebechet for the ubi8 environment' (#435)
